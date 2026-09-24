@@ -4,6 +4,5 @@
   "private": true,
   "description": "Panel de prueba para conectar GA4 vía Composio",
   "type": "module",
-  "scripts": { "start": "node --env-file-if-exists=.env server.js" },
-  "engines": { "node": ">=20.6" }
+  "engines": { "node": ">=20" }
 }
