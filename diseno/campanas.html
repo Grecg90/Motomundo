@@ -119,11 +119,12 @@
       <div class="rules" id="rules"></div>
       <div class="builder">
         <label>URL de destino<input id="b_url" value="https://www.motomundohn.com/cotizar-en-linea"></label>
-        <label>Fuente (utm_source)<select id="b_s"></select></label>
+        <label>Fuente (utm_source)<input id="b_s" placeholder="Meta, Google, Base Clientes Claro…" value="Meta"></label>
         <label>Medio (utm_medium)<select id="b_m"></select></label>
-        <label>Campaña (utm_campaign)<input id="b_c" placeholder="Genesis_TacticaComercial_Leads_Centro"></label>
-        <label>Término (utm_term)<input id="b_t" placeholder="centro_tegucigalpa"></label>
+        <label>Campaña (utm_campaign)<input id="b_c" placeholder="Genesis TacticaComercial Leads Centro"></label>
+        <label>Término (utm_term, opcional)<input id="b_t" placeholder="Centro Tegucigalpa"></label>
         <label>Contenido (utm_content, opcional)<input id="b_x" placeholder="TTPremium_Zx-200l"></label>
+        <div class="muted" style="font-size:.74rem">Los espacios se convierten en "_", se quitan tildes y cada palabra empieza en mayúscula.</div>
         <div class="out" id="b_out"></div>
         <ul class="issues" id="b_issues"></ul>
         <div><button class="copy" id="b_copy">copiar link</button></div>
@@ -181,42 +182,36 @@ function canal(s, m) {
 
 // ===== ESTÁNDAR DE UTM (editar aquí las reglas) =====
 const STD = {
-  fuentes: ['meta', 'google', 'youtube', 'tiktok', 'sms', 'whatsapp', 'email', 'qr'],
-  medios:  ['paid_social', 'paid_search', 'paid_video', 'organic_social', 'sms', 'whatsapp', 'email', 'qr'],
-  marcas:  ['MM', 'Genesis', 'TVS', 'Yamaha', 'HJ', 'KMF'],
-  regiones:['centro', 'norte', 'sur', 'litoral', 'oriente', 'occidente', 'nacional'],
+  // Medio: siempre de esta lista. "referral" NO es un medio (es un canal que asigna GA4).
+  medios: ['paid_social', 'paid_search', 'paid_video', 'organic_social', 'sms', 'whatsapp', 'email', 'qr'],
 };
 const RULES = [
-  { f:'utm_source', n:'Fuente', d:`Plataforma que envía el tráfico. En minúsculas y de la lista.`, ej: STD.fuentes },
-  { f:'utm_medium', n:'Medio', d:`Tipo de canal. En minúsculas y de la lista.`, ej: STD.medios },
-  { f:'utm_campaign', n:'Campaña', d:`<code>Marca_Estrategia_Objetivo[_Zona]</code>, separado por "_", sin espacios ni tildes. Marca: ${STD.marcas.join(', ')}.`, ej:['Genesis_TacticaComercial_Leads_Centro', 'TVS_Tricimoto_Trafico'] },
-  { f:'utm_term', n:'Término', d:`<code>region_ciudad</code> en minúsculas, sin espacios, tildes ni "_" al final. Región: ${STD.regiones.join(', ')}.`, ej:['centro_tegucigalpa', 'norte_san-pedro-sula'] },
+  { f:'utm_source', n:'Fuente', req:true, d:'Quién envía el tráfico: la plataforma o la base de datos. Palabras unidas con "_" y cada una con la primera letra en mayúscula.', ej:['Meta', 'Google', 'Base_Clientes_Claro'] },
+  { f:'utm_medium', n:'Medio', req:true, d:'Tipo de canal. Siempre uno de la lista.', ej: STD.medios },
+  { f:'utm_campaign', n:'Campaña', req:true, d:'Palabras unidas con "_" (el constructor lo agrega solo) y cada una con la primera letra en mayúscula. Sin tildes.', ej:['Genesis_TacticaComercial_Leads_Centro', 'Mi_Primer_Credito'] },
+  { f:'utm_term', n:'Término', req:false, d:'<b>Opcional</b> (los directos normalmente no lo usan). Si se usa: mismo formato que la campaña, sin "_" al final.', ej:['Centro_Tegucigalpa', 'Norte_San_Pedro_Sula'] },
 ];
 const notSet = v => !v || v.startsWith('(');
+// Formato común: palabras con "_", sin espacios/tildes, sin "_" doble o al final, primera letra de cada palabra en mayúscula
 const fmtIssues = v => [
-  / /.test(v) && 'tiene espacios', /[áéíóúñÁÉÍÓÚÑ]/.test(v) && 'tiene tildes o ñ',
+  / /.test(v) && 'tiene espacios (usar "_")', /[áéíóúÁÉÍÓÚ]/.test(v) && 'tiene tildes',
   /__/.test(v) && 'tiene "__" doble', /_$/.test(v) && 'termina en "_"', /^_/.test(v) && 'empieza con "_"',
+  (w => w.length && `primera letra en mayúscula: ${w.slice(0, 3).map(x => '"' + x + '"').join(', ')}${w.length > 3 ? '…' : ''}`)
+    (v.split(/[_\s-]+/).filter(x => /^[a-zñ]/.test(x))),
 ].filter(Boolean);
 // Devuelve la lista de problemas de una UTM: [{f: campo, m: mensaje}]
 function validar({ s, m, c, t }) {
   const out = [], add = (f, msg) => out.push({ f, m: msg });
-  if (notSet(s)) add('Fuente', 'falta utm_source');
-  else { if (s !== s.toLowerCase()) add('Fuente', `"${s}" debe ir en minúsculas`);
-         if (!STD.fuentes.includes(s.toLowerCase())) add('Fuente', `"${s}" no está en la lista (${STD.fuentes.join(', ')})`); }
+  if (notSet(s)) add('Fuente', 'falta utm_source'); else fmtIssues(s).forEach(x => add('Fuente', x));
   if (notSet(m)) add('Medio', 'falta utm_medium');
-  else { if (m !== m.toLowerCase()) add('Medio', `"${m}" debe ir en minúsculas`);
-         if (!STD.medios.includes(m.toLowerCase())) add('Medio', `"${m}" no está en la lista (${STD.medios.join(', ')})`); }
-  if (notSet(c)) add('Campaña', 'falta utm_campaign');
-  else { const seg = c.split('_');
-         if (!STD.marcas.includes(seg[0])) add('Campaña', `debe empezar con la marca (${STD.marcas.join(', ')}), empieza con "${seg[0]}"`);
-         if (seg.filter(Boolean).length < 3) add('Campaña', 'debe tener al menos Marca_Estrategia_Objetivo');
-         fmtIssues(c).forEach(x => add('Campaña', x)); }
-  if (notSet(t)) add('Término', 'falta utm_term');
-  else { if (!STD.regiones.includes(t.split('_')[0].toLowerCase())) add('Término', `debe empezar con la región (${STD.regiones.join(', ')})`);
-         if (t !== t.toLowerCase()) add('Término', 'debe ir en minúsculas');
-         fmtIssues(t).forEach(x => add('Término', x)); }
+  else if (!STD.medios.includes(m.toLowerCase())) add('Medio', `"${m}" no es un medio válido (${STD.medios.join(', ')})`);
+  if (notSet(c)) add('Campaña', 'falta utm_campaign'); else fmtIssues(c).forEach(x => add('Campaña', x));
+  if (!notSet(t)) fmtIssues(t).forEach(x => add('Término', x));
   return out;
 }
+// Constructor: convierte "base clientes claro" en "Base_Clientes_Claro"
+const normalizar = v => v.trim().normalize('NFD').replace(/[̀-ͯ]/g, '')
+  .split(/[\s_]+/).filter(Boolean).map(w => w[0].toUpperCase() + w.slice(1)).join('_');
 const issuesHtml = arr => `<ul class="issues">${arr.map(i => `<li><b>${i.f}:</b> ${esc(i.m)}</li>`).join('')}</ul>`;
 const R = REPORT.rows.map(([c,s,m,t,x,h,p,u,e1,e2]) => { const r = {g:canal(s, m),c,s,m,t,x,h,p,u,e1,e2}; r.iss = validar(r); return r; });
 const DIMS = { g:'Canal', c:'Campaña', s:'Fuente', m:'Medio', t:'Término', x:'Contenido', p:'Página de destino' };
@@ -325,13 +320,12 @@ $('kpis').innerHTML = [
   ['UTMs mal construidas', num(R.filter(r => r.iss.length).length), `de ${num(R.length)} UTMs usadas`],
 ].map(([l, v, s]) => `<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join('');
 // ===== Widget: guía + constructor de UTM =====
-$('rules').innerHTML = RULES.map(r => `<div class="rule"><div class="k">${r.f}</div><h4>${r.n}</h4><p>${r.d}</p>
+$('rules').innerHTML = RULES.map(r => `<div class="rule"><div class="k">${r.f} · ${r.req ? 'obligatorio' : 'opcional'}</div><h4>${r.n}</h4><p>${r.d}</p>
   <p style="margin-top:6px">${r.ej.map(x => `<code>${esc(x)}</code>`).join(' ')}</p></div>`).join('');
-$('b_s').innerHTML = STD.fuentes.map(x => `<option>${x}</option>`).join('');
 $('b_m').innerHTML = STD.medios.map(x => `<option>${x}</option>`).join('');
 function build() {
   const v = id => $(id).value.trim();
-  const r = { s:v('b_s'), m:v('b_m'), c:v('b_c'), t:v('b_t'), x:v('b_x') };
+  const r = { s:normalizar(v('b_s')), m:v('b_m'), c:normalizar(v('b_c')), t:normalizar(v('b_t')), x:normalizar(v('b_x')) };
   const iss = validar(r);
   const qs = [['utm_source', r.s], ['utm_medium', r.m], ['utm_campaign', r.c], ['utm_term', r.t], ['utm_content', r.x]]
     .filter(([, x]) => x).map(([k, x]) => k + '=' + encodeURIComponent(x)).join('&');
