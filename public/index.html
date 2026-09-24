@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Motomundo · Conexión GA4</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 16px; color: #1a1a1a; background: #f7f7f8; }
+  section { background: #fff; border: 1px solid #e3e3e6; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+  h1 { font-size: 1.4rem; } h2 { font-size: 1.05rem; margin-top: 0; }
+  button { padding: .5rem .9rem; border: 0; border-radius: 6px; background: #1f6feb; color: #fff; cursor: pointer; }
+  input, select { padding: .45rem; border: 1px solid #ccc; border-radius: 6px; }
+  .row { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; margin: .5rem 0; }
+  pre { background: #111; color: #cfc; padding: .75rem; border-radius: 6px; overflow: auto; max-height: 300px; font-size: 12px; }
+  table { border-collapse: collapse; width: 100%; } td, th { border-bottom: 1px solid #eee; padding: .35rem; text-align: right; } th:first-child, td:first-child { text-align: left; }
+  .ok { color: #1a7f37; } .err { color: #cf222e; }
+</style>
+</head>
+<body>
+<h1>Motomundo · Prueba de conexión GA4 (Composio)</h1>
+
+<section>
+  <h2>1. Estado de la conexión</h2>
+  <div class="row"><label>User ID <input id="userId" placeholder="default"></label>
+    <button onclick="checkStatus()">Comprobar</button>
+    <button onclick="connect()">Conectar GA4</button></div>
+  <div id="status"></div>
+</section>
+
+<section>
+  <h2>2. Propiedades</h2>
+  <button onclick="loadProperties()">Listar propiedades</button>
+  <div class="row"><select id="property"></select></div>
+</section>
+
+<section>
+  <h2>3. Reporte de prueba</h2>
+  <div class="row">
+    <label>Desde <input id="start" value="7daysAgo"></label>
+    <label>Hasta <input id="end" value="today"></label>
+    <button onclick="runReport()">Traer datos</button>
+  </div>
+  <div id="report"></div>
+</section>
+
+<section><h2>Respuesta cruda</h2><pre id="raw">—</pre></section>
+
+<script>
+const $ = id => document.getElementById(id);
+const userId = () => $('userId').value.trim() || undefined;
+const unwrap = r => r?.data?.data ?? r?.data ?? r;
+
+async function call(method, path, body) {
+  $('raw').textContent = 'Cargando…';
+  const res = await fetch(path, { method, headers: { 'content-type': 'application/json' }, body: body && JSON.stringify(body) });
+  const json = await res.json();
+  $('raw').textContent = JSON.stringify(json, null, 2);
+  if (json.error || json.successful === false) throw new Error(json.error || 'La herramienta falló (ver respuesta cruda)');
+  return json;
+}
+const fail = (el, e) => $(el).innerHTML = `<p class="err">${e.message}</p>`;
+
+async function checkStatus() {
+  try {
+    const r = await call('GET', '/api/status' + (userId() ? '?userId=' + encodeURIComponent(userId()) : ''));
+    const items = r.items || [];
+    $('status').innerHTML = items.length
+      ? items.map(a => `<p class="${a.status === 'ACTIVE' ? 'ok' : 'err'}">● ${a.id} — ${a.status}</p>`).join('')
+      : '<p class="err">Sin conexiones GA4 para este usuario.</p>';
+  } catch (e) { fail('status', e); }
+}
+
+async function connect() {
+  try {
+    const r = await call('POST', '/api/connect', { userId: userId() });
+    const url = r.redirect_url || r.redirectUrl;
+    if (url) window.open(url, '_blank'); else $('status').innerHTML = '<p>Conexión creada, vuelve a comprobar.</p>';
+  } catch (e) { fail('status', e); }
+}
+
+async function loadProperties() {
+  try {
+    const d = unwrap(await call('POST', '/api/properties', { userId: userId() }));
+    const opts = (d.accountSummaries || []).flatMap(a =>
+      (a.propertySummaries || []).map(p => `<option value="${p.property}">${a.displayName} › ${p.displayName} (${p.property})</option>`));
+    $('property').innerHTML = opts.join('') || '<option>No se encontraron propiedades</option>';
+  } catch (e) { alert(e.message); }
+}
+
+async function runReport() {
+  try {
+    const d = unwrap(await call('POST', '/api/report', { userId: userId(), property: $('property').value, startDate: $('start').value, endDate: $('end').value }));
+    const rep = (d.reports || [])[0] || {};
+    const heads = [...(rep.dimensionHeaders || []), ...(rep.metricHeaders || [])].map(h => h.name);
+    const rows = (rep.rows || []).map(r => [...r.dimensionValues, ...r.metricValues].map(v => v.value));
+    $('report').innerHTML = rows.length
+      ? `<table><tr>${heads.map(h => `<th>${h}</th>`).join('')}</tr>${rows.map(r => `<tr>${r.map(v => `<td>${v}</td>`).join('')}</tr>`).join('')}</table>`
+      : '<p>Sin filas para ese rango.</p>';
+  } catch (e) { fail('report', e); }
+}
+</script>
+</body>
+</html>
