@@ -67,6 +67,8 @@
   .issues { margin:6px 0 0; padding:0; list-style:none; font-size:.76rem; }
   .issues li { color:#9f1239; } .issues li b { font-weight:600; }
   .issues li.warn { color:#92400e; }
+  .wrn { display:inline-block; background:#fef3c7; color:#92400e; border-radius:5px; font-size:.72rem; font-weight:600; padding:1px 7px; margin-left:6px; white-space:nowrap; }
+  tr.det.warn td:first-child { box-shadow:inset 3px 0 0 #f59e0b; }
   tr.det.err td:first-child { box-shadow:inset 3px 0 0 #e11d48; }
   details.guide { background:var(--card); border:1px solid var(--line); border-radius:12px; margin-bottom:16px; }
   details.guide summary { cursor:pointer; padding:14px 18px; font-weight:600; list-style:none; display:flex; justify-content:space-between; align-items:center; }
@@ -145,7 +147,7 @@
       </div>
       <input id="q" placeholder="Buscar en todo…">
       <label class="chk"><input type="checkbox" id="only"> Solo con cotizaciones</label>
-      <label class="chk"><input type="checkbox" id="onlyBad"> Solo UTMs mal construidas</label>
+      <select id="onlyBad"><option value="">Estado UTM: todas</option><option value="err">✕ Mal construidas</option><option value="warn">⚠ Con advertencias</option><option value="ok">✓ Correctas</option></select>
     </div>
     <div class="filters" id="filters"></div>
     <div class="count" id="count"></div>
@@ -189,31 +191,38 @@ const RULES = [
   { f:'utm_source', n:'Fuente', req:true, d:'Quién envía el tráfico: la plataforma o la base de datos. Palabras unidas con "_" y cada una con la primera letra en mayúscula.', ej:['Meta', 'Google', 'Base_Clientes_Claro'] },
   { f:'utm_medium', n:'Medio', req:true, d:'Tipo de canal. Siempre uno de la lista.', ej: STD.medios },
   { f:'utm_campaign', n:'Campaña', req:true, d:'Palabras unidas con "_" (el constructor lo agrega solo) y cada una con la primera letra en mayúscula. Sin tildes.', ej:['Genesis_TacticaComercial_Leads_Centro', 'Mi_Primer_Credito'] },
-  { f:'utm_term', n:'Término', req:false, d:'<b>Opcional</b> (los directos normalmente no lo usan). Si se usa: mismo formato que la campaña, sin "_" al final.', ej:['Centro_Tegucigalpa', 'Norte_San_Pedro_Sula'] },
+  { f:'utm_term', n:'Término', req:false, d:'<b>Opcional</b> (los directos normalmente no lo usan). Si se usa: mismo formato que la campaña.', ej:['Centro_Tegucigalpa', 'Norte_San_Pedro_Sula'] },
 ];
 const notSet = v => !v || v.startsWith('(');
-// Formato común: palabras con "_", sin espacios/tildes, sin "_" doble o al final, primera letra de cada palabra en mayúscula
+// Nivel: 'err' = mal construida (rojo) · 'warn' = advertencia (amarillo)
+// Formato: palabras con "_" y primera letra en mayúscula. Un "_" al final se acepta.
 const fmtIssues = v => [
   / /.test(v) && 'tiene espacios (usar "_")', /[áéíóúÁÉÍÓÚ]/.test(v) && 'tiene tildes',
-  /__/.test(v) && 'tiene "__" doble', /_$/.test(v) && 'termina en "_"', /^_/.test(v) && 'empieza con "_"',
-  (w => w.length && `primera letra en mayúscula: ${w.slice(0, 3).map(x => '"' + x + '"').join(', ')}${w.length > 3 ? '…' : ''}`)
+  /__/.test(v) && 'tiene "__" doble', /^_/.test(v) && 'empieza con "_"',
+  (w => w.length && `primera letra en minúscula: ${w.slice(0, 3).map(x => '"' + x + '"').join(', ')}${w.length > 3 ? '…' : ''}`)
     (v.split(/[_\s-]+/).filter(x => /^[a-zñ]/.test(x))),
 ].filter(Boolean);
-// Devuelve la lista de problemas de una UTM: [{f: campo, m: mensaje}]
 function validar({ s, m, c, t }) {
-  const out = [], add = (f, msg) => out.push({ f, m: msg });
-  if (notSet(s)) add('Fuente', 'falta utm_source'); else fmtIssues(s).forEach(x => add('Fuente', x));
-  if (notSet(m)) add('Medio', 'falta utm_medium');
-  else if (!STD.medios.includes(m.toLowerCase())) add('Medio', `"${m}" no es un medio válido (${STD.medios.join(', ')})`);
-  if (notSet(c)) add('Campaña', 'falta utm_campaign'); else fmtIssues(c).forEach(x => add('Campaña', x));
-  if (!notSet(t)) fmtIssues(t).forEach(x => add('Término', x));
+  const out = [], add = (f, msg, lvl) => out.push({ f, m: msg, lvl });
+  const fmt = (f, v) => fmtIssues(v).forEach(x => add(f, x, 'warn'));
+  if (notSet(s)) add('Fuente', 'falta utm_source', 'err'); else fmt('Fuente', s);
+  if (notSet(m)) add('Medio', 'falta utm_medium', 'err');
+  else if (!STD.medios.includes(m)) {
+    const lo = m.toLowerCase(), hit = STD.medios.find(x => lo === x || lo.includes(x));
+    if (hit) add('Medio', `"${m}" debería escribirse exactamente "${hit}"`, 'warn');
+    else add('Medio', `"${m}" no es un medio válido (${STD.medios.join(', ')})`, 'err');
+  }
+  if (notSet(c)) add('Campaña', 'falta utm_campaign', 'err'); else fmt('Campaña', c);
+  if (!notSet(t)) fmt('Término', t);
   return out;
 }
+const nivel = iss => iss.some(i => i.lvl === 'err') ? 'err' : iss.length ? 'warn' : 'ok';
 // Constructor: convierte "base clientes claro" en "Base_Clientes_Claro"
 const normalizar = v => v.trim().normalize('NFD').replace(/[̀-ͯ]/g, '')
   .split(/[\s_]+/).filter(Boolean).map(w => w[0].toUpperCase() + w.slice(1)).join('_');
-const issuesHtml = arr => `<ul class="issues">${arr.map(i => `<li><b>${i.f}:</b> ${esc(i.m)}</li>`).join('')}</ul>`;
-const R = REPORT.rows.map(([c,s,m,t,x,h,p,u,e1,e2]) => { const r = {g:canal(s, m),c,s,m,t,x,h,p,u,e1,e2}; r.iss = validar(r); return r; });
+const issuesHtml = arr => `<ul class="issues">${arr.map(i => `<li class="${i.lvl}">${i.lvl === 'err' ? '✕' : '⚠'} <b>${i.f}:</b> ${esc(i.m)}</li>`).join('')}</ul>`;
+const BADGE = { err: n => `<span class="bad">✕ Mal construida</span>`, warn: n => `<span class="wrn">⚠ Advertencias · ${n}</span>`, ok: () => `<span class="okb">✓ Correcta</span>` };
+const R = REPORT.rows.map(([c,s,m,t,x,h,p,u,e1,e2]) => { const r = {g:canal(s, m),c,s,m,t,x,h,p,u,e1,e2}; r.iss = validar(r); r.lv = nivel(r.iss); return r; });
 const DIMS = { g:'Canal', c:'Campaña', s:'Fuente', m:'Medio', t:'Término', x:'Contenido', p:'Página de destino' };
 const ORDER = ['g','c','s','m','t','x','p'];
 const EV1 = 'Cotiza_Producto', EV2 = 'Cotización_Crédito';
@@ -240,7 +249,7 @@ const qs = r => utmParts(r).map(([k, v]) => k + '=' + encodeURIComponent(v)).joi
 const hasPage = r => r.p.startsWith('/');
 const link = r => hasPage(r) ? `https://${r.h}${r.p}${r.p.includes('?') ? '&' : '?'}${qs(r)}` : '';
 const utmHtml = r => {
-  const st = r.iss.length ? `<span class="bad">✕ UTM mal construida · ${r.iss.length}</span>` : `<span class="okb">✓ UTM correcta</span>`;
+  const st = BADGE[r.lv](r.iss.length);
   return utmLink(r) + st + (r.iss.length ? issuesHtml(r.iss) : '');
 };
 const utmLink = r => {
@@ -267,13 +276,13 @@ function fillFilters() {
   $('clear').disabled = !ORDER.some(d => F[d]);
 }
 $('filters').onchange = e => { F[e.target.dataset.d] = e.target.value; update(); };
-$('clear').onclick = () => { ORDER.forEach(d => F[d] = ''); $('q').value = ''; $('only').checked = false; $('onlyBad').checked = false; update(); };
+$('clear').onclick = () => { ORDER.forEach(d => F[d] = ''); $('q').value = ''; $('only').checked = false; $('onlyBad').value = ''; update(); };
 
 // ---- Tabla: agrupa por la dimensión elegida; al desplegar muestra cada UTM usada ----
 let view = 'c';
 function draw() {
-  const q = $('q').value.toLowerCase(), only = $('only').checked, onlyBad = $('onlyBad').checked;
-  const rows = R.filter(r => matches(r) && (!only || r.e1 + r.e2) && (!onlyBad || r.iss.length) && (!q || ORDER.some(d => r[d].toLowerCase().includes(q))));
+  const q = $('q').value.toLowerCase(), only = $('only').checked, onlyBad = $('onlyBad').value;
+  const rows = R.filter(r => matches(r) && (!only || r.e1 + r.e2) && (!onlyBad || r.lv === onlyBad) && (!q || ORDER.some(d => r[d].toLowerCase().includes(q))));
   const side = view === 'p' ? 'c' : 'p';   // segunda columna: página de destino (o campaña si agrupas por página)
   const G = group(rows, view);
   const t1 = rows.reduce((s, r) => s + r.e1, 0), t2 = rows.reduce((s, r) => s + r.e2, 0);
@@ -281,9 +290,9 @@ function draw() {
   $('tbl').innerHTML = `<thead><tr><th class="l">${DIMS[view]}</th><th class="l">${DIMS[side]}</th>${MH}</tr></thead><tbody>` +
     (G.length ? G.map((a, i) => `
       <tr class="grp" data-i="${i}"><td class="l"><div class="nm"><span class="caret">▸</span><b>${fmtDim(view, a.key)}</b></div>
-          <div class="sub2">${a.rows.length} UTM${a.rows.length === 1 ? '' : 's'}${(n => n ? `<span class="bad">✕ ${n} mal construida${n === 1 ? '' : 's'}</span>` : '<span class="okb">✓ todas correctas</span>')(a.rows.filter(r => r.iss.length).length)}</div></td>
+          <div class="sub2">${a.rows.length} UTM${a.rows.length === 1 ? '' : 's'}${(e => e ? `<span class="bad">✕ ${e} mal construida${e === 1 ? '' : 's'}</span>` : '')(a.rows.filter(r => r.lv === 'err').length)}${(w => w ? `<span class="wrn">⚠ ${w} con advertencias</span>` : '')(a.rows.filter(r => r.lv === 'warn').length)}${a.rows.every(r => r.lv === 'ok') ? '<span class="okb">✓ todas correctas</span>' : ''}</div></td>
         <td class="l">${tags(side, uniq(a.rows, r => r[side]))}</td>${metrics(a)}</tr>
-      ${a.rows.map(r => `<tr class="det ${r.iss.length ? 'err' : ''}" data-p="${i}" hidden><td class="l">${utmHtml(r)}</td><td class="l">${fmtDim(side, r[side])}</td>${metrics(r)}</tr>`).join('')}`).join('')
+      ${a.rows.map(r => `<tr class="det ${r.lv}" data-p="${i}" hidden><td class="l">${utmHtml(r)}</td><td class="l">${fmtDim(side, r[side])}</td>${metrics(r)}</tr>`).join('')}`).join('')
     : `<tr><td colspan="6" class="empty">Sin resultados con estos filtros</td></tr>`) + '</tbody>';
 }
 function drawCanales() {
@@ -317,7 +326,7 @@ $('kpis').innerHTML = [
   [EV2, num(sum(r => r.e2)), 'veces accionado desde campañas'],
   ['Usuarios con UTM', num(sum(r => r.u)), 'llegados por campañas'],
   ['Campañas', uniq(R, r => r.c).length, `${uniq(R.filter(r => r.e1 + r.e2), r => r.c).length} con cotizaciones`],
-  ['UTMs mal construidas', num(R.filter(r => r.iss.length).length), `de ${num(R.length)} UTMs usadas`],
+  ['UTMs mal construidas', num(R.filter(r => r.lv === 'err').length), `${num(R.filter(r => r.lv === 'warn').length)} con advertencias · ${num(R.filter(r => r.lv === 'ok').length)} correctas de ${num(R.length)}`],
 ].map(([l, v, s]) => `<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join('');
 // ===== Widget: guía + constructor de UTM =====
 $('rules').innerHTML = RULES.map(r => `<div class="rule"><div class="k">${r.f} · ${r.req ? 'obligatorio' : 'opcional'}</div><h4>${r.n}</h4><p>${r.d}</p>
@@ -331,7 +340,7 @@ function build() {
     .filter(([, x]) => x).map(([k, x]) => k + '=' + encodeURIComponent(x)).join('&');
   const url = v('b_url'); const full = url ? url + (url.includes('?') ? '&' : '?') + qs : qs;
   $('b_out').textContent = full;
-  $('b_issues').innerHTML = iss.length ? iss.map(i => `<li><b>${i.f}:</b> ${esc(i.m)}</li>`).join('') : '<li style="color:#166534">✓ La UTM cumple el estándar</li>';
+  $('b_issues').innerHTML = iss.length ? iss.map(i => `<li class="${i.lvl}">${i.lvl === 'err' ? '✕' : '⚠'} <b>${i.f}:</b> ${esc(i.m)}</li>`).join('') : '<li style="color:#166534">✓ La UTM cumple el estándar</li>';
   $('b_copy').dataset.utm = full;
 }
 ['b_url','b_s','b_m','b_c','b_t','b_x'].forEach(id => $(id).oninput = build);
