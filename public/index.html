@@ -440,8 +440,8 @@
   .ntf:hover .bar { animation-play-state:paused; }
 
   /* Formularios de administración */
-  .inp { width:100%; min-width:0; background:var(--white); border:1px solid var(--gray-200); border-radius:var(--r-sm); padding:10px 12px; font-size:14px; transition:border-color .15s, box-shadow .15s; }
-  .inp:hover { border-color:var(--gray-300); } .inp:focus { outline:0; border-color:var(--ink); box-shadow:0 0 0 3px rgba(13,14,16,.08); }
+  .inp { width:100%; min-width:0; color:var(--ink); background:var(--white); border:1px solid var(--gray-200); border-radius:var(--r-sm); padding:10px 12px; font-size:14px; transition:border-color .15s, box-shadow .15s; }
+  .inp:hover { border-color:var(--gray-300); } .inp:disabled { background:var(--gray-200); color:var(--gray-500); } .inp:focus { outline:0; border-color:var(--ink); box-shadow:0 0 0 3px rgba(13,14,16,.08); }
   .u-form { grid-column:span 5; } .u-link { grid-column:span 7; background:var(--black); color:var(--white); display:flex; flex-direction:column; gap:12px; }
   .u-link .out { background:var(--graphite); border-color:var(--graphite-2); }
   .perm { display:grid; gap:8px; margin-top:4px; }
@@ -1506,6 +1506,7 @@ const adminCall = async body => {
   return data;
 };
 let USERS = null, uView = 'bento';
+const U_LINK_DEFAULT = $('u_link').innerHTML;
 const ROLE_OPTS = [{ v:'especialista', l:'Especialista', m:'crea UTMs' }, { v:'jefe', l:'Jefe de canal', m:'crea y edita su canal' }, { v:'subgerente', l:'Subgerente', m:'solo reportes' }, { v:'admin', l:'Jefe Web (admin)', m:'controla todo' }];
 const CANAL_OPTS = [{ v:'', l:'Sin canal' }, ...['Directos', 'Redes', 'Pauta'].map(c => ({ v:c, l:c, ic: CANAL_INFO[c][1] }))];
 const UR = Dropdown($('u_role'), { options: ROLE_OPTS, value:'especialista', block:true, search:false, onChange: () => { $('u_canal_hint').textContent = UR.value === 'jefe' ? 'obligatorio para jefes' : 'opcional'; } });
@@ -1559,7 +1560,8 @@ const dt = s => s ? new Date(s).toLocaleString('es-MX', { dateStyle:'medium', ti
 const stChip = u => !u.active ? '<span class="role-chip off"><i class="ph ph-prohibit"></i>Desactivado</span>' : u.pending ? '<span class="role-chip pending"><i class="ph ph-hourglass"></i>Invitación pendiente</span>' : '<span class="role-chip" style="background:var(--ok-50);color:var(--ok)"><i class="ph ph-check-circle"></i>Activo</span>';
 function userActions(u) {
   const self = u.id === ME.id;
-  return `<button class="ibtn" data-ulink="${u.id}" title="${u.pending ? 'Generar invitación' : 'Generar enlace de recuperación'}" aria-label="Generar enlace"><i class="ph ${u.pending ? 'ph-paper-plane-tilt' : 'ph-key'}"></i></button>
+  return `<button class="ibtn" data-uedit="${u.id}" title="Editar nombre y correo" aria-label="Editar"><i class="ph ph-pencil-simple"></i></button>
+    <button class="ibtn" data-ulink="${u.id}" title="${u.pending ? 'Generar invitación' : 'Generar enlace de recuperación'}" aria-label="Generar enlace"><i class="ph ${u.pending ? 'ph-paper-plane-tilt' : 'ph-key'}"></i></button>
     ${self ? '' : `<button class="ibtn" data-uact="${u.id}" title="${u.active ? 'Desactivar' : 'Activar'}" aria-label="${u.active ? 'Desactivar' : 'Activar'}"><i class="ph ${u.active ? 'ph-prohibit' : 'ph-check-circle'}"></i></button>
     <button class="ibtn danger" data-udel="${u.id}" title="Eliminar" aria-label="Eliminar"><i class="ph ph-trash"></i></button>`}`;
 }
@@ -1596,6 +1598,7 @@ async function updUser(u, patch) {
   loadUsers();
 }
 $('users').addEventListener('click', async e => {
+  const ed = e.target.closest('[data-uedit]'); if (ed) return editUser(USERS.find(x => x.id === ed.dataset.uedit));
   const l = e.target.closest('[data-ulink]'), a = e.target.closest('[data-uact]'), d = e.target.closest('[data-udel]');
   if (l) { const u = USERS.find(x => x.id === l.dataset.ulink); try { const r = await adminCall({ action:'link', user_id: u.id }); showLink({ name: u.full_name, email: u.email, link: r.link, type: r.pending ? 'invite' : 'recovery', uid: u.id }); } catch (err) { toast(err.message, true); } }
   if (a) { const u = USERS.find(x => x.id === a.dataset.uact); updUser(u, { active: !u.active }); }
@@ -1606,6 +1609,38 @@ $('users').addEventListener('click', async e => {
   }
 });
 $('uq').oninput = () => drawUsers();
+// Editar nombre y correo (panel negro de la derecha)
+function editUser(u) {
+  const self = u.id === ME.id;
+  $('u_link').innerHTML = `<div class="l"><i class="ph ph-pencil-simple"></i>Editar usuario</div>
+    <h2 style="color:#fff">${esc(u.full_name || u.email)}</h2>
+    <div class="fgrid" style="grid-template-columns:1fr;margin-top:4px">
+      <label class="field"><span style="color:var(--gray-300)">Nombre completo</span><input class="inp" id="e_name" value="${esc(u.full_name)}" maxlength="120"></label>
+      <label class="field"><span style="color:var(--gray-300)">Correo de acceso</span><input class="inp" id="e_mail" type="email" value="${esc(u.email)}" ${self ? 'disabled' : ''}></label>
+    </div>
+    <div class="msg info" style="background:var(--graphite);color:var(--gray-300)"><i class="ph ph-info"></i><span>${self ? 'Tu propio correo solo lo puede cambiar otro administrador.' : 'Si cambias el correo, se cierran sus sesiones abiertas y se genera un enlace nuevo para que defina su contraseña con el correo nuevo.'}</span></div>
+    <div id="e_msg"></div>
+    <div class="actions" style="margin-top:0">
+      <button class="btn btn-red" id="e_save"><i class="ph ph-floppy-disk"></i>Guardar cambios</button>
+      <button class="btn btn-ghost-dark" id="e_cancel"><i class="ph ph-x"></i>Cancelar</button>
+    </div>`;
+  $('u_link').scrollIntoView({ behavior:'smooth', block:'nearest' }); $('e_name').focus();
+  $('e_cancel').onclick = () => { $('u_link').innerHTML = U_LINK_DEFAULT; };
+  $('e_save').onclick = async () => {
+    const name = $('e_name').value.trim(), mail = $('e_mail').value.trim().toLowerCase();
+    if (!name) { $('e_msg').innerHTML = msg('err', 'El nombre no puede quedar vacío.'); return; }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)) { $('e_msg').innerHTML = msg('err', 'Escribe un correo válido.'); return; }
+    const patch = {}; if (name !== u.full_name) patch.full_name = name; if (!self && mail !== u.email) patch.email = mail;
+    if (!Object.keys(patch).length) { $('u_link').innerHTML = U_LINK_DEFAULT; return; }
+    $('e_save').disabled = true;
+    try {
+      const r = await adminCall({ action:'update', user_id: u.id, ...patch });
+      toast('Usuario actualizado'); await loadUsers();
+      if (r.link) showLink({ name, email: mail, link: r.link, type: 'recovery', emailed: r.emailed, uid: u.id });
+      else $('u_link').innerHTML = U_LINK_DEFAULT;
+    } catch (err) { $('e_msg').innerHTML = msg('err', esc(err.message)); $('e_save').disabled = false; }
+  };
+}
 Seg($('uView'), null, uView, v => { uView = v; drawUsers(); });
 
 // ============================================================
@@ -1632,7 +1667,10 @@ async function loadActs() {
 const actDesc = a => {
   const d = a.detail || {};
   if (a.action.startsWith('utm.')) return `<b style="display:inline;font-weight:600">${esc(a.summary)}</b> · ${esc(d.source || '')} / ${esc(d.medium || '')}${d.zone ? ' · ' + esc(d.zone) : ''}`;
-  if (a.action === 'usuario.editar') return `${esc(a.summary)} · ${Object.entries(d).map(([k, v]) => `${k}: ${esc(v ?? '—')}`).join(', ')}`;
+  if (a.action === 'usuario.editar') {
+    const L = { full_name:'nombre', email:'correo', role:'rol', canal:'canal', active:'activo' }, fv = (k, v) => k === 'role' ? (ROLE_NAME[v] || v) : v ?? '—';
+    return `${esc(a.summary)} · ${Object.entries(d).map(([k, v]) => v && typeof v === 'object' && 'ahora' in v ? `${L[k] || k}: ${esc(fv(k, v.antes))} → ${esc(fv(k, v.ahora))}` : `${L[k] || k}: ${esc(fv(k, v))}`).join(' · ')}`;
+  }
   if (a.action === 'usuario.crear') return `${esc(a.summary)} · ${esc(ROLE_NAME[d.role] || d.role || '')}${d.canal ? ' · ' + esc(d.canal) : ''}`;
   return esc(a.summary || '');
 };
