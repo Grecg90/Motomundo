@@ -374,7 +374,13 @@
   .lib-gh h3 { margin:0; font-size:16px; font-weight:600; display:flex; gap:8px; align-items:center; }
   .lib-gh h3 .ph { color:var(--red); }
   .lib-gh span { font-size:12px; font-weight:600; color:var(--gray-500); background:var(--gray-100); padding:2px 9px; border-radius:999px; }
-  .lcard { grid-column:span 4; }
+  .lcard { grid-column:span 3; }
+  @media (max-width:1400px) { .lcard { grid-column:span 4; } }
+  .lcard .lst { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:6px; background:var(--gray-100); border-radius:var(--r-sm); padding:10px 12px; margin-top:auto; }
+  .lcard .lst div { font-size:11px; font-weight:500; color:var(--gray-500); line-height:1.3; min-width:0; } .lcard .lst b { display:block; font-size:17px; font-weight:600; color:var(--ink); }
+  .lcard .lst .lnd { grid-column:1 / -1; border-top:1px solid var(--gray-200); padding-top:7px; margin-top:2px; display:flex; align-items:baseline; gap:6px; } .lcard .lst .lnd b { display:inline; font-size:14px; }
+  .lcard.lcard .lst.zero div:not(.lnd) b { color:var(--gray-300); }
+  .lcard .lact { margin-top:0; }
   .lcard .chips { display:flex; flex-wrap:wrap; gap:4px; }
   .lcard .chips .tag { margin:0; }
   .lcard .chips .tag i { font-style:normal; color:var(--gray-500); font-weight:500; }
@@ -619,6 +625,16 @@
   .lacts { display:flex; gap:2px; justify-content:flex-end; align-items:center; white-space:nowrap; }
   .lcard .land { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--gray-500); background:var(--gray-100); border-radius:10px; padding:7px 10px; }
   .lcard .land span { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--mono); font-size:11.5px; } .lcard .land b { color:var(--ink); font-weight:600; white-space:nowrap; }
+  .ctabs { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:10px; margin:0 0 14px; }
+  .ctab { border:0; text-align:left; background:var(--white); border-radius:var(--r-md); box-shadow:var(--shadow); padding:14px 16px; display:grid; grid-template-columns:auto 1fr auto; grid-template-rows:auto auto; column-gap:12px; row-gap:2px; align-items:center; color:var(--ink); transition:background .2s var(--ease), color .2s var(--ease), transform .15s var(--ease); }
+  .ctab:not([disabled]):hover { transform:translateY(-1px); }
+  .ctab .ic { grid-row:1 / 3; width:38px; height:38px; border-radius:11px; display:grid; place-items:center; background:var(--gray-100); color:var(--red); font-size:19px; }
+  .ctab b { font-size:16px; font-weight:600; } .ctab small { grid-column:2; font-size:12px; color:var(--gray-500); }
+  .ctab em { grid-row:1 / 3; grid-column:3; font-style:normal; font-size:22px; font-weight:650; letter-spacing:-.02em; }
+  .ctab.on { background:var(--black); color:var(--white); } .ctab.on .ic { background:var(--red); color:#fff; } .ctab.on small { color:var(--gray-300); }
+  .ctab[disabled] { opacity:.45; cursor:not-allowed; box-shadow:none; }
+  @media (max-width:900px) { .ctabs { grid-template-columns:1fr 1fr; } }
+  @media (max-width:520px) { .ctab { padding:10px 12px; } .ctab .ic { width:32px; height:32px; font-size:16px; } .ctab em { font-size:18px; } .ctab small { display:none; } }
   .jchips { display:flex; gap:8px; flex-wrap:wrap; margin:-4px 0 14px; }
   .jchip { border:1px solid var(--gray-200); background:var(--white); border-radius:999px; padding:7px 14px 7px 12px; font-size:13px; font-weight:500; color:var(--gray-700); display:inline-flex; align-items:center; gap:7px; transition:background .15s var(--ease), border-color .15s var(--ease), color .15s; }
   .jchip:hover { border-color:var(--gray-300); color:var(--ink); }
@@ -1080,6 +1096,7 @@
       <div><h1>Constructor de UTMs</h1><p>Crea links con el estándar de Motomundo, guárdalos y mide lo que generaron en GA4.</p></div>
       <div class="cmp"><b id="libCount">-</b><br><span>UTMs guardadas</span></div>
     </div>
+    <div class="ctabs" id="lcanal" role="tablist" aria-label="Canal de trabajo"></div>
     <div class="bento">
       <div class="tile b-form">
         <h2 id="formTitle">Nueva UTM</h2>
@@ -1129,7 +1146,7 @@
             <button class="btn btn-ghost" id="lib_xls"><i class="ph ph-microsoft-excel-logo"></i><span>Exportar a Excel</span></button>
           </div>
         </div>
-        <div class="jchips" id="lcanal" role="group" aria-label="Ver por jefatura"></div>
+
         <div class="fstrip">
           <span class="fs-slot" id="lgdd"></span>
           <span class="fs-slot" id="lsort"></span>
@@ -2208,7 +2225,7 @@ function resetForm() {
 $('b_reset').onclick = resetForm; $('b_cancel').onclick = resetForm;
 $('b_save').onclick = async () => {
   const f = form(); $('b_save').disabled = true;
-  const row = { url: f.url, source: f.source, medium: f.medium, campaign: f.campaign, term: f.term, content: f.content, note: f.note, zone: f.zone, canal: LF.g || fixedCanal() || canal(f.source, f.medium) };
+  const row = { url: f.url, source: f.source, medium: f.medium, campaign: f.campaign, term: f.term, content: f.content, note: f.note, zone: f.zone, canal: fixedCanal() || LF.g || canal(f.source, f.medium) };
   // Edición: solo se guarda si nadie más la cambió desde que la abriste (updated_at funciona como versión)
   const q = editId ? sb.from('utm_links').update(row).eq('id', editId).eq('updated_at', editVer).select().single() : sb.from('utm_links').insert(row).select().single();
   const { data, error } = await q;
@@ -2276,11 +2293,11 @@ $('lf_mine').onchange = () => drawLib();
 $('lq').oninput = () => drawLib();
 $('lfchips').addEventListener('click', e => { const b = e.target.closest('[data-lfx]'); if (!b) return; LF[b.dataset.lfx] = ''; LFD[b.dataset.lfx]?.set(''); drawLib(); });
 $('lf_clear_all').onclick = () => $('lf_clear').click();
-$('lf_clear').onclick = () => { Object.keys(LF).forEach(k => { LF[k] = ''; LFD[k].set(''); }); $('lq').value = ''; $('lf_mine').checked = false; drawLib(); };
+$('lf_clear').onclick = () => { Object.keys(LF).forEach(k => { if (k === 'g') return; LF[k] = ''; LFD[k]?.set(''); }); $('lq').value = ''; $('lf_mine').checked = false; drawLib(); };
 const LG_KEY = LV;
 const LG_IC = Object.fromEntries(ORDER.map(d => [d, k => d === 'g' ? (CANAL_INFO[k]?.[1] || DIM_IC.g) : DIM_IC[d]]));
-libGroup = 'g';
-const LGD = Dropdown($('lgdd'), { label: 'Agrupar', icon: 'ph-stack', options: GB_OPTS, value: libGroup, search: false, onChange: v => { libGroup = v; drawLib(); } });
+libGroup = '';
+const LGD = Dropdown($('lgdd'), { label: 'Agrupar', icon: 'ph-stack', allLabel:'Sin agrupar', options: [{ v:'', l:'Sin agrupar' }, ...GB_OPTS.filter(o => o.v !== 'g')], value: libGroup, search: false, onChange: v => { libGroup = v; drawLib(); } });
 Seg($('libView'), null, libView, v => { libView = v; drawLib(); });
 const ago = s => { const d = (Date.now() - new Date(s)) / 864e5; return d < 1 ? 'hoy' : d < 2 ? 'ayer' : `hace ${Math.floor(d)} días`; };
 function libActions(l, u) {
@@ -2307,13 +2324,11 @@ function libCard(l) {
     <div class="chips"><span class="tag"><i>fuente</i> ${esc(l.source)}</span><span class="tag"><i>medio</i> ${esc(l.medium)}</span>${l.zone ? `<span class="tag"><i>zona</i> ${esc(l.zone)}</span>` : ''}${l.term ? `<span class="tag"><i>término</i> ${esc(l.term)}</span>` : ''}${l.content ? `<span class="tag"><i>contenido</i> ${esc(l.content)}</span>` : ''}</div>
     <div class="url"><b>${esc(host)}</b></div>
     ${l.note ? `<div class="note"><i class="ph ph-note-pencil"></i>${esc(l.note)}</div>` : ''}
-    ${(lu => lu ? `<div class="land" title="Usuarios que llegaron a esta landing en el periodo, por cualquier canal"><i class="ph ph-arrow-square-in"></i><span>Landing ${esc(pageName(lu.p))}</span><b>${num(lu.u)} usuarios</b></div>` : '')(landUsers(l.url))}
-    ${ga ? `<div class="ga"><div><b>${num(ga.e1)}</b>${EV1}</div><div><b>${num(ga.e2)}</b>${EV2}</div><div><b>${num(ga.u)}</b>Usuarios</div></div>`
-         : `<div class="ga none"><i class="ph ph-clock-countdown"></i>Sin visitas en GA4 en este periodo</div>`}
+    ${(lu => `<div class="lst ${ga ? '' : 'zero'}"><div title="Usuarios que llegaron con esta UTM"><b>${ga ? num(ga.u) : '0'}</b>Usuarios</div><div><b>${ga ? num(ga.e1) : '0'}</b>${EV1}</div><div><b>${ga ? num(ga.e2) : '0'}</b>${EV2}</div>${lu ? `<div class="lnd" title="Usuarios que llegaron a ${esc(pageName(lu.p))} en el periodo, por cualquier canal"><b>${num(lu.u)}</b>usuarios en la landing</div>` : ''}</div>`)(landUsers(l.url))}
     <div class="lact">${actions}</div></div>`;
 }
 let LIB_ROWS = [];
-$('lcanal').addEventListener('click', e => { const b = e.target.closest('[data-jc]'); if (!b || fixedCanal()) return; LF.g = LF.g === b.dataset.jc ? '' : b.dataset.jc; LFD.g?.set(LF.g); LIB_ALL = false; drawLib(); });
+$('lcanal').addEventListener('click', e => { const b = e.target.closest('[data-jc]'); if (!b || b.disabled || fixedCanal()) return; LF.g = b.dataset.jc; LFD.g?.set(LF.g); LIB_ALL = false; SEL.clear(); drawLib(); });
 // Exportar a Excel (SheetJS se carga solo al usarlo)
 const loadXlsx = () => window.XLSX ? Promise.resolve(window.XLSX) : new Promise((ok, ko) => {
   const sc = document.createElement('script'); sc.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
@@ -2339,7 +2354,8 @@ $('lib_xls').onclick = async () => {
 };
 function drawLib() {
   if (!LINKS) return;
-  if (fixedCanal()) { LF.g = fixedCanal(); LFD.g?.set(LF.g); }
+  if (fixedCanal()) LF.g = fixedCanal(); else if (!CANALES.includes(LF.g)) LF.g = CANALES[0];
+  LFD.g?.set(LF.g);
   const q = $('lq').value.toLowerCase(), mine = $('lf_mine').checked;
   const ls = LINKS.filter(l => (!q || [l.campaign, l.source, l.medium, l.term, l.content, l.url, l.note, l.zone, l.created_by_name].some(v => (v || '').toLowerCase().includes(q)))
     && libMatch(l) && (!LF.estado || lvOf(l) === LF.estado) && (!mine || l.created_by === ME.id));
@@ -2347,25 +2363,28 @@ function drawLib() {
   const base = LINKS.filter(l => (!q || [l.campaign, l.source, l.medium, l.term, l.content, l.url, l.note, l.zone, l.created_by_name].some(v => (v || '').toLowerCase().includes(q)))
     && libMatch(l, 'g') && (!LF.estado || lvOf(l) === LF.estado) && (!mine || l.created_by === ME.id));
   const fx = fixedCanal();
-  $('lcanal').innerHTML = (fx ? [[fx, cn(fx), CANAL_INFO[fx][1]]] : [['', 'Todas', 'ph-squares-four'], ...CANALES.map(c => [c, cn(c), CANAL_INFO[c][1]])]).map(([v, l, ic]) =>
-    `<button class="jchip ${LF.g === v ? 'on' : ''} ${fx ? 'lock' : ''}" data-jc="${esc(v)}" aria-pressed="${LF.g === v}" ${fx ? 'title="Tu canal de trabajo"' : ''}><i class="ph ${fx ? 'ph-lock-simple' : ic}"></i>${esc(l)}<em>${num(v ? base.filter(x => LV.g(x) === v).length : base.length)}</em></button>`).join('');
-  $('b_wc').innerHTML = LF.g ? `Creando UTMs para <b><i class="ph ${CANAL_INFO[LF.g][1]}"></i>${esc(cn(LF.g))}</b>` : 'El canal se asigna según la fuente y el medio. Elige un canal abajo para trabajar en él.';
+  $('lcanal').innerHTML = CANALES.map(c => { const n = base.filter(x => LV.g(x) === c).length, off = fx && fx !== c;
+    return `<button class="ctab ${LF.g === c ? 'on' : ''}" data-jc="${c}" role="tab" aria-selected="${LF.g === c}" ${off ? 'disabled title="Solo puedes trabajar en tu canal"' : ''}>
+      <span class="ic"><i class="ph ${off ? 'ph-lock-simple' : CANAL_INFO[c][1]}"></i></span><b>${esc(cn(c))}</b><small>${c === 'Otros' ? 'Todo lo demás' : fx === c ? 'Tu canal de trabajo' : 'Jefatura'}</small><em>${num(n)}</em></button>`; }).join('');
+  $('b_wc').innerHTML = `Creando UTMs para <b><i class="ph ${CANAL_INFO[LF.g][1]}"></i>${esc(cn(LF.g))}</b>`;
   LIB_ROWS = ls;
-  $('lf_clear').disabled = !Object.values(LF).some(Boolean) && !q && !mine;
+  $('lf_clear').disabled = !Object.entries(LF).some(([k, v]) => k !== 'g' && v) && !q && !mine;
   $('lf_clear_all').hidden = $('lf_clear').disabled;
-  $('lfc').textContent = Object.values(LF).filter(Boolean).length || '';
-  $('lfchips').innerHTML = Object.entries(LF).filter(([, v]) => v).map(([d, v]) => `<button class="fchip" data-lfx="${d}" title="Quitar filtro"><span>${d === 'estado' ? 'Estado' : DIMS[d]}</span><b>${esc(d === 'estado' ? ESTADOS.find(e => e.v === v)?.l || v : d === 'g' ? cn(v) : v)}</b><i class="ph ph-x"></i></button>`).join('');
+  $('lfc').textContent = Object.entries(LF).filter(([k, v]) => k !== 'g' && v).length || '';
+  $('lfchips').innerHTML = Object.entries(LF).filter(([k, v]) => k !== 'g' && v).map(([d, v]) => `<button class="fchip" data-lfx="${d}" title="Quitar filtro"><span>${d === 'estado' ? 'Estado' : DIMS[d]}</span><b>${esc(d === 'estado' ? ESTADOS.find(e => e.v === v)?.l || v : d === 'g' ? cn(v) : v)}</b><i class="ph ph-x"></i></button>`).join('');
   if (!LINKS.length) return swap($('lib'), `<div class="empty"><i class="ph ph-link-simple-break"></i><b>Todavía no hay UTMs guardadas</b><span>Arma la primera arriba y pulsa "Guardar UTM".</span></div>`);
-  if (!ls.length) return swap($('lib'), `<div class="empty"><i class="ph ph-funnel-x"></i><b>Ninguna UTM coincide con los filtros</b></div>`);
+  if (!ls.length) return swap($('lib'), !q && !mine && !ORDER.some(d => d !== 'g' && LF[d]) && !LF.estado
+    ? `<div class="empty"><i class="ph ph-link-simple"></i><b>Todavía no hay UTMs en ${esc(cn(LF.g))}</b><span>Crea la primera con el formulario de arriba; se guardará en este canal.</span></div>`
+    : `<div class="empty"><i class="ph ph-funnel-x"></i><b>Ninguna UTM coincide con los filtros</b></div>`);
   const tr = l => gaFor(l)?.u || 0, ts = l => Date.parse(l.created_at) || 0;
   ls.sort(LSORT_V === 'old' ? (a, b) => ts(a) - ts(b) : LSORT_V === 'traffic' ? (a, b) => tr(b) - tr(a) || ts(b) - ts(a) : (a, b) => ts(b) - ts(a));
   const vis = LIB_ALL ? ls : ls.slice(0, LIB_PAGE), more = ls.length > LIB_PAGE ? `<button class="btn btn-ghost more-btn" id="lib_more">${LIB_ALL ? 'Ver menos' : `Ver ${num(ls.length - LIB_PAGE)} más`}</button>` : '';
-  const kf = LG_KEY[libGroup], M = new Map();
+  const kf = LG_KEY[libGroup] || (() => ''), M = new Map();
   vis.forEach(l => { const k = kf(l); (M.get(k) || M.set(k, []).get(k)).push(l); });
   const keys = libGroup === 'g' ? [...CANALES.filter(k => M.has(k)), ...[...M.keys()].filter(k => !CANALES.includes(k))] : [...M.keys()];
   if (libView === 'table') {
     swap($('lib'), `<div class="table-wrap"><table><thead><tr><th class="rk-h"></th><th class="l">Campaña</th><th class="l">Fuente / medio</th><th class="l">Zona · término · contenido</th><th class="l">Creada por</th><th class="l">Estado</th><th>Usuarios</th><th>${EV1}</th><th>${EV2}</th><th></th></tr></thead><tbody>${keys.map(k =>
-      `<tr><td class="l" colspan="10" style="background:var(--gray-100);font-weight:500"><i class="ph ${LG_IC[libGroup](k)}" style="color:var(--red)"></i> ${esc(libGroup === 'g' ? cn(k) : k)} <span class="muted">· ${M.get(k).length}</span></td></tr>` +
+      (libGroup ? `<tr><td class="l" colspan="10" style="background:var(--gray-100);font-weight:500"><i class="ph ${LG_IC[libGroup](k)}" style="color:var(--red)"></i> ${esc(libGroup === 'g' ? cn(k) : k)} <span class="muted">· ${M.get(k).length}</span></td></tr>` : '') +
       M.get(k).map(l => { const iss = validar({ s: l.source, m: l.medium, c: l.campaign, t: l.term }), ga = gaFor(l), u = fullUrl(l);
         return `<tr><td class="rk-c"><label class="lsel"><input type="checkbox" data-sel="${l.id}" ${SEL.has(l.id) ? 'checked' : ''} aria-label="Seleccionar ${esc(l.campaign)}"></label></td><td class="l">${esc(l.campaign)}<div class="term">${esc(l.url)}</div></td><td class="l">${esc(l.source)} / ${esc(l.medium)}</td><td class="l"><span class="term">${esc(l.zone || '-')} · ${esc(l.term || '-')} · ${esc(l.content || '-')}</span></td>
           <td class="l"><span class="term">${esc(l.created_by_name || '-')}</span></td><td class="l">${BADGE[nivel(iss)](iss.length)}</td><td>${ga ? num(ga.u) : '-'}</td><td class="ev ${ga?.e1 ? '' : 'z'}">${ga?.e1 ? num(ga.e1) : '-'}</td><td class="ev ${ga?.e2 ? '' : 'z'}">${ga?.e2 ? num(ga.e2) : '-'}</td>
@@ -2373,7 +2392,7 @@ function drawLib() {
     selUi();
     return;
   }
-  swap($('lib'), keys.map(k => `<div class="lib-group"><div class="lib-gh"><h3 style="font-weight:500"><i class="ph ${LG_IC[libGroup](k)}"></i>${esc(libGroup === 'g' ? cn(k) : k)}</h3><span>${M.get(k).length}</span></div>
+  swap($('lib'), keys.map(k => `<div class="lib-group">${libGroup ? `<div class="lib-gh"><h3 style="font-weight:500"><i class="ph ${LG_IC[libGroup](k)}"></i>${esc(k)}</h3><span>${M.get(k).length}</span></div>` : ''}
     <div class="gbento">${M.get(k).map(libCard).join('')}</div></div>`).join('') + more);
   selUi();
 }
