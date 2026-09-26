@@ -3,202 +3,340 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Campañas UTM · Motomundo</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Raleway:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  :root { --bg:#f4f5f7; --card:#fff; --ink:#14161a; --muted:#6b7280; --line:#e6e8ec; --brand:#d71920; --soft:#f3f4f6; --bar:#1f2937; }
+  /* ===== Tokens: rojo · blanco · gris oscuro · negro ===== */
+  :root {
+    --red:#d71920; --red-600:#b3141a; --red-50:#fdecec; --red-100:#f9d3d4;
+    --black:#0d0e10; --ink:#17181b; --graphite:#2a2c31; --gray-700:#3d4047; --gray-500:#6c7079; --gray-300:#c9ccd2; --gray-200:#e3e5e9; --gray-100:#f1f2f4; --white:#fff;
+    --ok:#1f7a4a; --ok-50:#e5f4ec; --warn:#9a5b00; --warn-50:#fdf1dc;
+    --r-lg:20px; --r-md:12px; --r-sm:8px;
+    --shadow:0 1px 2px rgba(13,14,16,.06), 0 8px 24px -12px rgba(13,14,16,.18);
+    --display:'Raleway', system-ui, sans-serif; --body:'Nunito', system-ui, sans-serif;
+    --ease:cubic-bezier(.2,.8,.2,1);
+  }
   * { box-sizing:border-box; }
-  body { margin:0; font-family:Inter,system-ui,sans-serif; background:var(--bg); color:var(--ink); font-size:14px; }
-  .wrap { max-width:1280px; margin:0 auto; padding:28px 16px 48px; }
-  header { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:20px; }
-  .brand { display:flex; gap:12px; align-items:center; }
-  .logo { width:40px; height:40px; border-radius:10px; background:var(--brand); color:#fff; display:grid; place-items:center; font-weight:700; }
-  h1 { margin:0; font-size:1.45rem; letter-spacing:-.02em; } .sub { color:var(--muted); font-size:.88rem; }
-  .meta { text-align:right; color:var(--muted); font-size:.85rem; } .meta b { color:var(--ink); }
+  html { -webkit-text-size-adjust:100%; }
+  body { margin:0; font-family:var(--body); font-size:14px; color:var(--ink); background:var(--gray-100); }
+  .num, .kpi .v, .cn .nums b, td, .dp-btn { font-variant-numeric:lining-nums tabular-nums; }
+  button, input, select { font:inherit; color:inherit; }
+  :focus-visible { outline:2px solid var(--red); outline-offset:2px; }
+  .muted { color:var(--gray-500); }
+  .err { color:var(--red); }
 
-  /* selector de fecha */
-  .dp { position:relative; display:inline-block; }
-  .dp-btn { display:flex; gap:8px; align-items:center; font:inherit; font-size:.88rem; background:#fff; border:1px solid var(--line); border-radius:10px; padding:8px 12px; cursor:pointer; color:var(--ink); }
-  .dp-btn:hover { border-color:#c7cbd1; } .dp-btn .car { color:var(--muted); }
-  .dp-pop { position:absolute; right:0; top:calc(100% + 6px); z-index:20; background:#fff; border:1px solid var(--line); border-radius:12px; box-shadow:0 12px 32px rgba(0,0,0,.14); display:flex; text-align:left; }
+  /* ===== Header ===== */
+  .top { background:var(--black); color:var(--white); position:sticky; top:0; z-index:30; }
+  .top-in { max-width:1320px; margin:0 auto; padding:0 20px; height:68px; display:flex; align-items:center; gap:20px; }
+  .brand { display:flex; align-items:center; gap:12px; min-width:0; }
+  .mark { width:36px; height:36px; border-radius:10px; background:var(--red); display:grid; place-items:center; font-family:var(--display); font-weight:900; font-size:18px; flex:none; }
+  .brand-t { font-family:var(--display); font-weight:800; font-size:17px; letter-spacing:-.01em; white-space:nowrap; }
+  .brand-t span { color:var(--gray-300); font-weight:600; }
+  .top nav { display:flex; gap:4px; margin-left:12px; }
+  .top nav a { color:var(--gray-300); text-decoration:none; font-weight:600; font-size:13px; padding:7px 12px; border-radius:999px; transition:background .2s var(--ease), color .2s var(--ease); }
+  .top nav a:hover { color:var(--white); background:rgba(255,255,255,.08); }
+  .top nav a.on { color:var(--white); background:var(--graphite); }
+  .top .sp { flex:1; }
+
+  /* ===== Selector de fecha ===== */
+  .dp { position:relative; }
+  .dp-btn { display:flex; gap:10px; align-items:center; background:var(--graphite); color:var(--white); border:1px solid #3a3d44; border-radius:999px; padding:8px 14px 8px 12px; cursor:pointer; font-size:13px; white-space:nowrap; transition:border-color .2s var(--ease); }
+  .dp-btn:hover { border-color:#5a5e67; }
+  .dp-btn svg { width:16px; height:16px; flex:none; }
+  .dp-btn b { font-weight:800; }
+  .dp-btn .car { width:8px; height:8px; border-right:2px solid var(--gray-300); border-bottom:2px solid var(--gray-300); transform:rotate(45deg) translateY(-2px); margin-left:2px; }
+  .dp-pop { position:absolute; right:0; top:calc(100% + 10px); z-index:40; background:var(--white); color:var(--ink); border-radius:var(--r-lg); box-shadow:0 24px 60px -20px rgba(13,14,16,.45), 0 0 0 1px var(--gray-200); display:flex; overflow:hidden;
+    transform-origin:top right; animation:pop .18s var(--ease); }
+  @keyframes pop { from { opacity:0; transform:translateY(-4px) scale(.98); } }
   .dp-pop[hidden] { display:none; }
-  .dp-presets { display:flex; flex-direction:column; padding:8px; border-right:1px solid var(--line); min-width:150px; }
-  .dp-presets button { font:inherit; font-size:.85rem; text-align:left; background:none; border:0; border-radius:6px; padding:7px 10px; cursor:pointer; color:var(--ink); }
-  .dp-presets button:hover { background:var(--soft); } .dp-presets button.on { background:#fff5f5; color:var(--brand); font-weight:600; }
-  .dp-cal { padding:10px 14px 12px; position:relative; }
-  .dp-nav { position:absolute; left:10px; right:10px; top:8px; display:flex; justify-content:space-between; pointer-events:none; }
-  .dp-nav button { pointer-events:auto; border:0; background:none; font-size:1.2rem; cursor:pointer; color:var(--muted); padding:0 6px; }
-  .dp-months { display:flex; gap:18px; }
-  .mo .mt { text-align:center; font-weight:600; font-size:.85rem; margin-bottom:6px; text-transform:capitalize; }
-  .dg { display:grid; grid-template-columns:repeat(7, 32px); gap:2px 0; }
-  .dg .wd { text-align:center; font-size:.7rem; color:var(--muted); padding:4px 0; }
-  .dg button { height:30px; border:0; background:none; font:inherit; font-size:.8rem; cursor:pointer; color:var(--ink); border-radius:6px; }
-  .dg button:hover:not(.off) { background:var(--soft); }
-  .dg button.in { background:#fde8e9; border-radius:0; } .dg button.edge { background:var(--brand); color:#fff; font-weight:600; }
-  .dg button.off { color:#d1d5db; cursor:default; }
-  .dp-foot { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:10px; font-size:.8rem; color:var(--muted); }
-  .dp-apply { font:inherit; font-size:.82rem; background:var(--brand); color:#fff; border:0; border-radius:8px; padding:6px 14px; cursor:pointer; }
-  .dp-apply:disabled { opacity:.4; cursor:default; }
-  /* variación vs periodo anterior */
-  .dl { display:block; font-size:.72rem; font-weight:600; margin-top:1px; letter-spacing:0; }
-  .kpi .dl { display:inline-block; font-size:.8rem; margin-left:8px; vertical-align:middle; padding:1px 7px; border-radius:999px; }
-  .dl.up { color:#15803d; } .dl.dn { color:#be123c; } .dl.eq { color:var(--muted); }
-  .kpi .dl.up { background:#dcfce7; } .kpi .dl.dn { background:#fde8e9; } .kpi .dl.eq { background:var(--soft); }
-  .range { display:flex; gap:6px; align-items:center; justify-content:flex-end; flex-wrap:wrap; }
-  .range select, .range input { font:inherit; font-size:.85rem; padding:6px 8px; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--ink); }
-  .kpis { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:16px; }
-  .kpi { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; }
-  .kpi .l { font-size:.78rem; color:var(--muted); } .kpi .v { font-size:1.55rem; font-weight:700; margin-top:4px; font-variant-numeric:tabular-nums; }
-  .kpi .s { font-size:.78rem; color:var(--muted); margin-top:2px; }
+  .dp-presets { display:flex; flex-direction:column; gap:2px; padding:12px; background:var(--gray-100); min-width:180px; }
+  .dp-presets button { white-space:nowrap; }
+  .dp-presets button { text-align:left; background:none; border:0; border-radius:var(--r-sm); padding:8px 12px; cursor:pointer; font-weight:600; }
+  .dp-presets button:hover { background:var(--gray-200); }
+  .dp-presets button.on { background:var(--black); color:var(--white); }
+  .dp-cal { padding:14px 16px; position:relative; }
+  .dp-nav { position:absolute; left:10px; right:10px; top:10px; display:flex; justify-content:space-between; pointer-events:none; }
+  .dp-nav button { pointer-events:auto; width:30px; height:30px; border:0; border-radius:50%; background:none; cursor:pointer; font-size:0; position:relative; }
+  .dp-nav button:hover { background:var(--gray-100); }
+  .dp-nav button::after { content:''; position:absolute; inset:0; margin:auto; width:7px; height:7px; border-left:2px solid var(--gray-700); border-bottom:2px solid var(--gray-700); transform:rotate(45deg); }
+  .dp-nav button#dp_nextm::after { transform:rotate(-135deg); }
+  .dp-months { display:flex; gap:22px; }
+  .mo .mt { text-align:center; font-family:var(--display); font-weight:700; margin:4px 0 8px; text-transform:capitalize; }
+  .dg { display:grid; grid-template-columns:repeat(7, 34px); gap:2px 0; }
+  .dg .wd { text-align:center; font-size:11px; color:var(--gray-500); font-weight:700; padding:4px 0; }
+  .dg button { height:32px; border:0; background:none; cursor:pointer; border-radius:var(--r-sm); font-size:13px; font-weight:600; }
+  .dg button:hover:not(.off) { background:var(--gray-100); }
+  .dg button.in { background:var(--red-50); border-radius:0; }
+  .dg button.edge { background:var(--red); color:var(--white); }
+  .dg button.off { color:var(--gray-300); cursor:default; }
+  .dp-foot { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:12px; padding-top:12px; border-top:1px solid var(--gray-200); color:var(--gray-500); font-size:13px; }
+  .dp-apply { background:var(--red); color:var(--white); border:0; border-radius:999px; padding:8px 18px; font-weight:700; cursor:pointer; }
+  .dp-apply:hover { background:var(--red-600); } .dp-apply:disabled { opacity:.35; cursor:default; }
 
-  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; margin-bottom:16px; }
-  .toolbar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:14px; }
-  .tabs { display:flex; background:var(--soft); border-radius:8px; padding:3px; }
-  .tabs button { border:0; background:none; padding:7px 14px; border-radius:6px; font:inherit; font-weight:500; color:var(--muted); cursor:pointer; }
-  .tabs button.on { background:#fff; color:var(--ink); box-shadow:0 1px 2px rgba(0,0,0,.08); }
-  input, select { font:inherit; padding:7px 10px; border:1px solid var(--line); border-radius:8px; background:#fff; }
-  input { flex:1; min-width:180px; }
+  /* ===== Página ===== */
+  main { max-width:1320px; margin:0 auto; padding:28px 20px 48px; }
+  .intro { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:20px; }
+  h1 { font-family:var(--display); font-weight:800; font-size:30px; letter-spacing:-.025em; line-height:1.1; margin:0; }
+  .intro p { margin:6px 0 0; color:var(--gray-500); font-size:15px; }
+  .intro .cmp { font-size:13px; color:var(--gray-500); text-align:right; }
+  .intro .cmp b { color:var(--ink); }
 
-  table { width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums; }
-  th { text-align:right; font-weight:500; color:var(--muted); font-size:.76rem; padding:8px; border-bottom:1px solid var(--line); white-space:nowrap; }
-  td { text-align:right; padding:9px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
-  th.l, td.l { text-align:left; }
-  tr.grp { cursor:pointer; } tr.grp:hover { background:#fafafa; }
-  tr.grp td.l b { font-weight:600; }
-  .caret { display:inline-block; width:14px; color:var(--muted); transition:transform .15s; }
-  tr.grp.open .caret { transform:rotate(90deg); }
-  tr.det td { background:#fafbfc; font-size:.85rem; }
-  tr.det td.l:first-child { padding-left:30px; width:60%; }
-  .sub2 { color:var(--muted); font-size:.75rem; margin:2px 0 0 18px; }
-  .utm { line-height:1.6; }
-  .share { display:flex; align-items:center; gap:8px; justify-content:flex-end; }
-  .share .t { width:70px; height:6px; background:var(--soft); border-radius:3px; overflow:hidden; }
-  .share .f { height:100%; background:var(--bar); }
-  .tag { display:inline-block; padding:1px 7px; border-radius:5px; background:var(--soft); font-size:.78rem; margin:1px 2px 1px 0; white-space:nowrap; }
-  .page { display:inline-block; min-width:140px; font-family:ui-monospace,Menlo,monospace; font-size:.8rem; color:#1d4ed8; word-break:break-all; }
-  .term { color:var(--muted); font-size:.8rem; }
-  .rate { display:inline-block; min-width:48px; padding:1px 7px; border-radius:999px; font-size:.76rem; font-weight:600; text-align:center; }
-  .hi { background:#dcfce7; color:#166534; } .mid { background:var(--soft); color:#374151; } .lo { background:#fde8e9; color:#9f1239; }
-  .ke { font-weight:600; } .ke.z { color:#c0c4cc; font-weight:400; }
-  .table-wrap { overflow-x:auto; }
-  .nm { display:flex; gap:4px; align-items:baseline; } .nm b, .nm .page { overflow-wrap:anywhere; } td:first-child { min-width:260px; } td .term { overflow-wrap:anywhere; }
-  .share .t { width:48px; }
-  .filters { display:grid; grid-template-columns:repeat(7,1fr) auto; gap:8px; margin-bottom:14px; align-items:end; }
-  .filters label { display:flex; flex-direction:column; gap:4px; font-size:.74rem; color:var(--muted); font-weight:500; min-width:0; }
+  /* ===== Bento ===== */
+  .bento { display:grid; grid-template-columns:repeat(12, 1fr); gap:14px; margin-bottom:14px; }
+  .bento > #kpis, .bento > #canales { display:contents; }
+  .tile { background:var(--white); border-radius:var(--r-lg); padding:20px 22px; box-shadow:var(--shadow); min-width:0; position:relative; }
+  .tile .l { font-size:13px; font-weight:700; color:var(--gray-500); }
+  .tile .v { font-family:var(--display); font-weight:800; font-size:34px; letter-spacing:-.03em; line-height:1; margin-top:10px; }
+  .tile .s { font-size:13px; color:var(--gray-500); margin-top:8px; }
+  .t-hero { grid-column:span 6; grid-row:span 2; background:var(--black); color:var(--white); display:flex; flex-direction:column; padding:24px 26px; overflow:hidden; }
+  .t-hero .l { color:var(--gray-300); }
+  .t-hero .pair { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:14px; }
+  .t-hero .pair .v { font-size:54px; }
+  .t-hero .pair .n { font-size:13px; font-weight:700; color:var(--gray-300); margin-top:8px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .t-hero .pair .sw { width:10px; height:10px; border-radius:3px; display:inline-block; }
+  .chart { margin-top:auto; padding-top:18px; }
+  .chart svg { width:100%; height:110px; display:block; overflow:visible; }
+  .chart .ax { display:flex; justify-content:space-between; font-size:11px; color:var(--gray-500); margin-top:6px; }
+  .chart rect { transition:opacity .15s; } .chart g:hover rect { opacity:.75; }
+  .t-sm { grid-column:span 3; }
+  .t-md { grid-column:span 6; }
+  .t-red { background:var(--red); color:var(--white); }
+  .t-red .l, .t-red .s { color:#ffd9da; }
+  .t-graph { background:var(--graphite); color:var(--white); }
+  .t-graph .l, .t-graph .s { color:var(--gray-300); }
+  .stack { display:flex; height:12px; border-radius:999px; overflow:hidden; margin:16px 0 12px; background:var(--gray-100); }
+  .stack i { display:block; height:100%; }
+  .legend { display:flex; gap:16px; flex-wrap:wrap; font-size:13px; font-weight:600; }
+  .legend span { display:flex; align-items:center; gap:6px; } .legend i { width:10px; height:10px; border-radius:3px; }
+
+  /* Canales */
+  .cn { grid-column:span 3; text-align:left; border:0; cursor:pointer; transition:transform .2s var(--ease), box-shadow .2s var(--ease); }
+  .cn:hover { transform:translateY(-2px); }
+  .cn:active { transform:translateY(0) scale(.99); }
+  .cn.on { box-shadow:0 0 0 2px var(--red), var(--shadow); }
+  .cn .h { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .cn .h b { font-family:var(--display); font-weight:800; font-size:20px; letter-spacing:-.02em; }
+  .cn .h span { font-size:12px; font-weight:700; color:var(--gray-500); white-space:nowrap; }
+  .cn .d { font-size:12px; color:var(--gray-500); margin:2px 0 14px; }
+  .cn .nums { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; }
+  .cn .nums div { font-size:11px; font-weight:700; color:var(--gray-500); line-height:1.4; }
+  .cn .nums b { display:block; font-family:var(--display); font-weight:800; font-size:20px; color:inherit; letter-spacing:-.02em; margin-bottom:2px; }
+  .cn.t-red .h span, .cn.t-red .d, .cn.t-red .nums div { color:#ffd9da; }
+  .cn.t-graph .h span, .cn.t-graph .d, .cn.t-graph .nums div { color:var(--gray-300); }
+
+  /* Variación vs periodo anterior */
+  .dl { display:inline-flex; align-items:center; gap:3px; font-family:var(--body); font-size:12px; font-weight:800; letter-spacing:0; white-space:nowrap; }
+  .dl::before { content:''; width:0; height:0; border-left:4px solid transparent; border-right:4px solid transparent; }
+  .dl.up { color:var(--ok); } .dl.up::before { border-bottom:6px solid currentColor; }
+  .dl.dn { color:var(--red); } .dl.dn::before { border-top:6px solid currentColor; }
+  .dl.eq { color:var(--gray-500); } .dl.eq::before { display:none; }
+  .tile .v .dl { margin-left:10px; vertical-align:middle; padding:3px 8px; border-radius:999px; font-size:12px; }
+  .tile .v .dl.up { background:var(--ok-50); } .tile .v .dl.dn { background:var(--red-50); } .tile .v .dl.eq { background:var(--gray-100); }
+  .t-hero .dl.up, .t-graph .dl.up { color:#7ee2a8; } .t-hero .dl.dn, .t-graph .dl.dn { color:#ff8a8e; }
+  .t-hero .v .dl, .t-graph .v .dl, .t-red .v .dl { background:rgba(255,255,255,.1) !important; }
+  .t-red .dl, .t-red .dl.dn, .t-red .dl.up { color:var(--white); }
+  td .dl { display:flex; justify-content:flex-end; margin-top:2px; font-size:11px; }
+
+  /* ===== Guía / constructor ===== */
+  details.guide { grid-column:1 / -1; padding:0; overflow:hidden; }
+  details.guide summary { cursor:pointer; padding:18px 22px; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  details.guide summary::-webkit-details-marker { display:none; }
+  details.guide summary h2 { margin:0; font-family:var(--display); font-weight:800; font-size:18px; letter-spacing:-.015em; }
+  details.guide summary p { margin:2px 0 0; color:var(--gray-500); font-size:13px; }
+  details.guide summary .tg { font-weight:700; font-size:13px; color:var(--red); white-space:nowrap; }
+  details.guide summary .tg::after { content:'Abrir'; } details.guide[open] summary .tg::after { content:'Cerrar'; }
+  .gbody { padding:0 22px 22px; display:grid; grid-template-columns:7fr 5fr; gap:18px; }
+  .rules { display:grid; grid-template-columns:1fr 1fr; gap:10px; align-content:start; }
+  .rule { background:var(--gray-100); border-radius:var(--r-md); padding:14px 16px; }
+  .rule .k { font-size:12px; color:var(--gray-500); font-weight:700; }
+  .rule h4 { margin:2px 0 6px; font-family:var(--display); font-weight:800; font-size:16px; }
+  .rule p { margin:0; font-size:13px; color:var(--gray-700); line-height:1.5; }
+  .rule code { background:var(--white); border-radius:5px; padding:1px 6px; font-size:12px; display:inline-block; margin:2px 2px 0 0; }
+  .builder { background:var(--black); color:var(--white); border-radius:var(--r-md); padding:18px; display:grid; gap:10px; align-content:start; }
+  .builder label { display:grid; gap:4px; font-size:12px; font-weight:700; color:var(--gray-300); }
+  .builder input, .builder select { width:100%; min-width:0; background:var(--graphite); color:var(--white); border:1px solid #3a3d44; border-radius:var(--r-sm); padding:9px 11px; font-size:14px; }
+  .builder input::placeholder { color:#8e929b; }
+  .builder input:focus, .builder select:focus { border-color:var(--red); outline:none; }
+  .builder .muted { color:var(--gray-300); font-size:12px; }
+  .out { background:var(--ink); border:1px dashed #3a3d44; color:#f3f3f4; border-radius:var(--r-sm); padding:10px 12px; font-family:ui-monospace, Menlo, monospace; font-size:12px; overflow-wrap:anywhere; min-height:44px; }
+  .builder .issues li { color:#ffb3b5; } .builder .issues li.warn { color:#ffd48a; } .builder .issues li.okl { color:#7ee2a8; }
+  .builder .copy { background:var(--red); color:var(--white); border:0; padding:8px 16px; font-size:13px; }
+  .builder .copy:hover { background:var(--red-600); color:var(--white); }
+
+  /* ===== Tabla ===== */
+  .card { grid-column:1 / -1; }
+  .toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px; }
+  .tabs { position:relative; display:flex; background:var(--gray-100); border-radius:999px; padding:4px; overflow-x:auto; scrollbar-width:none; }
+  .tabs .pill { position:absolute; top:4px; bottom:4px; left:0; background:var(--black); border-radius:999px; transition:transform .25s var(--ease); z-index:0; }
+  .tabs button { position:relative; z-index:1; border:0; background:none; padding:8px 14px; border-radius:999px; font-weight:700; font-size:13px; color:var(--gray-700); cursor:pointer; white-space:nowrap; transition:color .2s var(--ease); }
+  .tabs button.on { color:var(--white); }
+  .toolbar input#q { flex:1; min-width:200px; background:var(--gray-100); border:1px solid transparent; border-radius:999px; padding:9px 16px; }
+  .toolbar input#q:focus { background:var(--white); border-color:var(--gray-300); outline:none; }
+  .toolbar select, .filters select { background:var(--white); border:1px solid var(--gray-200); border-radius:var(--r-sm); padding:8px 10px; font-size:13px; }
+  .chk { display:flex; gap:8px; align-items:center; font-weight:600; font-size:13px; white-space:nowrap; cursor:pointer; }
+  .chk input { accent-color:var(--red); width:16px; height:16px; }
+  .filters { display:grid; grid-template-columns:repeat(7, minmax(0, 1fr)) auto; gap:8px; margin-bottom:12px; align-items:end; }
+  .filters label { display:flex; flex-direction:column; gap:4px; font-size:12px; color:var(--gray-500); font-weight:700; min-width:0; }
   .filters select { width:100%; text-overflow:ellipsis; }
-  .filters select.on { border-color:var(--brand); background:#fff5f5; color:#9f1239; font-weight:500; }
-  .chk { display:flex; gap:6px; align-items:center; color:var(--ink); white-space:nowrap; } .chk input { min-width:0; flex:none; }
-  .utm { display:block; font-family:ui-monospace,Menlo,monospace; font-size:.72rem; color:var(--muted); margin-top:4px; overflow-wrap:anywhere; }
-  .utm i { font-style:normal; color:#9ca3af; } .utm b { font-weight:500; color:#374151; }
-  .lnk { text-decoration:none; } .lnk:hover b, .lnk:hover .host { text-decoration:underline; }
-  .host { color:#1d4ed8; font-weight:600; }
-  .acts { display:flex; gap:6px; margin-top:4px; align-items:center; } .acts .copy { margin:0; text-decoration:none; }
-  .bad { display:inline-block; background:#fde8e9; color:#9f1239; border-radius:5px; font-size:.72rem; font-weight:600; padding:1px 7px; margin-left:6px; white-space:nowrap; }
-  .okb { display:inline-block; background:#dcfce7; color:#166534; border-radius:5px; font-size:.72rem; font-weight:600; padding:1px 7px; margin-left:6px; }
-  .issues { margin:6px 0 0; padding:0; list-style:none; font-size:.76rem; }
-  .issues li { color:#9f1239; } .issues li b { font-weight:600; }
-  .issues li.warn { color:#92400e; }
-  .wrn { display:inline-block; background:#fef3c7; color:#92400e; border-radius:5px; font-size:.72rem; font-weight:600; padding:1px 7px; margin-left:6px; white-space:nowrap; }
-  tr.det.warn td:first-child { box-shadow:inset 3px 0 0 #f59e0b; }
-  tr.det.err td:first-child { box-shadow:inset 3px 0 0 #e11d48; }
-  details.guide { background:var(--card); border:1px solid var(--line); border-radius:12px; margin-bottom:16px; }
-  details.guide summary { cursor:pointer; padding:14px 18px; font-weight:600; list-style:none; display:flex; justify-content:space-between; align-items:center; }
-  details.guide summary::after { content:'Mostrar ▾'; color:var(--muted); font-weight:400; font-size:.8rem; }
-  details.guide[open] summary::after { content:'Ocultar ▴'; }
-  .gbody { padding:0 18px 18px; display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-  .rules { display:grid; gap:10px; }
-  .rule { border:1px solid var(--line); border-radius:10px; padding:10px 12px; }
-  .rule .k { font-family:ui-monospace,Menlo,monospace; font-size:.75rem; color:var(--muted); }
-  .rule h4 { margin:0 0 4px; font-size:.9rem; } .rule p { margin:0; font-size:.8rem; color:#374151; }
-  .rule code { background:var(--soft); border-radius:4px; padding:0 4px; font-size:.78rem; }
-  .builder { display:grid; gap:8px; align-content:start; }
-  .builder label { display:grid; gap:3px; font-size:.75rem; color:var(--muted); font-weight:500; }
-  .builder input, .builder select { min-width:0; width:100%; }
-  .out { background:#111827; color:#e5e7eb; border-radius:8px; padding:10px 12px; font-family:ui-monospace,Menlo,monospace; font-size:.76rem; overflow-wrap:anywhere; min-height:44px; }
-  .nopage { font-size:.72rem; color:#9f1239; }
-  .canales { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
-  .cn { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; cursor:pointer; text-align:left; font:inherit; color:inherit; }
-  .cn:hover { border-color:#c7cbd1; } .cn.on { border-color:var(--brand); box-shadow:0 0 0 1px var(--brand) inset; }
-  .cn .h { display:flex; justify-content:space-between; align-items:baseline; } .cn .h b { font-size:1rem; } .cn .h span { color:var(--muted); font-size:.75rem; }
-  .cn .d { color:var(--muted); font-size:.75rem; margin:2px 0 10px; }
-  .cn { min-width:0; } .cn .nums { display:flex; gap:10px; flex-wrap:wrap; font-variant-numeric:tabular-nums; } .cn .nums div { font-size:.72rem; color:var(--muted); } .cn .nums b { display:block; font-size:1.1rem; color:var(--ink); }
-  .copy { border:1px solid var(--line); background:#fff; border-radius:5px; font-size:.7rem; padding:1px 6px; cursor:pointer; margin-left:6px; color:var(--muted); }
-  .ev { font-weight:700; } .ev.z { color:#c0c4cc; font-weight:400; }
+  .filters select.on { border-color:var(--red); background:var(--red-50); color:var(--red-600); font-weight:700; }
+  .clear { border:0; background:none; color:var(--red); font-weight:700; cursor:pointer; padding:8px 4px; white-space:nowrap; }
+  .clear:disabled { color:var(--gray-300); cursor:default; }
+  .count { color:var(--gray-500); font-size:13px; margin:0 0 8px; font-weight:600; }
+  .table-wrap { overflow-x:auto; margin:0 -22px; padding:0 22px; }
+  table { width:100%; border-collapse:collapse; }
+  th { text-align:right; font-weight:700; color:var(--gray-500); font-size:12px; padding:10px 8px; border-bottom:1px solid var(--gray-200); white-space:nowrap; }
+  td { text-align:right; padding:12px 8px; border-bottom:1px solid var(--gray-100); vertical-align:top; }
+  th.l, td.l { text-align:left; }
+  td:first-child { min-width:260px; }
+  tr.grp { cursor:pointer; transition:background .15s; } tr.grp:hover { background:var(--gray-100); }
+  .nm { display:flex; gap:8px; align-items:baseline; } .nm b { font-family:var(--display); font-weight:700; overflow-wrap:anywhere; }
+  .caret { flex:none; width:7px; height:7px; border-right:2px solid var(--gray-500); border-bottom:2px solid var(--gray-500); transform:rotate(-45deg); transition:transform .2s var(--ease); position:relative; top:-1px; }
+  tr.grp.open .caret { transform:rotate(45deg); }
+  .sub2 { color:var(--gray-500); font-size:12px; margin:4px 0 0 15px; display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  tr.det td { background:#fafafb; font-size:13px; }
+  tr.det td.l:first-child { padding-left:30px; width:58%; }
+  tr.det.err td:first-child { box-shadow:inset 2px 0 0 var(--red); }
+  tr.det.warn td:first-child { box-shadow:inset 2px 0 0 #e0a030; }
+  .tag { display:inline-block; padding:2px 8px; border-radius:6px; background:var(--gray-100); font-size:12px; margin:1px 3px 1px 0; white-space:nowrap; font-weight:600; }
+  .page { display:inline-block; min-width:140px; font-family:ui-monospace, Menlo, monospace; font-size:12px; color:var(--ink); overflow-wrap:anywhere; }
+  .term { color:var(--gray-500); font-size:12px; overflow-wrap:anywhere; }
+  .ev { font-weight:800; } .ev.z { color:var(--gray-300); font-weight:600; }
   th.ev1, th.ev2 { color:var(--ink); }
-  .clear { border:0; background:none; color:var(--brand); font:inherit; font-weight:500; cursor:pointer; padding:8px 4px; white-space:nowrap; }
-  .clear:disabled { color:#c0c4cc; cursor:default; }
-  .count { color:var(--muted); font-size:.8rem; margin:-6px 0 10px; }
-  .empty { padding:24px; text-align:center; color:var(--muted); }
-  footer { color:var(--muted); font-size:.78rem; text-align:center; margin-top:20px; }
-  @media (max-width:820px) { .dp-pop { position:fixed; left:8px; right:8px; top:70px; flex-direction:column; } .dp-presets { flex-direction:row; flex-wrap:wrap; border-right:0; border-bottom:1px solid var(--line); } .dp-months { flex-direction:column; } .dg { grid-template-columns:repeat(7, 1fr); } .gbody { grid-template-columns:1fr; } .canales { grid-template-columns:1fr 1fr; } .filters { grid-template-columns:1fr 1fr; } .kpis { grid-template-columns:repeat(2,1fr); } .table-wrap { overflow-x:auto; } .meta { text-align:left; } table { min-width:760px; } }
-  @media print { .toolbar, .filters { display:none; } tr.det { display:table-row !important; } }
+  .empty { padding:36px; text-align:center; color:var(--gray-500); }
+  .utm { display:block; font-family:ui-monospace, Menlo, monospace; font-size:11.5px; color:var(--gray-500); line-height:1.6; overflow-wrap:anywhere; }
+  .utm i { font-style:normal; color:#9a9ea6; } .utm b { font-weight:600; color:var(--gray-700); }
+  .lnk { text-decoration:none; } .lnk:hover b, .lnk:hover .host { text-decoration:underline; }
+  .host { color:var(--red-600); font-weight:700; }
+  .acts { display:flex; gap:6px; margin-top:6px; align-items:center; flex-wrap:wrap; }
+  .copy { border:1px solid var(--gray-200); background:var(--white); border-radius:999px; font-size:12px; font-weight:700; padding:3px 10px; cursor:pointer; color:var(--gray-700); text-decoration:none; transition:border-color .15s, color .15s; }
+  .copy:hover { border-color:var(--ink); color:var(--ink); }
+  .nopage { font-size:12px; color:var(--red-600); font-weight:600; }
+  .bad, .wrn, .okb { display:inline-flex; align-items:center; gap:5px; border-radius:999px; font-size:11.5px; font-weight:800; padding:2px 9px; white-space:nowrap; }
+  .bad::before, .wrn::before, .okb::before { content:''; width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .bad { background:var(--red-50); color:var(--red-600); } .wrn { background:var(--warn-50); color:var(--warn); } .okb { background:var(--ok-50); color:var(--ok); }
+  .issues { margin:8px 0 0; padding:0; list-style:none; font-size:12px; display:grid; gap:2px; }
+  .issues li { color:var(--red-600); } .issues li b { font-weight:800; } .issues li.warn { color:var(--warn); }
+
+  /* ===== Footer ===== */
+  .foot { background:var(--black); color:var(--gray-300); }
+  .foot-in { max-width:1320px; margin:0 auto; padding:28px 20px; display:grid; grid-template-columns:2fr 1fr 1fr; gap:24px; font-size:13px; }
+  .foot b { color:var(--white); font-family:var(--display); font-weight:800; font-size:15px; display:block; margin-bottom:6px; }
+  .foot a { color:var(--gray-300); text-decoration:none; display:block; margin:3px 0; } .foot a:hover { color:var(--white); }
+  .foot .dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#3ecf7a; margin-right:6px; }
+  .foot-bar { border-top:1px solid #23252a; }
+  .foot-bar div { max-width:1320px; margin:0 auto; padding:14px 20px; font-size:12px; color:var(--gray-500); display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+
+  /* ===== Carga ===== */
+  .skel { background:linear-gradient(90deg, var(--gray-100) 0, var(--gray-200) 50%, var(--gray-100) 100%); background-size:200% 100%; animation:sk 1.2s linear infinite; border-radius:var(--r-lg); min-height:130px; }
+  @keyframes sk { to { background-position:-200% 0; } }
+
+  /* ===== Responsive ===== */
+  @media (max-width:1100px) {
+    .t-hero { grid-column:1 / -1; grid-row:auto; }
+    .t-sm, .cn { grid-column:span 6; } .t-md { grid-column:1 / -1; }
+    .filters { grid-template-columns:repeat(4, minmax(0, 1fr)); }
+    .gbody { grid-template-columns:1fr; }
+  }
+  @media (max-width:720px) {
+    .top-in { height:auto; min-height:60px; flex-wrap:wrap; padding:10px 16px; gap:10px; }
+    .top nav { display:none; } .top .sp { display:none; } .dp { width:100%; } .dp-btn { width:100%; justify-content:center; }
+    .dp-pop { position:fixed; left:12px; right:12px; top:120px; flex-direction:column; max-height:calc(100dvh - 140px); overflow:auto; }
+    .dp-presets { flex-direction:row; flex-wrap:wrap; } .dp-months { flex-direction:column; } .dg { grid-template-columns:repeat(7, 1fr); }
+    main { padding:20px 12px 36px; } h1 { font-size:24px; } .intro .cmp { text-align:left; }
+    .bento { gap:10px; } .t-sm, .cn { grid-column:1 / -1; }
+    .t-hero .pair .v { font-size:40px; }
+    .rules { grid-template-columns:1fr; }
+    .filters { grid-template-columns:1fr 1fr; }
+    .table-wrap { margin:0 -16px; padding:0 16px; } table { min-width:760px; }
+    .tile { padding:18px 16px; }
+    .foot-in { grid-template-columns:1fr; }
+  }
+  @media (prefers-reduced-motion:reduce) { *, *::before { animation:none !important; transition:none !important; } }
+  @media print { .top, .foot, .toolbar, .filters, details.guide { display:none; } body { background:#fff; } tr.det { display:table-row !important; } }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="brand"><div class="logo">M</div>
-      <div><h1>Seguimiento de campañas (UTM)</h1><div class="sub">Qué UTM se usó, a dónde llevó y cuántas cotizaciones generó</div></div></div>
-    <div class="meta">
-      <div class="dp">
-        <button class="dp-btn" id="dp_btn"><span class="ic">📅</span><span id="dp_label"></span><span class="car">▾</span></button>
-        <div class="dp-pop" id="dp_pop" hidden>
-          <div class="dp-presets" id="dp_presets"></div>
-          <div class="dp-cal">
-            <div class="dp-nav"><button id="dp_prevm">‹</button><button id="dp_nextm">›</button></div>
-            <div class="dp-months" id="dp_months"></div>
-            <div class="dp-foot"><span id="dp_sel"></span><button id="dp_apply" class="dp-apply">Aplicar</button></div>
-          </div>
+<header class="top">
+  <div class="top-in">
+    <div class="brand"><div class="mark">M</div><div class="brand-t">Motomundo <span>Campañas</span></div></div>
+    <nav><a href="#resumen" class="on">Resumen</a><a href="#canales-sec">Canales</a><a href="#utms">UTMs</a><a href="#guide">Constructor</a></nav>
+    <div class="sp"></div>
+    <div class="dp">
+      <button class="dp-btn" id="dp_btn" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        <span id="dp_label">Cargando…</span><span class="car"></span></button>
+      <div class="dp-pop" id="dp_pop" role="dialog" aria-label="Elegir periodo" hidden>
+        <div class="dp-presets" id="dp_presets"></div>
+        <div class="dp-cal">
+          <div class="dp-nav"><button id="dp_prevm" aria-label="Mes anterior">‹</button><button id="dp_nextm" aria-label="Mes siguiente">›</button></div>
+          <div class="dp-months" id="dp_months"></div>
+          <div class="dp-foot"><span id="dp_sel"></span><button id="dp_apply" class="dp-apply">Aplicar</button></div>
         </div>
       </div>
-      <div style="margin-top:6px">Propiedad: <b id="prop"></b> · <span id="period"></span></div>
     </div>
-  </header>
+  </div>
+</header>
 
-  <div class="kpis" id="kpis"></div>
-
-  <div class="canales" id="canales"></div>
-
-  <details class="guide" id="guide">
-    <summary>Cómo construir una UTM</summary>
-    <div class="gbody">
-      <div class="rules" id="rules"></div>
-      <div class="builder">
-        <label>URL de destino<input id="b_url" value="https://www.motomundohn.com/cotizar-en-linea"></label>
-        <label>Fuente (utm_source)<input id="b_s" placeholder="Meta, Google, Base Clientes Claro…" value="Meta"></label>
-        <label>Medio (utm_medium)<select id="b_m"></select></label>
-        <label>Campaña (utm_campaign)<input id="b_c" placeholder="Genesis TacticaComercial Leads Centro"></label>
-        <label>Término (utm_term, opcional)<input id="b_t" placeholder="Centro Tegucigalpa"></label>
-        <label>Contenido (utm_content, opcional)<input id="b_x" placeholder="TTPremium_Zx-200l"></label>
-        <div class="muted" style="font-size:.74rem">Los espacios se convierten en "_", se quitan tildes y cada palabra empieza en mayúscula.</div>
-        <div class="out" id="b_out"></div>
-        <ul class="issues" id="b_issues"></ul>
-        <div><button class="copy" id="b_copy">copiar link</button></div>
-      </div>
-    </div>
-  </details>
-
-  <div class="card">
-    <div class="toolbar">
-      <div class="tabs" id="tabs">
-        <button data-v="g">Canal</button>
-        <button data-v="c" class="on">Campaña</button>
-        <button data-v="s">Fuente</button>
-        <button data-v="m">Medio</button>
-        <button data-v="t">Término</button>
-        <button data-v="x">Contenido (anuncio)</button>
-        <button data-v="p">Página de destino</button>
-      </div>
-      <input id="q" placeholder="Buscar en todo…">
-      <label class="chk"><input type="checkbox" id="only"> Solo con cotizaciones</label>
-      <select id="onlyBad"><option value="">Estado UTM: todas</option><option value="err">✕ Mal construidas</option><option value="warn">⚠ Con advertencias</option><option value="ok">✓ Correctas</option></select>
-    </div>
-    <div class="filters" id="filters"></div>
-    <div class="count" id="count"></div>
-    <div class="table-wrap"><table id="tbl"></table></div>
+<main>
+  <div class="intro" id="resumen">
+    <div><h1>Seguimiento de campañas</h1><p>Qué UTM se usó, a dónde llevó y cuántas cotizaciones generó.</p></div>
+    <div class="cmp"><b id="prop"></b><br><span id="period"></span></div>
   </div>
 
-  <footer>Fuente: Google Analytics 4 → Supabase · solo tráfico con utm_campaign · <span id="gen"></span></footer>
-</div>
+  <section class="bento">
+    <div id="kpis"><div class="tile skel t-hero"></div><div class="tile skel t-sm"></div><div class="tile skel t-sm"></div><div class="tile skel t-md"></div></div>
+    <div id="canales" aria-label="Canales"></div>
+
+    <details class="guide tile" id="guide">
+      <summary><div><h2>Constructor de UTM</h2><p>Arma el link con el estándar de Motomundo y valida cada campo antes de copiarlo.</p></div><span class="tg"></span></summary>
+      <div class="gbody">
+        <div class="rules" id="rules"></div>
+        <div class="builder">
+          <label>URL de destino<input id="b_url" value="https://www.motomundohn.com/cotizar-en-linea"></label>
+          <label>Fuente (utm_source)<input id="b_s" placeholder="Meta, Google, Base Clientes Claro…" value="Meta"></label>
+          <label>Medio (utm_medium)<select id="b_m"></select></label>
+          <label>Campaña (utm_campaign)<input id="b_c" placeholder="Genesis TacticaComercial Leads Centro"></label>
+          <label>Término (utm_term, opcional)<input id="b_t" placeholder="Centro Tegucigalpa"></label>
+          <label>Contenido (utm_content, opcional)<input id="b_x" placeholder="TTPremium Zx-200l"></label>
+          <div class="muted">Los espacios se convierten en "_", se quitan tildes y cada palabra empieza en mayúscula.</div>
+          <div class="out" id="b_out"></div>
+          <ul class="issues" id="b_issues"></ul>
+          <div><button class="copy" id="b_copy">Copiar link</button></div>
+        </div>
+      </div>
+    </details>
+
+    <div class="tile card" id="utms">
+      <div class="toolbar">
+        <div class="tabs" id="tabs">
+          <span class="pill" aria-hidden="true"></span>
+          <button data-v="g">Canal</button>
+          <button data-v="c" class="on">Campaña</button>
+          <button data-v="s">Fuente</button>
+          <button data-v="m">Medio</button>
+          <button data-v="t">Término</button>
+          <button data-v="x">Contenido</button>
+          <button data-v="p">Página de destino</button>
+        </div>
+        <input id="q" placeholder="Buscar campaña, término, página…" aria-label="Buscar">
+        <label class="chk"><input type="checkbox" id="only"> Solo con cotizaciones</label>
+        <select id="onlyBad" aria-label="Estado de la UTM"><option value="">Estado UTM: todas</option><option value="err">Mal construidas</option><option value="warn">Con advertencias</option><option value="ok">Correctas</option></select>
+      </div>
+      <div class="filters" id="filters"></div>
+      <div class="count" id="count"></div>
+      <div class="table-wrap"><table id="tbl"></table></div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot-in">
+    <div><b>Motomundo · Seguimiento de campañas</b>Datos de Google Analytics 4 (propiedad Motomundo - GA4), guardados en Supabase. Solo cuenta tráfico que llegó con utm_campaign.</div>
+    <div><b>Datos</b><span><i class="dot"></i><span id="gen">Sincronización diaria 8:00 a.m.</span></span><a href="#guide">Estándar de UTM</a></div>
+    <div><b>Eventos medidos</b>Cotiza_Producto<br>Cotización_Crédito</div>
+  </div>
+  <div class="foot-bar"><div><span>© Motomundo</span><span>Los usuarios de un rango son la suma de cada día; las cotizaciones son exactas.</span></div></div>
+</footer>
 
 <script>
 // ===== DATOS: se leen de Supabase vía /api/data (se sincronizan desde GA4 cada día a las 8:00 a.m.) =====
@@ -266,8 +404,8 @@ const nivel = iss => iss.some(i => i.lvl === 'err') ? 'err' : iss.length ? 'warn
 // Constructor: convierte "base clientes claro" en "Base_Clientes_Claro"
 const normalizar = v => v.trim().normalize('NFD').replace(/[̀-ͯ]/g, '')
   .split(/[\s_]+/).filter(Boolean).map(w => w[0].toUpperCase() + w.slice(1)).join('_');
-const issuesHtml = arr => `<ul class="issues">${arr.map(i => `<li class="${i.lvl}">${i.lvl === 'err' ? '✕' : '⚠'} <b>${i.f}:</b> ${esc(i.m)}</li>`).join('')}</ul>`;
-const BADGE = { err: n => `<span class="bad">✕ Mal construida</span>`, warn: n => `<span class="wrn">⚠ Advertencias · ${n}</span>`, ok: () => `<span class="okb">✓ Correcta</span>` };
+const issuesHtml = arr => `<ul class="issues">${arr.map(i => `<li class="${i.lvl}"><b>${i.f}:</b> ${esc(i.m)}</li>`).join('')}</ul>`;
+const BADGE = { err: n => `<span class="bad">Mal construida</span>`, warn: n => `<span class="wrn">Advertencias · ${n}</span>`, ok: () => `<span class="okb">Correcta</span>` };
 // Suma los datos diarios del rango elegido por UTM (campaña+fuente+medio+término+contenido+página)
 // Nota: en la muestra los usuarios se suman por día; en Vercel GA4 los devuelve exactos para el rango.
 let R = [], P = null;   // R = periodo elegido · P = periodo anterior (mismo largo, justo antes)
@@ -291,8 +429,8 @@ function dl(cur, prev) {
   if (!prev && !cur) return '';
   if (!prev) return '<span class="dl up">nuevo</span>';
   const v = (cur - prev) / prev;
-  if (Math.abs(v) < .005) return '<span class="dl eq">= 0%</span>';
-  return `<span class="dl ${v > 0 ? 'up' : 'dn'}">${v > 0 ? '▲' : '▼'} ${Math.abs(v * 100).toFixed(Math.abs(v) < .1 ? 1 : 0)}%</span>`;
+  if (Math.abs(v) < .005) return '<span class="dl eq">0%</span>';
+  return `<span class="dl ${v > 0 ? 'up' : 'dn'}">${Math.abs(v * 100).toFixed(Math.abs(v) < .1 ? 1 : 0)}%</span>`;
 }
 const DIMS = { g:'Canal', c:'Campaña', s:'Fuente', m:'Medio', t:'Término', x:'Contenido', p:'Página de destino' };
 const ORDER = ['g','c','s','m','t','x','p'];
@@ -327,8 +465,8 @@ const utmLink = r => {
   const pretty = utmParts(r).map(([k, v]) => `<i>${k}=</i><b>${esc(v)}</b>`).join('<i>&amp;</i>');
   return hasPage(r)
     ? `<a class="utm lnk" href="${esc(link(r))}" target="_blank" rel="noopener"><span class="host">${esc(r.h)}${esc(r.p)}</span><i>?</i>${pretty}</a>
-       <span class="acts"><a class="copy" href="${esc(link(r))}" target="_blank" rel="noopener">abrir ↗</a><button class="copy" data-utm="${esc(link(r))}">copiar link</button></span>`
-    : `<span class="utm">${pretty}</span><span class="acts"><span class="nopage">sin página de destino registrada</span><button class="copy" data-utm="${esc(qs(r))}">copiar UTM</button></span>`;
+       <span class="acts"><a class="copy" href="${esc(link(r))}" target="_blank" rel="noopener">Abrir</a><button class="copy" data-utm="${esc(link(r))}">Copiar link</button></span>`
+    : `<span class="utm">${pretty}</span><span class="acts"><span class="nopage">sin página de destino registrada</span><button class="copy" data-utm="${esc(qs(r))}">Copiar UTM</button></span>`;
 };
 
 // ---- Filtros: un desplegable por dimensión; cada uno solo ofrece valores compatibles con los demás ----
@@ -362,8 +500,8 @@ function draw() {
   $('count').textContent = `${G.length} resultado${G.length === 1 ? '' : 's'} · ${rows.length} UTMs · ${num(t1)} ${EV1} · ${num(t2)} ${EV2}`;
   $('tbl').innerHTML = `<thead><tr><th class="l">${DIMS[view]}</th><th class="l">${DIMS[side]}</th>${MH}</tr></thead><tbody>` +
     (G.length ? G.map((a, i) => `
-      <tr class="grp" data-i="${i}"><td class="l"><div class="nm"><span class="caret">▸</span><b>${fmtDim(view, a.key)}</b></div>
-          <div class="sub2">${a.rows.length} UTM${a.rows.length === 1 ? '' : 's'}${(e => e ? `<span class="bad">✕ ${e} mal construida${e === 1 ? '' : 's'}</span>` : '')(a.rows.filter(r => r.lv === 'err').length)}${(w => w ? `<span class="wrn">⚠ ${w} con advertencias</span>` : '')(a.rows.filter(r => r.lv === 'warn').length)}${a.rows.every(r => r.lv === 'ok') ? '<span class="okb">✓ todas correctas</span>' : ''}</div></td>
+      <tr class="grp" data-i="${i}"><td class="l"><div class="nm"><span class="caret"></span><b>${fmtDim(view, a.key)}</b></div>
+          <div class="sub2">${a.rows.length} UTM${a.rows.length === 1 ? '' : 's'}${(e => e ? `<span class="bad">${e} mal construida${e === 1 ? '' : 's'}</span>` : '')(a.rows.filter(r => r.lv === 'err').length)}${(w => w ? `<span class="wrn">${w} con advertencias</span>` : '')(a.rows.filter(r => r.lv === 'warn').length)}${a.rows.every(r => r.lv === 'ok') ? '<span class="okb">todas correctas</span>' : ''}</div></td>
         <td class="l">${tags(side, uniq(a.rows, r => r[side]))}</td>${metrics(a, PG.get(a.key))}</tr>
       ${a.rows.map(r => `<tr class="det ${r.lv}" data-p="${i}" hidden><td class="l">${utmHtml(r)}</td><td class="l">${fmtDim(side, r[side])}</td>${metrics(r, PK.get(r.k))}</tr>`).join('')}`).join('')
     : `<tr><td colspan="6" class="empty">Sin resultados con estos filtros</td></tr>`) + '</tbody>';
@@ -372,37 +510,68 @@ function drawCanales() {
   $('canales').innerHTML = CANALES.map(g => {
     const rs = R.filter(r => r.g === g), sm = f => rs.reduce((a, r) => a + f(r), 0);
     const ps = P ? P.filter(r => r.g === g) : [], pm = f => ps.reduce((a, r) => a + f(r), 0);
-    return `<button class="cn ${F.g === g ? 'on' : ''}" data-g="${g}"><div class="h"><b>${g}</b><span>${uniq(rs, r => r.c).length} campañas</span></div>
+    return `<button class="tile cn ${{Pauta:'', Directos:'', Redes:'', Otros:''}[g]} ${F.g === g ? 'on' : ''}" data-g="${g}" id="${g === 'Pauta' ? 'canales-sec' : ''}"><div class="h"><b>${g}</b><span>${uniq(rs, r => r.c).length} campañas</span></div>
       <div class="d">${CANAL_INFO[g]}</div>
-      <div class="nums">${[[r => r.e1, EV1], [r => r.e2, EV2], [r => r.u, 'Usuarios']].map(([f, l]) => `<div><b>${num(sm(f))}</b>${l}${dl(sm(f), pm(f))}</div>`).join('')}</div></button>`;
+      <div class="nums">${[[r => r.e1, 'Cotiza producto', EV1], [r => r.e2, 'Cotiza crédito', EV2], [r => r.u, 'Usuarios', 'Usuarios']].map(([f, l, t]) => `<div title="${t}"><b>${num(sm(f))}</b>${l}<br>${dl(sm(f), pm(f))}</div>`).join('')}</div></button>`;
   }).join('');
 }
 $('canales').onclick = e => { const b = e.target.closest('.cn'); if (!b) return; F.g = F.g === b.dataset.g ? '' : b.dataset.g; update(); };
 function update() { fillFilters(); drawCanales(); draw(); }
 $('tbl').onclick = e => {
   const cp = e.target.closest('.copy');
-  if (cp) { navigator.clipboard?.writeText(cp.dataset.utm); cp.textContent = 'copiado'; setTimeout(() => cp.textContent = 'copiar', 1200); return; }
+  if (cp) { navigator.clipboard?.writeText(cp.dataset.utm); cp.textContent = 'Copiado'; setTimeout(() => cp.textContent = 'Copiar', 1200); return; }
   const tr = e.target.closest('tr.grp'); if (!tr) return;
   tr.classList.toggle('open');
   document.querySelectorAll(`tr.det[data-p="${tr.dataset.i}"]`).forEach(d => d.hidden = !tr.classList.contains('open'));
 };
 $('tabs').onclick = e => { const b = e.target.closest('button'); if (!b) return;
-  view = b.dataset.v; [...$('tabs').children].forEach(x => x.classList.toggle('on', x === b)); draw(); };
+  view = b.dataset.v; [...$('tabs').querySelectorAll('button')].forEach(x => x.classList.toggle('on', x === b)); movePill(); draw(); };
+function movePill() { const b = $('tabs').querySelector('button.on'), p = $('tabs').querySelector('.pill'); p.style.width = b.offsetWidth + 'px'; p.style.transform = `translateX(${b.offsetLeft}px)`; }
+window.addEventListener('resize', movePill); document.fonts?.ready.then(movePill); movePill();
 $('q').oninput = draw; $('only').onchange = draw; $('onlyBad').onchange = draw;
 
 // Cabecera y KPIs
 const sum = f => R.reduce((s, r) => s + f(r), 0);
 $('prop').textContent = REPORT.property;
+function serieDiaria() {
+  const M = new Map();
+  for (let d = RANGO.from; d <= RANGO.to; d = addD(d, 1)) M.set(d, [0, 0]);
+  for (const [d, , , , , , , , , e1, e2] of D.r) { const v = M.get(d); if (v) { v[0] += e1; v[1] += e2; } }
+  return [...M.entries()];
+}
+function chartSvg() {
+  const S = serieDiaria(), n = S.length, max = Math.max(1, ...S.map(([, v]) => v[0] + v[1]));
+  const W = 600, H = 110, gap = n > 40 ? 1 : 3, bw = (W - gap * (n - 1)) / n;
+  const bars = S.map(([d, [a, b]], i) => {
+    const x = i * (bw + gap), ha = a / max * H, hb = b / max * H;
+    return `<g><title>${date(d)}: ${a} ${EV1} · ${b} ${EV2}</title>
+      <rect x="${x}" y="${H - ha - hb}" width="${bw}" height="${hb}" rx="2" fill="#ffffff"/>
+      <rect x="${x}" y="${H - ha}" width="${bw}" height="${ha}" rx="2" fill="#d71920"/></g>`;
+  }).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Cotizaciones por día">${bars}</svg>
+    <div class="ax"><span>${date(S[0][0])}</span><span>Cotizaciones por día · máx. ${num(max)}</span><span>${date(S[n - 1][0])}</span></div>`;
+}
 function drawKpis() {
   const ps = f => P ? P.reduce((s, r) => s + f(r), 0) : 0;
   const nc = rs => uniq(rs, r => r.c).length;
-  $('kpis').innerHTML = [
-    [EV1, sum(r => r.e1), ps(r => r.e1), 'veces accionado desde campañas'],
-    [EV2, sum(r => r.e2), ps(r => r.e2), 'veces accionado desde campañas'],
-    ['Usuarios con UTM', sum(r => r.u), ps(r => r.u), 'llegados por campañas'],
-    ['Campañas', nc(R), P ? nc(P.filter(r => r.u >= 5 || r.e1 || r.e2)) : 0, `${nc(R.filter(r => r.e1 + r.e2))} con cotizaciones`],
-    ['UTMs mal construidas', R.filter(r => r.lv === 'err').length, null, `${num(R.filter(r => r.lv === 'warn').length)} con advertencias · ${num(R.filter(r => r.lv === 'ok').length)} correctas de ${num(R.length)}`],
-  ].map(([l, v, p, s]) => `<div class="kpi"><div class="l">${l}</div><div class="v">${num(v)}${p === null ? '' : dl(v, p)}</div><div class="s">${s}</div></div>`).join('');
+  const e1 = sum(r => r.e1), e2 = sum(r => r.e2);
+  const bad = R.filter(r => r.lv === 'err').length, warn = R.filter(r => r.lv === 'warn').length, ok = R.filter(r => r.lv === 'ok').length, tot = R.length || 1;
+  $('kpis').innerHTML = `
+    <div class="tile t-hero">
+      <div class="l">Cotizaciones desde campañas</div>
+      <div class="pair">
+        <div><div class="v">${num(e1)}</div><div class="n"><i class="sw" style="background:#d71920"></i>${EV1} ${dl(e1, ps(r => r.e1))}</div></div>
+        <div><div class="v">${num(e2)}</div><div class="n"><i class="sw" style="background:#fff"></i>${EV2} ${dl(e2, ps(r => r.e2))}</div></div>
+      </div>
+      <div class="chart">${chartSvg()}</div>
+    </div>
+    <div class="tile t-sm t-red"><div class="l">Usuarios con UTM</div><div class="v">${num(sum(r => r.u))}${dl(sum(r => r.u), ps(r => r.u))}</div><div class="s">llegaron por campañas</div></div>
+    <div class="tile t-sm t-graph"><div class="l">Campañas activas</div><div class="v">${num(nc(R))}${P ? dl(nc(R), nc(P.filter(r => r.u >= 5 || r.e1 || r.e2))) : ''}</div><div class="s">${nc(R.filter(r => r.e1 + r.e2))} generaron cotizaciones</div></div>
+    <div class="tile t-md"><div class="l">Calidad de las UTMs usadas</div>
+      <div class="v">${num(bad)} <span style="font-size:15px;font-weight:700;color:var(--gray-500)">mal construidas de ${num(R.length)}</span></div>
+      <div class="stack"><i style="width:${bad / tot * 100}%;background:var(--red)"></i><i style="width:${warn / tot * 100}%;background:#e0a030"></i><i style="width:${ok / tot * 100}%;background:var(--ok)"></i></div>
+      <div class="legend"><span><i style="background:var(--red)"></i>${num(bad)} mal construidas</span><span><i style="background:#e0a030"></i>${num(warn)} con advertencias</span><span><i style="background:var(--ok)"></i>${num(ok)} correctas</span></div>
+    </div>`;
 }
 
 // ===== Selector de intervalo de tiempo (un solo control) =====
@@ -427,10 +596,10 @@ async function aplicarRango(from, to, preset) {
   const n = days(from, to) + 1, pTo = addD(from, -1), pFrom = addD(pTo, -(n - 1));
   const name = PRESETS.find(p => p[0] === preset)?.[1];
   $('dp_label').innerHTML = `${name ? `<b>${name}</b> · ` : ''}${date(from)} – ${date(to)}`;
-  $('period').textContent = pFrom >= REPORT.minDate ? `vs ${date(pFrom)} – ${date(pTo)}` : 'sin periodo anterior para comparar';
-  $('dp_label').insertAdjacentHTML('beforeend', ' <span class="muted">· cargando…</span>');
+  $('period').textContent = pFrom >= REPORT.minDate ? `Comparado con ${date(pFrom)} – ${date(pTo)}` : 'Sin periodo anterior para comparar';
+  $('dp_label').insertAdjacentHTML('beforeend', ' · cargando…');
   try { await asegurarDatos(pFrom < REPORT.minDate ? from : pFrom, to); }
-  catch (e) { $('kpis').innerHTML = `<div class="kpi" style="grid-column:1/-1"><b class="err">Error al cargar datos:</b> ${esc(e.message)}</div>`; return; }
+  catch (e) { $('kpis').innerHTML = `<div class="tile" style="grid-column:1/-1"><b class="err">Error al cargar datos:</b> ${esc(e.message)}</div>`; return; }
   $('dp_label').innerHTML = `${name ? `<b>${name}</b> · ` : ''}${date(from)} – ${date(to)}`;
   cargarRango(from, to, pFrom, pTo); drawKpis(); update();
 }
@@ -481,20 +650,20 @@ function build() {
     .filter(([, x]) => x).map(([k, x]) => k + '=' + encodeURIComponent(x)).join('&');
   const url = v('b_url'); const full = url ? url + (url.includes('?') ? '&' : '?') + qs : qs;
   $('b_out').textContent = full;
-  $('b_issues').innerHTML = iss.length ? iss.map(i => `<li class="${i.lvl}">${i.lvl === 'err' ? '✕' : '⚠'} <b>${i.f}:</b> ${esc(i.m)}</li>`).join('') : '<li style="color:#166534">✓ La UTM cumple el estándar</li>';
+  $('b_issues').innerHTML = iss.length ? iss.map(i => `<li class="${i.lvl}"><b>${i.f}:</b> ${esc(i.m)}</li>`).join('') : '<li class="okl">La UTM cumple el estándar</li>';
   $('b_copy').dataset.utm = full;
 }
 ['b_url','b_s','b_m','b_c','b_t','b_x'].forEach(id => $(id).oninput = build);
-$('b_copy').onclick = e => { navigator.clipboard?.writeText(e.target.dataset.utm); e.target.textContent = 'copiado'; setTimeout(() => e.target.textContent = 'copiar link', 1200); };
+$('b_copy').onclick = e => { navigator.clipboard?.writeText(e.target.dataset.utm); e.target.textContent = 'Copiado'; setTimeout(() => e.target.textContent = 'Copiar link', 1200); };
 build();
 (async () => {
   try {
     const m = await (await fetch('/api/data?meta=1')).json();
     if (m.error || !m.maxDate) throw new Error(m.error || 'Todavía no hay datos sincronizados');
     REPORT.minDate = m.minDate; REPORT.maxDate = AYER = m.maxDate; calMonth = AYER.slice(0, 7);
-    $('gen').textContent = m.lastSync ? 'datos actualizados el ' + new Date(m.lastSync).toLocaleString('es-MX') : '';
+    $('gen').textContent = m.lastSync ? 'Actualizado ' + new Date(m.lastSync).toLocaleString('es-MX', { dateStyle:'medium', timeStyle:'short' }) : 'Sin sincronizar';
     aplicarRango(...PRESETS[4][2](), 'mes');
-  } catch (e) { $('kpis').innerHTML = `<div class="kpi" style="grid-column:1/-1"><b class="err">Error:</b> ${esc(e.message)}</div>`; }
+  } catch (e) { $('kpis').innerHTML = `<div class="tile" style="grid-column:1/-1"><b class="err">Error:</b> ${esc(e.message)}</div>`; }
 })();
 </script>
 </body>
