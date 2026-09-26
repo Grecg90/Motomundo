@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Campañas UTM · Motomundo</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300..800&display=swap" rel="stylesheet">
 <!-- Íconos: Phosphor (regular + fill) -->
@@ -465,6 +468,10 @@
   @media (max-width:1100px) { .u-form, .u-link { grid-column:1 / -1; } .acard { grid-column:span 6; } }
   @media (max-width:860px) { .auth { grid-template-columns:1fr; } .auth-art { display:none; } }
   @media (max-width:720px) { .acard { grid-column:1 / -1; } .um-btn .nm-t { display:none; } .ntf-stack { right:12px; bottom:12px; } }
+  .brand .logo { height:30px; width:auto; display:block; }
+  .brand-sep { width:1px; height:24px; background:#3a3d44; }
+  .brand .brand-t { font-weight:600; color:var(--gray-300); }
+  @media (max-width:720px) { .brand .logo { height:24px; } .brand-sep, .brand .brand-t { display:none; } }
 </style>
 
 </head>
@@ -473,7 +480,7 @@
 <div class="auth" id="auth" hidden>
   <div class="auth-art">
     <div class="grid"></div>
-    <div class="brand"><div class="mark">M</div><div class="brand-t">Motomundo <span>Campañas</span></div></div>
+    <div class="brand"><img class="logo" src="/logo-motomundo.svg" alt="Motomundo" style="height:38px"><span class="brand-sep"></span><span class="brand-t">Campañas</span></div>
     <div style="position:relative">
       <h2>Cada UTM, cada cotización, en un solo lugar.</h2>
       <p>Construye links con el estándar de Motomundo y mide lo que generan en Google Analytics 4.</p>
@@ -487,7 +494,7 @@
 <div id="app" hidden>
 <header class="top">
   <div class="top-in">
-    <a class="brand" href="#/reporte"><div class="mark">M</div><div class="brand-t">Motomundo <span>Campañas</span></div></a>
+    <a class="brand" href="#/reporte" aria-label="Motomundo Campañas, inicio"><img class="logo" src="/logo-motomundo.svg" alt="Motomundo"><span class="brand-sep"></span><span class="brand-t">Campañas</span></a>
     <div class="seg dark" id="nav" role="tablist" aria-label="Secciones">
       <span class="pill" aria-hidden="true"></span>
       <button data-r="reporte" role="tab"><i class="ph ph-chart-bar"></i>Reporte</button>
@@ -1505,8 +1512,8 @@ const UC = Dropdown($('u_canal'), { options: CANAL_OPTS, value:'', block:true, s
 $('u_canal_hint').textContent = 'opcional';
 function inviteText(name, link, type = 'invite') {
   return type === 'invite'
-    ? `Hola ${name || ''}, te creé un usuario en Motomundo Campañas. Entra a este enlace para crear tu contraseña: ${link}`
-    : `Hola ${name || ''}, este es tu enlace para crear una contraseña nueva en Motomundo Campañas: ${link}`;
+    ? `Hola ${name || ''}, te creé un usuario en Motomundo Campañas. Entra a este enlace para crear tu contraseña: ${link}\n\nImportante: el enlace vence en 24 horas y es de un solo uso. La contraseña debe tener mínimo 8 caracteres, con mayúsculas, minúsculas y números.`
+    : `Hola ${name || ''}, este es tu enlace para crear una contraseña nueva en Motomundo Campañas: ${link}\n\nImportante: el enlace vence en 24 horas y es de un solo uso. La contraseña debe tener mínimo 8 caracteres, con mayúsculas, minúsculas y números.`;
 }
 function showLink({ name, email, link, type = 'invite', emailed, uid }) {
   const t = inviteText(name, link, type);
@@ -1514,6 +1521,7 @@ function showLink({ name, email, link, type = 'invite', emailed, uid }) {
     <h2 style="color:#fff">${esc(name || email)}</h2>
     <p style="margin:0;color:var(--gray-300);line-height:1.5">${emailed ? `<b style="color:#7ee2a8">Correo enviado a ${esc(email)}.</b> ` : ''}Con este enlace ${type === 'invite' ? 'crea' : 'restablece'} su contraseña (escribiéndola dos veces). Es de un solo uso.</p>
     <div class="out">${esc(link)}</div>
+    <div class="msg info" style="background:var(--graphite);color:var(--gray-300)"><i class="ph ph-info"></i><span>El enlace vence en <b style="color:#fff">24 horas</b>. La contraseña debe tener <b style="color:#fff">mínimo 8 caracteres</b>, con mayúsculas, minúsculas y números.</span></div>
     <div class="actions" style="margin-top:0">
       <button class="btn btn-red" data-copy="${esc(link)}"><i class="ph ph-copy"></i>Copiar enlace</button>
       ${uid ? `<button class="btn btn-ghost-dark" data-resend="${uid}"><i class="ph ph-envelope-simple"></i>${emailed ? 'Reenviar correo' : 'Enviar por correo'}</button>` : ''}
