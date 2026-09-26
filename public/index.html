@@ -901,7 +901,7 @@ function agg(from, to) {
     if (!r) { const v = i => T[i] || '(not set)'; r = { k, c:v(c), s:v(s), m:v(m), t:v(t), x:v(x), h:T[h], p:v(p), u:0, e1:0, e2:0 }; M.set(k, r); }
     r.u += u; r.e1 += e1; r.e2 += e2;
   }
-  return [...M.values()].map(r => { r.g = canal(r.s, r.m); r.iss = validar(r); r.lv = nivel(r.iss); return r; });
+  return enriquecer([...M.values()].map(r => { r.g = canal(r.s, r.m); r.iss = validar(r); r.lv = nivel(r.iss); return r; }));
 }
 function dl(cur, prev) {
   if (!P) return '';
@@ -911,9 +911,23 @@ function dl(cur, prev) {
   if (Math.abs(v) < .005) return '<span class="dl eq"><i class="ph ph-equals"></i>0%</span>';
   return `<span class="dl ${v > 0 ? 'up' : 'dn'}"><i class="ph-fill ${v > 0 ? 'ph-caret-up' : 'ph-caret-down'}"></i>${Math.abs(v * 100).toFixed(Math.abs(v) < .1 ? 1 : 0)}%</span>`;
 }
-const DIMS = { g:'Canal', c:'Campaña', s:'Fuente', m:'Medio', t:'Término', x:'Contenido', p:'Página de destino' };
-const DIM_IC = { g:'ph-broadcast', c:'ph-flag', s:'ph-plug', m:'ph-shuffle', t:'ph-map-pin', x:'ph-image-square', p:'ph-browser' };
-const ORDER = ['g','c','s','m','t','x','p'];
+// Dimensiones compartidas por el reporte y el constructor: mismo orden, nombre e ícono en ambos
+const DIMS = { g:'Canal', c:'Campaña', z:'Zona', s:'Fuente', m:'Medio', t:'Término', x:'Contenido', p:'Página', a:'Autor' };
+const DIM_IC = { g:'ph-broadcast', c:'ph-flag', z:'ph-map-trifold', s:'ph-plug', m:'ph-shuffle', t:'ph-map-pin', x:'ph-image-square', p:'ph-browser', a:'ph-user' };
+const ORDER = ['g','c','z','s','m','t','x','p','a'];
+// Zona y autor: si la UTM se creó en el constructor se toman de ahí; si no, la zona se deduce del final del nombre de la campaña
+const ZONAS_ALL = ['Centro', 'Norte', 'Litoral', 'Sur', 'Oriente', 'Occidente', 'Nacional'];
+const zonaDeCampana = c => { const w = (c || '').replace(/_+$/, '').split('_').pop().toLowerCase(); return ZONAS_ALL.find(z => z.toLowerCase() === w) || ''; };
+const linkKey = (c, s, m, t, x) => [c, s, m, t || '(not set)', x || '(not set)'].join('|');
+let LINK_IDX = new Map();
+function enriquecer(rows) {
+  for (const r of rows || []) {
+    const l = LINK_IDX.get(linkKey(r.c, r.s, r.m, r.t, r.x));
+    r.z = l?.zone || zonaDeCampana(r.c) || 'Sin zona';
+    r.a = l ? (l.created_by_name || 'Sin nombre') : 'Sin registrar';
+  }
+  return rows;
+}
 function group(rows, key) {
   const g = new Map();
   for (const r of rows) {
@@ -1004,7 +1018,7 @@ $('clear').onclick = () => { ORDER.forEach(d => F[d] = ''); estado = ''; FE.set(
 $('q').oninput = () => { draw(); $('clear').disabled = false; };
 $('only').onchange = () => { draw(); fillFilters(); };
 
-const GB = Seg($('groupBy'), ORDER.map(d => [d, DIMS[d] === 'Página de destino' ? 'Página' : DIMS[d], DIM_IC[d]]), view, v => { view = v; draw(); });
+const GB = Seg($('groupBy'), ORDER.map(d => [d, DIMS[d], DIM_IC[d]]), view, v => { view = v; draw(); });
 Seg($('viewMode'), null, mode, v => { mode = v; draw(); });
 
 const fmtDim = (d, v) => d === 'p' ? `<span class="page">${esc(v)}</span>` : d === 't' || d === 'x' ? `<span class="term">${esc(v)}</span>` : esc(v);
@@ -1282,7 +1296,7 @@ async function start() {
   if (!location.hash || /^#\/(login|recuperar|crear-contrasena)/.test(location.hash)) location.hash = '#/reporte';
   route();
   if (STARTED) return; STARTED = true;
-  if (can.crear()) loadLinks(); else LINKS = [];
+  loadLinks();
   subscribeRealtime();
   try {
     const q1 = await sb.from('ga4_utm_daily').select('date').order('date', { ascending: true }).limit(1);
@@ -1395,6 +1409,8 @@ async function loadLinks() {
   const { data, error } = await sb.from('utm_links').select('*').order('updated_at', { ascending: false });
   if (error) { LINKS = []; $('lib').innerHTML = `<div class="empty"><i class="ph ph-plugs"></i><b>No se pudieron cargar las UTMs guardadas</b><span>${esc(error.message)}</span></div>`; return; }
   LINKS = data;
+  LINK_IDX = new Map(LINKS.map(l => [linkKey(l.campaign, l.source, l.medium, l.term, l.content), l]));
+  enriquecer(R); enriquecer(P); if (R.length) { fillFilters(); draw(); }
   $('libCount').textContent = num(LINKS.length);
   $('dl_s').innerHTML = uniq(LINKS, l => l.source).map(v => `<option value="${esc(v)}">`).join('');
   $('dl_c').innerHTML = uniq(LINKS, l => l.campaign).map(v => `<option value="${esc(v)}">`).join('');
@@ -1405,27 +1421,31 @@ function gaFor(l) {
   const rs = R.filter(r => r.c === l.campaign && r.s === l.source && r.m === l.medium && r.t === t && r.x === x);
   return rs.length ? rs.reduce((a, r) => ({ u: a.u + r.u, e1: a.e1 + r.e1, e2: a.e2 + r.e2 }), { u:0, e1:0, e2:0 }) : null;
 }
-// Filtros de la biblioteca
-const LF = { canal:'', medium:'', zone:'', author:'', estado:'' };
-const lvOf = l => nivel(validar({ s: l.source, m: l.medium, c: l.campaign, t: l.term }));
-const LFD = {
-  canal: Dropdown($('lf_pills'), { label:'Canal', options:[], value:'', search:false, onChange: v => { LF.canal = v; drawLib(); } }),
-  medium: Dropdown($('lf_pills'), { label:'Medio', options:[], value:'', search:false, onChange: v => { LF.medium = v; drawLib(); } }),
-  zone: Dropdown($('lf_pills'), { label:'Zona', options:[], value:'', search:false, onChange: v => { LF.zone = v; drawLib(); } }),
-  author: Dropdown($('lf_pills'), { label:'Creada por', options:[], value:'', onChange: v => { LF.author = v; drawLib(); } }),
-  estado: Dropdown($('lf_pills'), { label:'Estado', options:ESTADOS, value:'', search:false, onChange: v => { LF.estado = v; drawLib(); } }),
+// Filtros y agrupación de la biblioteca: mismas dimensiones y orden que el reporte
+const pathOf = u => { try { return new URL(u).pathname || '/'; } catch { return u; } };
+const LV = {   // valor de cada dimensión para una UTM guardada
+  g: l => l.canal || canal(l.source, l.medium), c: l => l.campaign, z: l => l.zone || 'Sin zona', s: l => l.source, m: l => l.medium,
+  t: l => l.term || 'Sin término', x: l => l.content || 'Sin contenido', p: l => pathOf(l.url), a: l => l.created_by_name || 'Sin nombre',
 };
+const LF = Object.fromEntries([...ORDER, 'estado'].map(d => [d, '']));
+const lvOf = l => nivel(validar({ s: l.source, m: l.medium, c: l.campaign, t: l.term }));
+const LFD = Object.fromEntries(ORDER.map(d => [d, Dropdown($('lf_pills'), { label: DIMS[d], options: [], value: '', onChange: v => { LF[d] = v; drawLib(); } })]));
+LFD.estado = Dropdown($('lf_pills'), { label:'Estado UTM', options:ESTADOS, value:'', search:false, onChange: v => { LF.estado = v; drawLib(); } });
+const libMatch = (l, skip) => ORDER.every(d => d === skip || !LF[d] || LV[d](l) === LF[d]);
 function fillLibFilters() {
-  const opt = (arr, f) => [{ v:'', l:'Todas' }, ...uniq(arr, f).filter(v => v !== undefined).sort().map(v => ({ v, l: v || 'Sin zona', m: num(arr.filter(x => f(x) === v).length) }))];
-  LFD.canal.setOptions(opt(LINKS, l => l.canal)); LFD.medium.setOptions(opt(LINKS, l => l.medium));
-  LFD.zone.setOptions(opt(LINKS, l => l.zone)); LFD.author.setOptions(opt(LINKS, l => l.created_by_name || '—'));
+  ORDER.forEach(d => {
+    const rows = LINKS.filter(l => libMatch(l, d)), vals = uniq(rows, LV[d]).sort((x, y) => x.localeCompare(y, 'es'));
+    LFD[d].setOptions([{ v:'', l:'Todas', m: vals.length }, ...vals.map((v, i) => ({ v, l: v, m: num(rows.filter(l => LV[d](l) === v).length), sep: i === 0 }))]);
+    LFD[d].set(LF[d]);
+  });
 }
 $('lf_mine').onchange = () => drawLib();
 $('lq').oninput = () => drawLib();
 $('lf_clear').onclick = () => { Object.keys(LF).forEach(k => { LF[k] = ''; LFD[k].set(''); }); $('lq').value = ''; $('lf_mine').checked = false; drawLib(); };
-const LG_KEY = { canal: l => l.canal || canal(l.source, l.medium), campaign: l => l.campaign, zone: l => l.zone || 'Sin zona', medium: l => l.medium, author: l => l.created_by_name || '—' };
-const LG_IC = { canal: g => CANAL_INFO[g]?.[1] || 'ph-broadcast', campaign: () => 'ph-flag', zone: () => 'ph-map-trifold', medium: () => 'ph-shuffle', author: () => 'ph-user' };
-Seg($('libGroup'), [['canal', 'Canal', 'ph-broadcast'], ['campaign', 'Campaña', 'ph-flag'], ['zone', 'Zona', 'ph-map-trifold'], ['medium', 'Medio', 'ph-shuffle'], ['author', 'Autor', 'ph-user']], libGroup, v => { libGroup = v; drawLib(); });
+const LG_KEY = LV;
+const LG_IC = Object.fromEntries(ORDER.map(d => [d, k => d === 'g' ? (CANAL_INFO[k]?.[1] || DIM_IC.g) : DIM_IC[d]]));
+libGroup = 'g';
+Seg($('libGroup'), ORDER.map(d => [d, DIMS[d], DIM_IC[d]]), libGroup, v => { libGroup = v; drawLib(); });
 Seg($('libView'), null, libView, v => { libView = v; drawLib(); });
 const ago = s => { const d = (Date.now() - new Date(s)) / 864e5; return d < 1 ? 'hoy' : d < 2 ? 'ayer' : `hace ${Math.floor(d)} días`; };
 function libActions(l, u) {
@@ -1454,14 +1474,14 @@ function drawLib() {
   if (!LINKS) return;
   const q = $('lq').value.toLowerCase(), mine = $('lf_mine').checked;
   const ls = LINKS.filter(l => (!q || [l.campaign, l.source, l.medium, l.term, l.content, l.url, l.note, l.zone, l.created_by_name].some(v => (v || '').toLowerCase().includes(q)))
-    && (!LF.canal || l.canal === LF.canal) && (!LF.medium || l.medium === LF.medium) && (LF.zone === '' || l.zone === LF.zone)
-    && (!LF.author || (l.created_by_name || '—') === LF.author) && (!LF.estado || lvOf(l) === LF.estado) && (!mine || l.created_by === ME.id));
+    && libMatch(l) && (!LF.estado || lvOf(l) === LF.estado) && (!mine || l.created_by === ME.id));
+  fillLibFilters();
   $('lf_clear').disabled = !Object.values(LF).some(Boolean) && !q && !mine;
   if (!LINKS.length) return swap($('lib'), `<div class="empty"><i class="ph ph-link-simple-break"></i><b>Todavía no hay UTMs guardadas</b><span>Arma la primera arriba y pulsa "Guardar UTM".</span></div>`);
   if (!ls.length) return swap($('lib'), `<div class="empty"><i class="ph ph-funnel-x"></i><b>Ninguna UTM coincide con los filtros</b></div>`);
   const kf = LG_KEY[libGroup], M = new Map();
   ls.forEach(l => { const k = kf(l); (M.get(k) || M.set(k, []).get(k)).push(l); });
-  const keys = libGroup === 'canal' ? [...CANALES.filter(k => M.has(k)), ...[...M.keys()].filter(k => !CANALES.includes(k))] : [...M.keys()].sort((a, b) => M.get(b).length - M.get(a).length);
+  const keys = libGroup === 'g' ? [...CANALES.filter(k => M.has(k)), ...[...M.keys()].filter(k => !CANALES.includes(k))] : [...M.keys()].sort((a, b) => M.get(b).length - M.get(a).length);
   if (libView === 'table') {
     swap($('lib'), `<div class="table-wrap"><table><thead><tr><th class="l">Campaña</th><th class="l">Fuente / medio</th><th class="l">Zona · término · contenido</th><th class="l">Creada por</th><th class="l">Estado</th><th>Usuarios</th><th>${EV1}</th><th>${EV2}</th><th></th></tr></thead><tbody>${keys.map(k =>
       `<tr><td class="l" colspan="9" style="background:var(--gray-100);font-weight:600"><i class="ph ${LG_IC[libGroup](k)}" style="color:var(--red)"></i> ${esc(k)} <span class="muted">· ${M.get(k).length}</span></td></tr>` +
