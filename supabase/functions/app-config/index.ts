@@ -60,6 +60,18 @@ Deno.serve(async (req) => {
           if (addr !== curAddr) changes.mail_from = { antes: curAddr || '(predeterminado)', ahora: addr || '(predeterminado)' };
         }
       }
+      // Mapa de canales: { "m:<medio>": canal, "s:<fuente>": canal }
+      if (body.channel_map !== undefined) {
+        const cm = body.channel_map, CAN = ['Pauta', 'Directos', 'Redes', 'Otros'];
+        if (!cm || typeof cm !== 'object' || Array.isArray(cm)) return json({ error: 'Mapa de canales inválido' }, 400);
+        const clean: Record<string, string> = {};
+        for (const [k, v] of Object.entries(cm)) {
+          if (!/^[ms]:.{1,80}$/.test(k) || !CAN.includes(String(v))) return json({ error: `Mapa de canales inválido en ${k}` }, 400);
+          clean[k] = String(v);
+        }
+        if (Object.keys(clean).length > 400) return json({ error: 'Demasiadas reglas en el mapa' }, 400);
+        if (JSON.stringify(clean) !== JSON.stringify(st.channel_map || {})) { patch.channel_map = clean; changes.channel_map = { antes: `${Object.keys(st.channel_map || {}).length} reglas`, ahora: `${Object.keys(clean).length} reglas` }; }
+      }
       if (Object.keys(patch).length) {
         const { error } = await sb.from('app_settings').update({ ...patch, updated_at: new Date().toISOString(), updated_by: me.id }).eq('id', 1);
         if (error) throw error;

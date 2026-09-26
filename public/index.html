@@ -169,7 +169,7 @@
   @keyframes sk { to { background-position:-200% 0; } }
 
   /* Canales */
-  .cn { grid-column:span 3; text-align:left; border:0; transition:transform .2s var(--ease), box-shadow .2s var(--ease); }
+  .cn { grid-column:span 3; text-align:left; border:0; display:flex; flex-direction:column; justify-content:flex-start; transition:transform .2s var(--ease), box-shadow .2s var(--ease); }
   .cn:hover { transform:translateY(-2px); }
   .cn:active { transform:translateY(0) scale(.99); }
   .cn.on { box-shadow:0 0 0 2px var(--red), var(--shadow); }
@@ -265,6 +265,9 @@
   .gcard .gm b { display:block; font-size:20px; font-weight:700; color:var(--ink); line-height:1.1; }
   .gcard.xl .gm b { color:var(--white); font-size:26px; } .gcard.xl .gm div, .gcard.xl .rank { color:var(--gray-300); }
   .gcard.xl .dl.up { color:#7ee2a8; } .gcard.xl .dl.dn { color:#ff9296; }
+  .share-l { display:flex; justify-content:space-between; font-size:11.5px; font-weight:600; color:var(--gray-500); margin:12px 0 5px; } .share-l b { color:var(--ink); font-weight:700; }
+  .gcard.xl .share-l b { color:var(--white); } .gcard.xl .share-l span { color:var(--gray-300); }
+  .cn .share { height:6px; border-radius:999px; background:var(--gray-100); overflow:hidden; } .cn .share i { display:block; height:100%; background:var(--red); border-radius:999px; transition:width .5s var(--ease); }
   .gcard .share { height:6px; border-radius:999px; background:var(--gray-100); overflow:hidden; }
   .gcard .share i { display:block; height:100%; background:var(--red); border-radius:999px; }
   .gcard.xl .share { background:var(--graphite-2); }
@@ -342,7 +345,15 @@
   .ctl-lab { display:flex; align-items:center; gap:6px; font-weight:700; font-size:12px; color:var(--gray-500); text-transform:uppercase; letter-spacing:.04em; white-space:nowrap; flex:none; }
   .fbar .lab, .lfilters .lab { text-transform:uppercase; letter-spacing:.04em; font-size:12px; color:var(--gray-500); }
   .only-m { display:none !important; }
-  .fline { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:0 0 12px; }
+  .fline { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:0 0 14px; padding:8px; background:var(--gray-100); border-radius:var(--r-md); transition:border-radius .2s; }
+  .fline:has(+ .fsheet.on) { border-radius:var(--r-md) var(--r-md) 0 0; margin-bottom:0; }
+  .fline + .fsheet.on { border-radius:0 0 var(--r-md) var(--r-md); border-top:1px solid var(--gray-200); padding-top:12px; }
+  .fline > .btn, .fline .search, .fline .sw, .fline .fchip, .fline .clear { height:38px; }
+  .fline > .btn { background:var(--white); border-color:var(--white); box-shadow:0 1px 2px rgba(13,14,16,.06); padding:0 14px; }
+  .fline .sw { background:var(--white); border-radius:999px; padding:0 14px 0 8px; box-shadow:0 1px 2px rgba(13,14,16,.06); }
+  .fline .search { background:var(--white); box-shadow:0 1px 2px rgba(13,14,16,.06); flex:0 1 340px; min-width:200px; }
+  .fline .search:focus-within { border-color:var(--ink); }
+  .fline .clear { padding:0 10px; }
   .fline .sp { flex:1; }
   .fbtn[aria-expanded="true"] { border-color:var(--ink); color:var(--ink); } .fbtn .cr { transition:transform .2s var(--ease); } .fbtn[aria-expanded="true"] .cr { transform:rotate(180deg); }
   .fchips { display:contents; }
@@ -385,6 +396,37 @@
   .sk-row { height:44px; margin-bottom:8px; border-radius:10px; }
   .loading #kpis .tile, .loading #canales .tile, .loading #out { opacity:.55; transition:opacity .2s; }
 
+  /* ===== Mapa de canales (mapa mental) ===== */
+  .mm-tile .card-h h2 { display:flex; align-items:center; gap:8px; }
+  .mm-wrap { overflow-x:auto; padding:6px 2px 4px; }
+  .mm-tile.closed .mm-wrap, .mm-tile.closed .mm-edit-bar { display:none; }
+  .mm-tile.closed .card-h { margin-bottom:0; }
+  .mm, .mm-br { display:flex; align-items:center; }
+  .mm { min-width:max-content; }
+  .mm-kids { display:flex; flex-direction:column; gap:8px; padding-left:34px; position:relative; }
+  .mm-kids::before { content:''; position:absolute; left:0; top:50%; width:17px; border-top:2px solid var(--gray-200); }
+  .mm-kids > .mm-br { position:relative; }
+  .mm-kids > .mm-br::before { content:''; position:absolute; left:-17px; top:50%; width:17px; border-top:2px solid var(--gray-200); }
+  .mm-kids > .mm-br::after { content:''; position:absolute; left:-17px; top:0; bottom:-8px; border-left:2px solid var(--gray-200); }
+  .mm-kids > .mm-br:first-child::after { top:50%; } .mm-kids > .mm-br:last-child::after { bottom:50%; } .mm-kids > .mm-br:only-child::after { display:none; }
+  .mm-n { display:flex; align-items:center; gap:10px; border-radius:14px; padding:10px 14px; white-space:nowrap; position:relative; z-index:1; }
+  .mm-n small { display:block; font-size:11.5px; font-weight:600; color:var(--gray-500); margin-top:1px; }
+  .mm-n b { font-weight:700; }
+  .mm-root { background:var(--black); color:var(--white); padding:14px 18px; font-size:15px; } .mm-root small { color:var(--gray-300); }
+  .mm-canal { background:var(--red); color:var(--white); min-width:170px; font-size:15px; } .mm-canal small { color:rgba(255,255,255,.8); } .mm-canal > i { font-size:20px; }
+  .mm-canal.c-Directos { background:var(--graphite); } .mm-canal.c-Redes { background:#3a3d44; } .mm-canal.c-Otros { background:var(--gray-200); color:var(--ink); } .mm-canal.c-Otros small { color:var(--gray-500); }
+  .mm-medio { background:var(--white); border:1px solid var(--gray-200); min-width:150px; font-family:var(--mono); font-size:12.5px; }
+  .mm-medio b { font-family:var(--font); }
+  .mm-kids.mm-leafs { flex-direction:row; flex-wrap:wrap; gap:6px; max-width:520px; padding-left:34px; align-content:center; }
+  .mm-kids.mm-leafs > .mm-br::before, .mm-kids.mm-leafs > .mm-br::after { display:none; }
+  .mm-f { background:var(--gray-100); padding:6px 10px; border-radius:999px; font-size:12px; font-weight:600; color:var(--gray-700); gap:6px; }
+  .mm-f em { font-style:normal; color:var(--gray-500); font-weight:500; }
+  .mm-f.more { background:transparent; color:var(--gray-500); }
+  .mm-sel { border:1px solid var(--gray-300); background:var(--white); border-radius:8px; font-size:12px; font-weight:600; padding:3px 6px; color:var(--ink); font-family:var(--font); }
+  .mm-n.moved { box-shadow:0 0 0 2px #f5b800; }
+  .mm-edit-bar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:10px 12px; background:#fff6d6; border-radius:var(--r-md); margin-bottom:12px; font-size:13px; color:var(--gray-700); }
+  .mm-edit-bar .sp { flex:1; }
+
   /* ===== Footer ===== */
   .foot { background:var(--black); color:var(--gray-300); }
   .foot-in { max-width:1320px; margin:0 auto; padding:30px 20px; display:grid; grid-template-columns:2fr 1fr 1fr; gap:24px; font-size:13px; line-height:1.6; }
@@ -404,7 +446,7 @@
     .b-form, .b-prev { grid-column:1 / -1; }
     .rules { grid-template-columns:1fr 1fr; }
   }
-  @media (max-width:1440px) { .top .hl-btn .hl-t, .top .dp-btn .lbl-long { display:none; } .top .hl-btn { padding:8px; } .top-in { gap:12px; } }
+  @media (max-width:1440px) { .top .hl-btn .hl-t { display:none; } .top .hl-btn { padding:8px; } .top-in { gap:12px; } }
   @media (max-width:1180px) { .top #nav button { padding:8px 11px; } }
   @media (max-width:1040px) { .top #nav button i { display:none; } }
   @media (max-width:860px) {
@@ -501,10 +543,12 @@
   @keyframes ntfOut { to { opacity:0; transform:translateX(24px); } }
   .ntf .ic { width:36px; height:36px; border-radius:10px; display:grid; place-items:center; background:var(--red); color:var(--white); font-size:18px; }
   .ntf .ic.dark { background:var(--black); } .ntf .ic.warn { background:var(--warn-50); color:var(--warn); }
-  .ntf.t-bad, .ntf.t-warn, .ntf.t-ok { border-left:4px solid; }
-  .ntf.t-bad { border-color:var(--red); background:#fff5f5; } .ntf.t-bad .ic { background:var(--red); color:#fff; } .ntf.t-bad .bar { background:var(--red); }
-  .ntf.t-warn { border-color:#e0a100; background:#fffbeb; } .ntf.t-warn .ic { background:#f5b800; color:var(--black); } .ntf.t-warn .bar { background:#e0a100; }
-  .ntf.t-ok { border-color:#15803d; background:#f0fdf4; } .ntf.t-ok .ic { background:#16a34a; color:#fff; } .ntf.t-ok .bar { background:#16a34a; }
+  .ntf.t-bad, .ntf.t-ok, .ntf.t-dk { color:#fff; } .ntf.t-bad b, .ntf.t-ok b, .ntf.t-dk b { color:#fff; }
+  .ntf.t-bad p, .ntf.t-ok p, .ntf.t-dk p, .ntf.t-bad time, .ntf.t-ok time, .ntf.t-dk time, .ntf.t-bad p b, .ntf.t-ok p b { color:rgba(255,255,255,.88) !important; }
+  .ntf.t-bad .ibtn, .ntf.t-ok .ibtn, .ntf.t-dk .ibtn { color:rgba(255,255,255,.8); }
+  .ntf.t-bad .ic, .ntf.t-ok .ic, .ntf.t-dk .ic { background:rgba(255,255,255,.18); color:#fff; } .ntf.t-bad .bar, .ntf.t-ok .bar, .ntf.t-dk .bar { background:rgba(255,255,255,.55); }
+  .ntf.t-bad { background:var(--red); } .ntf.t-ok { background:#15a150; } .ntf.t-dk { background:var(--black); }
+  .ntf.t-warn { background:#ffc21a; color:var(--black); } .ntf.t-warn p, .ntf.t-warn time { color:rgba(13,14,16,.78); } .ntf.t-warn .ic { background:rgba(13,14,16,.12); color:var(--black); } .ntf.t-warn .bar { background:rgba(13,14,16,.4); } .ntf.t-warn .ibtn { color:rgba(13,14,16,.7); }
   .ntf b { display:block; font-weight:600; font-size:13.5px; } .ntf p { margin:2px 0 0; color:var(--gray-700); font-size:13px; line-height:1.4; overflow-wrap:anywhere; }
   .ntf time { display:block; font-size:11.5px; color:var(--gray-500); margin-top:6px; }
   .ntf .bar { position:absolute; left:0; bottom:0; height:3px; background:var(--red); animation:ntfBar linear forwards; }
@@ -670,6 +714,24 @@
         <div class="tile t-md"><div class="sk sk-l"></div><div class="sk sk-v" style="width:35%"></div><div class="sk sk-s" style="width:100%;height:8px"></div></div>
       </div>
       <div class="contents" id="canales"><div class="tile cn"><div class="sk sk-l"></div><div class="sk sk-s" style="width:60%"></div><div class="sk sk-v" style="width:90%;height:34px"></div></div><div class="tile cn"><div class="sk sk-l"></div><div class="sk sk-s" style="width:60%"></div><div class="sk sk-v" style="width:90%;height:34px"></div></div><div class="tile cn"><div class="sk sk-l"></div><div class="sk sk-s" style="width:60%"></div><div class="sk sk-v" style="width:90%;height:34px"></div></div><div class="tile cn"><div class="sk sk-l"></div><div class="sk sk-s" style="width:60%"></div><div class="sk sk-v" style="width:90%;height:34px"></div></div></div>
+      <div class="tile t-full mm-tile" id="mapa">
+        <div class="card-h">
+          <h2><i class="ph ph-tree-structure" style="color:var(--red)"></i> Mapa de canales</h2>
+          <div class="toolbar">
+            <span class="muted" style="font-size:12.5px">Canal → Medio → Fuente · usuarios del periodo</span>
+            <button class="btn btn-ghost" id="mm_edit" data-need="admin" hidden><i class="ph ph-pencil-simple"></i>Editar agrupación</button>
+            <button class="btn btn-ghost" id="mm_toggle" aria-expanded="true"><i class="ph ph-caret-up"></i><span>Ocultar</span></button>
+          </div>
+        </div>
+        <div class="mm-edit-bar" id="mm_bar" hidden>
+          <i class="ph ph-info"></i><span>Cambia el canal de cada medio o fuente. Una regla por fuente manda sobre la del medio. Los cambios aplican a todo el reporte.</span>
+          <span class="sp"></span>
+          <button class="btn btn-ghost" id="mm_reset"><i class="ph ph-arrow-counter-clockwise"></i>Restaurar automático</button>
+          <button class="btn btn-ghost" id="mm_cancel">Cancelar</button>
+          <button class="btn btn-red" id="mm_save"><i class="ph ph-floppy-disk"></i>Guardar agrupación</button>
+        </div>
+        <div class="mm-wrap"><div class="mm" id="mm"></div></div>
+      </div>
       <div class="tile card" id="report">
         <div class="card-h">
           <h2>Detalle por UTM</h2>
@@ -688,6 +750,7 @@
         <div class="fline">
           <button class="btn btn-ghost fbtn" data-sheet="fbar" aria-controls="fbar" aria-expanded="false"><i class="ph ph-funnel-simple"></i>Filtros<span class="fc" id="fc"></span><i class="ph ph-caret-down cr"></i></button>
           <span class="fchips" id="fchips"></span>
+          <button class="clear" id="clear_all" hidden><i class="ph ph-x-circle"></i>Limpiar todo</button>
           <span class="sp"></span>
           <label class="sw"><input type="checkbox" id="only"><span class="tr"></span>Solo con cotizaciones</label>
           <label class="search"><i class="ph ph-magnifying-glass"></i><input id="q" placeholder="Buscar campaña, término, página…" aria-label="Buscar"></label>
@@ -768,6 +831,7 @@
         <div class="fline">
           <button class="btn btn-ghost fbtn" data-sheet="lfilters" aria-controls="lfilters" aria-expanded="false"><i class="ph ph-funnel-simple"></i>Filtros<span class="fc" id="lfc"></span><i class="ph ph-caret-down cr"></i></button>
           <span class="fchips" id="lfchips"></span>
+          <button class="clear" id="lf_clear_all" hidden><i class="ph ph-x-circle"></i>Limpiar todo</button>
           <span class="sp"></span>
           <label class="sw"><input type="checkbox" id="lf_mine"><span class="tr"></span>Solo mías</label>
           <label class="search"><i class="ph ph-magnifying-glass"></i><input id="lq" placeholder="Buscar UTM…" aria-label="Buscar UTM"></label>
@@ -928,7 +992,7 @@
   <div class="foot-in">
     <div><b>Motomundo · Seguimiento de campañas</b>Datos de Google Analytics 4 (propiedad Motomundo - GA4), guardados en Supabase. Solo cuenta tráfico que llegó con utm_campaign.</div>
     <div><b>Datos</b><span class="live"><i></i><span id="gen">Sincronización diaria 8:00 a.m. y 2:00 p.m.</span></span><a href="#/utms" data-need="crear"><i class="ph ph-link-simple"></i>Constructor de UTMs</a></div>
-    <div><b>Eventos medidos</b>Cotiza_Producto<br>Cotización_Crédito</div>
+    <div><b>Cotizaciones medidas</b>Producto Web<br>Cotizador Web</div>
   </div>
   <div class="foot-bar"><div><span class="copy"><img class="logo" src="/logo-motomundo.png" alt="Motomundo"><span>© 2026 Motomundo · ILP Motos · Todos los derechos reservados</span></span><span>Los usuarios de un rango son la suma de cada día; las cotizaciones son exactas.</span></div></div>
 </footer>
@@ -943,13 +1007,20 @@ const sb = supabase.createClient(window.APP_CONFIG.supabaseUrl, window.APP_CONFI
 // ============================================================
 const $ = id => document.getElementById(id);
 const num = n => Math.round(n).toLocaleString('es-MX');
+const shortRange = (a, b) => {   // "1–24 sep" · "28 ago – 3 sep" · con año solo si no es el actual
+  const A = new Date(a + 'T12:00'), B = new Date(b + 'T12:00'), m = d => d.toLocaleDateString('es-MX', { month:'short' }).replace('.', '');
+  const y = B.getFullYear() !== new Date().getFullYear() ? ' ' + B.getFullYear() : '';
+  if (a === b) return `${B.getDate()} ${m(B)}${y}`;
+  return A.getMonth() === B.getMonth() && A.getFullYear() === B.getFullYear() ? `${A.getDate()}–${B.getDate()} ${m(B)}${y}` : `${A.getDate()} ${m(A)} – ${B.getDate()} ${m(B)}${y}`;
+};
+const pct = x => (x * 100).toFixed(x < .1 ? 1 : 0) + '%';
 const date = s => new Date(s + 'T12:00').toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' });
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uniq = (rows, f) => [...new Set(rows.map(f))];
 const iso = d => d.toISOString().slice(0, 10);
 const addD = (s, n) => { const d = new Date(s + 'T12:00Z'); d.setUTCDate(d.getUTCDate() + n); return iso(d); };
 const days = (a, b) => Math.round((new Date(b + 'T12:00Z') - new Date(a + 'T12:00Z')) / 864e5);
-const EV1 = 'Cotiza_Producto', EV2 = 'Cotización_Crédito';
+const EV1 = 'Producto Web', EV2 = 'Cotizador Web';
 function toast(msg, err) {
   document.querySelector('.toast')?.remove();
   const t = document.createElement('div'); t.className = 'toast' + (err ? ' err' : '');
@@ -1039,7 +1110,14 @@ addEventListener('scroll', e => { if (ddOpen && !ddOpen.pop.contains(e.target)) 
 // ============================================================
 const CANALES = ['Pauta', 'Directos', 'Redes', 'Otros'];
 const CANAL_INFO = { Pauta:['Paid social / search · Meta', 'ph-megaphone-simple'], Directos:['SMS · WhatsApp · Email · QR', 'ph-paper-plane-tilt'], Redes:['Organic social', 'ph-users-three'], Otros:['Sin clasificar', 'ph-question'] };
-function canal(s, m) {
+// Agrupación configurable (mapa de canales): primero la regla por fuente, luego por medio y al final la regla automática
+let CMAP = {};
+function canal(s, m, map = CMAP) {
+  if (map['s:' + s]) return map['s:' + s];
+  if (map['m:' + m]) return map['m:' + m];
+  return canalAuto(s, m);
+}
+function canalAuto(s, m) {
   const t = `${s} ${m}`.toLowerCase();
   if (/sms|whats|wapp|e-?mail|\bmail\b|\bqr\b/.test(t)) return 'Directos';
   if (/paid|meta|cpc|ppc|\bads?\b/.test(t)) return 'Pauta';
@@ -1200,13 +1278,15 @@ function drawKpis() {
     </div>`;
 }
 function drawCanales() {
+  const TU = R.reduce((a, r) => a + r.u, 0) || 1;
   $('canales').innerHTML = CANALES.map(g => {
     const rs = R.filter(r => r.g === g), sm = f => rs.reduce((a, r) => a + f(r), 0);
     const ps = P ? P.filter(r => r.g === g) : [], pm = f => ps.reduce((a, r) => a + f(r), 0);
     return `<button class="tile cn ${F.g === g ? 'on' : ''}" data-g="${g}" aria-pressed="${F.g === g}">
       <div class="h"><b><i class="ph ${CANAL_INFO[g][1]}"></i>${g}</b><span>${uniq(rs, r => r.c).length} campañas</span></div>
       <div class="d">${CANAL_INFO[g][0]}</div>
-      <div class="nums">${[[r => r.e1, 'Cotiza producto', EV1], [r => r.e2, 'Cotiza crédito', EV2], [r => r.u, 'Usuarios', 'Usuarios']].map(([f, l, t]) => `<div title="${t}"><b>${num(sm(f))}</b>${l}<br>${dl(sm(f), pm(f))}</div>`).join('')}</div></button>`;
+      <div class="nums">${[[r => r.e1, EV1, EV1], [r => r.e2, EV2, EV2], [r => r.u, 'Usuarios', 'Usuarios']].map(([f, l, t]) => `<div title="${t}"><b>${num(sm(f))}</b>${l}<br>${dl(sm(f), pm(f))}</div>`).join('')}</div>
+      <div class="share-l"><span>Participación en usuarios</span><b>${pct(sm(r => r.u) / TU)}</b></div><div class="share"><i style="width:${Math.max(sm(r => r.u) ? 2 : 0, sm(r => r.u) / TU * 100)}%"></i></div></button>`;
   }).join('');
 }
 $('canales').addEventListener('click', e => { const b = e.target.closest('.cn'); if (!b) return; F.g = F.g === b.dataset.g ? '' : b.dataset.g; update(); });
@@ -1215,7 +1295,7 @@ $('canales').addEventListener('click', e => { const b = e.target.closest('.cn');
 // Reporte: filtros (desplegables propios), agrupación y vista Tabla / Bento
 // ============================================================
 const F = Object.fromEntries(ORDER.map(d => [d, '']));
-let view = 'c', mode = 'table', estado = '';
+let view = 'c', mode = 'bento', estado = '';
 const matches = (r, skip) => ORDER.every(d => d === skip || !F[d] || r[d] === F[d]);
 const FD = {};
 ORDER.forEach(d => {
@@ -1231,11 +1311,13 @@ function fillFilters() {
     FD[d].set(F[d]);
   });
   $('clear').disabled = !ORDER.some(d => F[d]) && !estado && !$('only').checked && !$('q').value;
+  $('clear_all').hidden = $('clear').disabled;
   const act = ORDER.filter(d => F[d]);
   $('fc').textContent = (act.length + !!estado) || '';
   $('fchips').innerHTML = act.map(d => `<button class="fchip" data-fx="${d}" title="Quitar filtro"><span>${DIMS[d]}</span><b>${esc(F[d])}</b><i class="ph ph-x"></i></button>`).join('')
     + (estado ? `<button class="fchip" data-fx="estado"><span>Estado</span><b>${esc(ESTADOS.find(e => e.v === estado).l)}</b><i class="ph ph-x"></i></button>` : '');
 }
+$('clear_all').onclick = () => $('clear').click();
 $('clear').onclick = () => { ORDER.forEach(d => F[d] = ''); estado = ''; FE.set(''); $('q').value = ''; $('only').checked = false; update(); };
 $('q').oninput = () => { draw(); $('clear').disabled = false; };
 $('fchips').addEventListener('click', e => { const b = e.target.closest('[data-fx]'); if (!b) return; if (b.dataset.fx === 'estado') { estado = ''; FE.set(''); } else F[b.dataset.fx] = ''; update(); });
@@ -1286,8 +1368,8 @@ function draw() {
       const side = view === 'p' ? 'c' : 'p', tops = group(a.rows, side).slice(0, i === 0 ? 4 : 3);
       return `<button class="gcard ${cls}" data-k="${esc(a.key)}" title="Ver en tabla">
         <div class="gt"><b>${esc(a.key)}</b><span class="rank">#${i + 1}</span></div>
-        <div class="gm"><div><b>${num(a.e1)}</b>Cotiza producto ${dl(a.e1, p.e1)}</div><div><b>${num(a.e2)}</b>Cotiza crédito ${dl(a.e2, p.e2)}</div><div><b>${num(a.u)}</b>Usuarios ${dl(a.u, p.u)}</div></div>
-        <div class="share" title="${(a.u / tu * 100).toFixed(1)}% de los usuarios"><i style="width:${Math.max(2, a.u / tu * 100)}%"></i></div>
+        <div class="gm"><div><b>${num(a.e1)}</b>${EV1} ${dl(a.e1, p.e1)}</div><div><b>${num(a.e2)}</b>${EV2} ${dl(a.e2, p.e2)}</div><div><b>${num(a.u)}</b>Usuarios ${dl(a.u, p.u)}</div></div>
+        <div class="share-l"><span>Participación en usuarios</span><b>${pct(a.u / tu)}</b></div><div class="share" title="${pct(a.u / tu)} de los usuarios del periodo"><i style="width:${Math.max(2, a.u / tu * 100)}%"></i></div>
         <div class="tops">${tops.map(t => `<div><span>${esc(t.key)}</span><b>${num(t.e1 + t.e2) || num(t.u) + ' usu.'}</b></div>`).join('')}</div>
         <div class="foot-row"><span class="tag">${a.rows.length} UTM${a.rows.length === 1 ? '' : 's'}</span>${stateBadges(a.rows)}</div></button>`;
     }).join('')}</div>`);
@@ -1311,7 +1393,65 @@ $('out').addEventListener('click', e => {
   document.querySelectorAll(`#out tr.det[data-p="${tr.dataset.i}"]`).forEach(d => d.hidden = !open);
 });
 $('out').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('tr.grp')) { e.preventDefault(); e.target.click(); } });
-function update() { fillFilters(); drawCanales(); draw(); if (LINKS) drawLib(); }
+function update() { fillFilters(); drawCanales(); drawMapa(); draw(); if (LINKS) drawLib(); }
+
+// ---------- Mapa de canales: Canal → Medio → Fuente (editable por el admin) ----------
+let MM_EDIT = null;   // mapa en edición (copia de CMAP) o null
+const CAN_IC = g => CANAL_INFO[g]?.[1] || 'ph-circle';
+function drawMapa() {
+  const map = MM_EDIT || CMAP, rows = R, tot = rows.reduce((a, r) => a + r.u, 0);
+  const cot = rs => rs.reduce((a, r) => a + r.e1 + r.e2, 0), us = rs => rs.reduce((a, r) => a + r.u, 0);
+  const sel = (key, cur) => MM_EDIT ? `<select class="mm-sel" data-mk="${esc(key)}" aria-label="Canal">${CANALES.map(c => `<option ${c === cur ? 'selected' : ''}>${c}</option>`).join('')}</select>` : '';
+  const byC = new Map(CANALES.map(c => [c, []]));
+  rows.forEach(r => byC.get(canal(r.s, r.m, map))?.push(r));
+  const meta = rs => `<small>${num(us(rs))} usuarios · ${num(cot(rs))} cot.</small>`;
+  const canales = [...byC].filter(([, rs]) => rs.length);
+  $('mm').innerHTML = !rows.length ? '<div class="muted">Sin datos en este periodo.</div>' : `
+    <div class="mm-n mm-root"><i class="ph ph-megaphone"></i><div><b>Campañas</b>${meta(rows)}</div></div>
+    <div class="mm-kids">${canales.map(([c, rs]) => {
+      const medios = [...group(rs, 'm')].sort((a, b) => b.u - a.u);
+      return `<div class="mm-br"><div class="mm-n mm-canal c-${c}"><i class="ph ${CAN_IC(c)}"></i><div><b>${c}</b><small>${tot ? pct(us(rs) / tot) : '0%'} · ${num(us(rs))} usu. · ${num(cot(rs))} cot.</small></div></div>
+        <div class="mm-kids">${medios.map(md => {
+          const fs = [...group(md.rows, 's')].sort((a, b) => b.u - a.u), top = fs.slice(0, 5);
+          const mk = 'm:' + md.key, moved = MM_EDIT && (MM_EDIT[mk] || null) !== (CMAP[mk] || null);
+          return `<div class="mm-br"><div class="mm-n mm-medio ${moved ? 'moved' : ''}"><div><b>${esc(md.key)}</b>${meta(md.rows)}</div>${sel(mk, canal('', md.key, map))}</div>
+            <div class="mm-kids mm-leafs">${top.map(f => {
+              const sk = 's:' + f.key, fm = MM_EDIT && (MM_EDIT[sk] || null) !== (CMAP[sk] || null);
+              return `<div class="mm-br"><span class="mm-n mm-f ${fm ? 'moved' : ''}">${esc(f.key)} <em>${num(f.u)}</em>${sel(sk, canal(f.key, md.key, map))}</span></div>`;
+            }).join('')}${fs.length > 5 ? `<div class="mm-br"><span class="mm-n mm-f more">+${fs.length - 5} fuentes</span></div>` : ''}</div></div>`;
+        }).join('')}</div></div>`;
+    }).join('')}</div>`;
+}
+$('mm').addEventListener('change', e => {
+  const s = e.target.closest('[data-mk]'); if (!s || !MM_EDIT) return;
+  const k = s.dataset.mk, [t, v] = [k.slice(0, 2), k.slice(2)];
+  // Si coincide con lo que daría la regla automática (o la del medio), no hace falta guardar una regla
+  const rest = { ...MM_EDIT }; delete rest[k];
+  const auto = t === 'm:' ? canal('', v, rest) : canal(v, s.closest('.mm-leafs').previousElementSibling.querySelector('b').textContent, rest);
+  if (s.value === auto) delete MM_EDIT[k]; else MM_EDIT[k] = s.value;
+  drawMapa();
+});
+const mmMode = on => { MM_EDIT = on ? { ...CMAP } : null; $('mm_bar').hidden = !on; $('mm_edit').hidden = on || !can.admin(); drawMapa(); };
+$('mm_edit').onclick = () => { $('mapa').classList.remove('closed'); mmMode(true); };
+$('mm_cancel').onclick = () => mmMode(false);
+$('mm_reset').onclick = () => { MM_EDIT = {}; drawMapa(); };
+$('mm_save').onclick = async () => {
+  $('mm_save').disabled = true;
+  try {
+    const r = await cfgCall({ action: 'save', channel_map: MM_EDIT });
+    CMAP = r.settings.channel_map || {};
+    [R, P || []].forEach(rs => rs.forEach(x => { x.g = canal(x.s, x.m); }));
+    mmMode(false); update();
+    notify({ icon:'ph-tree-structure', tone:'ok', title:'Agrupación guardada', body:'El reporte ya usa el nuevo mapa de canales.' });
+  } catch (e) { toast('No se pudo guardar: ' + e.message, true); }
+  $('mm_save').disabled = false;
+};
+$('mm_toggle').onclick = () => {
+  const c = $('mapa').classList.toggle('closed');
+  $('mm_toggle').setAttribute('aria-expanded', !c); $('mm_toggle').innerHTML = c ? '<i class="ph ph-caret-down"></i><span>Mostrar</span>' : '<i class="ph ph-caret-up"></i><span>Ocultar</span>';
+  try { localStorage.setItem('mm_closed', c ? '1' : ''); } catch {}
+};
+try { if (localStorage.getItem('mm_closed')) $('mm_toggle').click(); } catch {}
 $('q').addEventListener('input', fillFilters); $('only').addEventListener('change', fillFilters);
 
 // ============================================================
@@ -1333,7 +1473,7 @@ async function aplicarRango(from, to, preset) {
   RANGO = { from, to, preset };
   const n = days(from, to) + 1, pTo = addD(from, -1), pFrom = addD(pTo, -(n - 1));
   const name = PRESETS.find(p => p[0] === preset)?.[1];
-  const label = `${name ? `<b>${name}</b><span class="lbl-long"> · ${date(from)} – ${date(to)}</span>` : `<b>${date(from)} – ${date(to)}</b>`}`;
+  const label = `${name ? `<b>${name}</b><span class="lbl-long"> · ${shortRange(from, to)}</span>` : `<b>${shortRange(from, to)}</b>`}`;
   $('dp_label').innerHTML = label + ' <span class="muted">· cargando…</span>';
   if (R.length) $('view-reporte').classList.add('loading');
   $('period').textContent = pFrom >= REPORT.minDate ? `Comparado con ${date(pFrom)} – ${date(pTo)}` : 'Sin periodo anterior para comparar';
@@ -1403,7 +1543,7 @@ const logAct = (action, summary = '', detail = {}) => sb.rpc('log_activity', { p
 // Notificaciones flotantes tipo tarjeta
 // ============================================================
 function notify({ icon = 'ph-bell-simple', tone = '', title, body = '', ms = 7000 }) {
-  const n = document.createElement('div'); n.className = 'ntf' + (['bad','warn','ok'].includes(tone) ? ' t-' + tone : ''); n.setAttribute('role', 'status');
+  const n = document.createElement('div'); n.className = 'ntf' + (['bad','warn','ok'].includes(tone) ? ' t-' + tone : tone === 'dark' ? ' t-dk' : ''); n.setAttribute('role', 'status');
   n.innerHTML = `<div class="ic ${tone}"><i class="ph ${icon}"></i></div><div><b>${esc(title)}</b>${body ? `<p>${body}</p>` : ''}<time>${new Date().toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit' })}</time></div>
     <button class="ibtn" aria-label="Cerrar"><i class="ph ph-x"></i></button><span class="bar" style="animation-duration:${ms}ms"></span>`;
   const close = () => { n.classList.add('out'); setTimeout(() => n.remove(), 250); };
@@ -1527,11 +1667,13 @@ async function start() {
   subscribeRealtime(); pushState().catch(() => {});
   if (can.admin()) runHealth(true);
   try {
-    const [q1, q2, q3] = await Promise.all([
+    const [qm, q1, q2, q3] = await Promise.all([
+      sb.rpc('channel_map'),
       sb.from('ga4_utm_daily').select('date').order('date', { ascending: true }).limit(1),
       sb.from('ga4_utm_daily').select('date').order('date', { ascending: false }).limit(1),
       sb.from('ga4_sync_log').select('ran_at').order('ran_at', { ascending: false }).limit(1),
     ]);
+    CMAP = qm.data || {};
     const min = q1.data?.[0]?.date, max = q2.data?.[0]?.date;
     if (!max) throw new Error(q1.error?.message || 'Todavía no hay datos sincronizados');
     REPORT.minDate = min; REPORT.maxDate = AYER = max; calMonth = AYER.slice(0, 7);
@@ -1628,14 +1770,26 @@ const form = () => ({ url: $('b_url').value.trim(), source: normalizar($('b_s').
 const fullUrl = f => { const q = [['utm_source', f.source], ['utm_medium', f.medium], ['utm_campaign', f.campaign], ['utm_term', f.term], ['utm_content', f.content]]
   .filter(([, v]) => v).map(([k, v]) => k + '=' + encodeURIComponent(v)).join('&'); return f.url ? f.url + (f.url.includes('?') ? '&' : '?') + q : q; };
 
-// Termómetro de salud: 100 puntos menos 35 por error y 8 por advertencia, más detalles que suman trazabilidad
+// Salud de la UTM: se exige 90+ para guardar. Resta por errores, advertencias, campos vacíos y valores genéricos.
+const GENERIC = /^(test|tests|testing|prueba|pruebas|demo|ejemplo|asdf|qwerty|abc|xxx+|aaa+|na|n\/a|none|null|campa[nñ]a|fuente|nuevo|nueva|temp|tmp|\d+)$/i;
+const SALUD_MIN = 90;
 function salud(f, iss) {
-  let s = 100 - iss.filter(i => i.lvl === 'err').length * 35 - iss.filter(i => i.lvl === 'warn').length * 8;
-  if (!f.zone) s -= 6; if (!f.term) s -= 4; if (!f.content) s -= 4;
-  if (f.campaign && f.campaign.split('_').length < 3) s -= 6;
+  const falta = [];
+  let s = 100 - iss.filter(i => i.lvl === 'err').length * 40 - iss.filter(i => i.lvl === 'warn').length * 10;
+  const gen = [['Fuente', f.source], ['Campaña', f.campaign], ['Término', f.term], ['Contenido', f.content]]
+    .filter(([, v]) => v && v.split('_').some(p => GENERIC.test(p)));
+  gen.forEach(([n]) => { s -= 30; falta.push(`${n.toLowerCase()} con un valor genérico ("Test", "Prueba"…)`); });
+  if (f.source && f.source.replace(/_/g, '').length < 3) { s -= 10; falta.push('una fuente más descriptiva'); }
+  if (!f.zone) { s -= 10; falta.push('la zona'); }
+  const base = (f.campaign || '').split('_').filter(Boolean);
+  if (f.campaign && base.length < (f.zone ? 4 : 3)) { s -= 12; falta.push('una campaña con Marca_Táctica_Objetivo'); }
+  if (!f.term) { s -= 6; falta.push('el término (subcategoría)'); }
+  if (!f.content) { s -= 6; falta.push('el contenido (modelo)'); }
   s = Math.max(0, Math.min(100, s));
-  const [lbl, col, hint] = s >= 85 ? ['Excelente', '#1c9a57', 'Lista para usar y fácil de medir.'] : s >= 65 ? ['Buena', '#7cc242', 'Funciona; completa zona, término o contenido para medir mejor.']
-    : s >= 40 ? ['Regular', '#e0a030', 'Corrige las advertencias antes de publicarla.'] : ['Crítica', '#d71920', 'Tiene errores: GA4 la va a clasificar mal.'];
+  const [lbl, col] = s >= SALUD_MIN ? ['Excelente', '#1c9a57'] : s >= 65 ? ['Buena', '#7cc242'] : s >= 40 ? ['Regular', '#e0a030'] : ['Crítica', '#d71920'];
+  const hint = iss.some(i => i.lvl === 'err') ? 'Tiene errores: GA4 la va a clasificar mal.'
+    : s >= SALUD_MIN ? 'Lista para guardar y fácil de medir.'
+    : `Necesita ${SALUD_MIN} o más para guardarse. Falta: ${falta.slice(0, 3).join(', ')}.`;
   return { s, lbl, col, hint };
 }
 function drawHealth(h) {
@@ -1655,10 +1809,12 @@ function build() {
   const iss = validar({ s: f.source, m: f.medium, c: f.campaign, t: f.term });
   if (!/^https?:\/\/[^\s/]+\.[^\s]+/.test(f.url)) iss.unshift({ f:'URL', m:'debe empezar con https:// y ser una dirección válida', lvl:'err' });
   $('b_issues').innerHTML = iss.length ? issuesLi(iss) : '<li class="okl"><i class="ph-fill ph-check-circle"></i><span>La UTM cumple el estándar</span></li>';
-  drawHealth(salud(f, iss));
+  const H = salud(f, iss); drawHealth(H);
+  if (!iss.length && H.s < SALUD_MIN) $('b_issues').innerHTML = `<li class="warn"><i class="ph-fill ph-warning"></i><span>Cumple el formato, pero la salud es ${H.s}: necesita ${SALUD_MIN} o más para guardarse.</span></li>`;
   const dupe = LINKS?.find(l => l.id !== editId && fullUrl(l) === full);
   $('b_dupe').hidden = !dupe;
-  $('b_save').disabled = iss.some(i => i.lvl === 'err') || !!dupe || !can.crear();
+  $('b_save').disabled = iss.some(i => i.lvl === 'err') || H.s < SALUD_MIN || !!dupe || !can.crear();
+  $('b_save').title = H.s < SALUD_MIN ? `La salud debe ser ${SALUD_MIN} o más para guardar` : '';
 }
 ['b_url', 'b_s', 'b_c', 'b_t', 'b_x', 'b_note'].forEach(id => $(id).addEventListener('input', build));
 $('b_copy').onclick = () => copy($('b_out').textContent);
@@ -1717,6 +1873,7 @@ function fillLibFilters() {
 $('lf_mine').onchange = () => drawLib();
 $('lq').oninput = () => drawLib();
 $('lfchips').addEventListener('click', e => { const b = e.target.closest('[data-lfx]'); if (!b) return; LF[b.dataset.lfx] = ''; LFD[b.dataset.lfx]?.set(''); drawLib(); });
+$('lf_clear_all').onclick = () => $('lf_clear').click();
 $('lf_clear').onclick = () => { Object.keys(LF).forEach(k => { LF[k] = ''; LFD[k].set(''); }); $('lq').value = ''; $('lf_mine').checked = false; drawLib(); };
 const LG_KEY = LV;
 const LG_IC = Object.fromEntries(ORDER.map(d => [d, k => d === 'g' ? (CANAL_INFO[k]?.[1] || DIM_IC.g) : DIM_IC[d]]));
@@ -1743,7 +1900,7 @@ function libCard(l) {
     <div class="chips"><span class="tag"><i>fuente</i> ${esc(l.source)}</span><span class="tag"><i>medio</i> ${esc(l.medium)}</span>${l.zone ? `<span class="tag"><i>zona</i> ${esc(l.zone)}</span>` : ''}${l.term ? `<span class="tag"><i>término</i> ${esc(l.term)}</span>` : ''}${l.content ? `<span class="tag"><i>contenido</i> ${esc(l.content)}</span>` : ''}</div>
     <div class="url"><b>${esc(host)}</b></div>
     ${l.note ? `<div class="note"><i class="ph ph-note-pencil"></i>${esc(l.note)}</div>` : ''}
-    ${ga ? `<div class="ga"><div><b>${num(ga.e1)}</b>Cotiza producto</div><div><b>${num(ga.e2)}</b>Cotiza crédito</div><div><b>${num(ga.u)}</b>Usuarios</div></div>`
+    ${ga ? `<div class="ga"><div><b>${num(ga.e1)}</b>${EV1}</div><div><b>${num(ga.e2)}</b>${EV2}</div><div><b>${num(ga.u)}</b>Usuarios</div></div>`
          : `<div class="ga none"><i class="ph ph-clock-countdown"></i>Sin visitas en GA4 en este periodo</div>`}
     <div class="lact">${actions}</div></div>`;
 }
@@ -1754,6 +1911,7 @@ function drawLib() {
     && libMatch(l) && (!LF.estado || lvOf(l) === LF.estado) && (!mine || l.created_by === ME.id));
   fillLibFilters();
   $('lf_clear').disabled = !Object.values(LF).some(Boolean) && !q && !mine;
+  $('lf_clear_all').hidden = $('lf_clear').disabled;
   $('lfc').textContent = Object.values(LF).filter(Boolean).length || '';
   $('lfchips').innerHTML = Object.entries(LF).filter(([, v]) => v).map(([d, v]) => `<button class="fchip" data-lfx="${d}" title="Quitar filtro"><span>${d === 'estado' ? 'Estado' : DIMS[d]}</span><b>${esc(d === 'estado' ? ESTADOS.find(e => e.v === v)?.l || v : v)}</b><i class="ph ph-x"></i></button>`).join('');
   if (!LINKS.length) return swap($('lib'), `<div class="empty"><i class="ph ph-link-simple-break"></i><b>Todavía no hay UTMs guardadas</b><span>Arma la primera arriba y pulsa "Guardar UTM".</span></div>`);

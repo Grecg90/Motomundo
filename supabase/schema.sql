@@ -257,3 +257,12 @@ create policy brand_admin_del on storage.objects for delete to authenticated usi
 
 -- ---------------------------------------------------------------- Bitácora temporal (7 días)
 select cron.schedule('purge_activity_log', '15 6 * * *', $$delete from public.activity_log where at < now() - interval '7 days'$$);
+
+-- ---------------------------------------------------------------- Mapa de canales (agrupación editable desde el reporte)
+alter table public.app_settings add column if not exists channel_map jsonb not null default '{}'::jsonb
+  check (jsonb_typeof(channel_map) = 'object' and length(channel_map::text) < 20000);
+create or replace function public.channel_map() returns jsonb language sql stable security definer set search_path = public as $$
+  select channel_map from public.app_settings where id = 1 and public.my_role() is not null
+$$;
+revoke all on function public.channel_map() from public, anon;
+grant execute on function public.channel_map() to authenticated;
