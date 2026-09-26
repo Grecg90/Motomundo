@@ -157,7 +157,30 @@
   .chart { margin-top:auto; padding-top:18px; }
   .chart svg { width:100%; height:110px; display:block; overflow:visible; }
   .chart .ax { display:flex; justify-content:space-between; font-size:11px; color:var(--gray-500); margin-top:6px; }
-  .chart g:hover rect { opacity:.75; }
+  .chart { position:relative; }
+  .chart svg { cursor:crosshair; touch-action:pan-y; }
+  .chart .bar rect { transition:opacity .15s var(--ease); }
+  .chart svg.hov .bar:not(.on) rect.v { opacity:.35; }
+  .chart .hit { fill:transparent; }
+  .kpi-split { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px; padding-top:16px; border-top:1px solid rgba(255,255,255,.1); }
+  .kpi-split .k { display:grid; gap:6px; align-content:start; }
+  .kpi-split .kl { font-size:13px; font-weight:600; color:var(--gray-300); display:flex; align-items:center; gap:7px; }
+  .kpi-split .kl .swc { width:10px; height:10px; border-radius:3px; display:inline-block; }
+  .kpi-split .kv { font-size:30px; font-weight:700; letter-spacing:-.02em; line-height:1; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .kpi-split .ks { font-size:12px; color:var(--gray-300); }
+  .kpi-split .gpill { font-size:11.5px; padding:2px 8px; }
+  .kpi-split .dl { font-size:12px; }
+  /* Tooltip de gráficos */
+  .ctip { position:fixed; z-index:90; left:0; top:0; pointer-events:none; min-width:180px; max-width:260px; background:var(--white); color:var(--ink); border-radius:14px; box-shadow:var(--shadow-pop); padding:12px 14px; font-size:12.5px; opacity:0; transform:translateY(4px) scale(.98); transition:opacity .14s var(--ease), transform .14s var(--ease); }
+  .ctip.on { opacity:1; transform:none; }
+  .ctip .th { font-weight:700; font-size:13px; margin-bottom:8px; display:flex; justify-content:space-between; gap:10px; }
+  .ctip .th em { font-style:normal; font-weight:600; color:var(--gray-500); font-size:11.5px; text-transform:capitalize; }
+  .ctip .tr { display:flex; align-items:center; gap:8px; padding:3px 0; }
+  .ctip .tr i { width:9px; height:9px; border-radius:3px; flex:none; box-shadow:inset 0 0 0 1px rgba(13,14,16,.18); }
+  .ctip .tr span { flex:1; color:var(--gray-700); font-weight:600; } .ctip .tr b { font-weight:700; font-variant-numeric:tabular-nums; }
+  .ctip .tt { margin-top:6px; padding-top:7px; border-top:1px solid var(--gray-100); }
+  .ctip .tt span { color:var(--ink); }
+  .ctip .tf { margin-top:6px; font-size:11.5px; color:var(--gray-500); font-weight:600; }
   .t-sm { grid-column:span 3; } .t-md { grid-column:span 6; } .t-full { grid-column:1 / -1; }
   .t-red { background:var(--red); color:var(--white); } .t-red .l, .t-red .s { color:#ffdcdd; }
   .t-graph { background:var(--graphite); color:var(--white); } .t-graph .l, .t-graph .s { color:var(--gray-300); }
@@ -508,7 +531,7 @@
   .modal-h .sp { flex:1; }
   .modal-f { display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:12px 22px; background:var(--white); border-top:1px solid var(--gray-200); }
   .modal-f .sp { flex:1; } .modal-f .chg { font-size:13px; font-weight:600; color:var(--warn); }
-  .board { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:12px; padding:16px 22px; overflow:auto; flex:1; }
+  .board { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); grid-auto-rows:max-content; align-content:start; align-items:start; gap:12px; padding:16px 22px; overflow:auto; overscroll-behavior:contain; flex:1 1 auto; min-height:0; }
   .bcol { min-width:0; background:var(--white); border-radius:var(--r-md); display:flex; flex-direction:column; min-height:220px; transition:box-shadow .15s, background .15s; }
   .bcol.over { box-shadow:0 0 0 2px var(--red); background:#fff8f8; }
   .bcol-h { display:flex; align-items:center; gap:10px; padding:14px 14px 10px; border-bottom:1px solid var(--gray-100); }
@@ -534,7 +557,8 @@
   .mm-sel { border:1px solid var(--gray-200); background:var(--white); border-radius:8px; font-size:12px; font-weight:600; padding:3px 6px; color:var(--ink); font-family:var(--font); max-width:130px; }
   .mc-h .mm-sel { margin-left:auto; }
   .mc-h b { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  @media (max-width:980px) { .board { grid-template-columns:repeat(2, minmax(0, 1fr)); } }
+  @media (max-width:1100px) { .board { grid-template-columns:repeat(2, minmax(0, 1fr)); } }
+  .mc-h { flex-wrap:wrap; } .mc-h b { flex:1 1 90px; }
   @media (max-width:720px) {
     .modal-bg { padding:0; place-items:end stretch; } .modal { max-height:92dvh; border-radius:20px 20px 0 0; width:100%; }
     .board { grid-template-columns:minmax(0, 1fr); grid-auto-rows:max-content; align-content:start; padding:12px; gap:10px; } .bcol { min-height:0; } .bcol-b .none { padding:10px; }
@@ -1186,6 +1210,47 @@ const shortRange = (a, b) => {   // "1–24 sep" · "28 ago – 3 sep" · con a�
 };
 const pct = x => (x * 100).toFixed(x < .1 ? 1 : 0) + '%';
 const date = s => new Date(s + 'T12:00').toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' });
+// Barras apiladas por día con tooltip. S = [{ d, parts:[[valor, color, etiqueta]], total:[etiqueta, valor], foot }]
+function barChart(S, { label, axis, max: mx }) {
+  if (!S.length) return '';
+  const W = 600, H = 110, n = S.length, max = Math.max(1, mx ?? Math.max(...S.map(x => x.parts.reduce((a, p) => a + p[0], 0))));
+  const gap = n > 40 ? 1 : 3, bw = Math.max(1, (W - gap * (n - 1)) / n);
+  const bars = S.map((x, i) => {
+    let y = H; const X = i * (bw + gap);
+    const rs = x.parts.map(([v, c]) => { const h = v / max * H; y -= h; return h > 0 ? `<rect class="v" x="${X}" y="${y}" width="${bw}" height="${h}" rx="2" fill="${c}"/>` : ''; }).reverse().join('');
+    return `<g class="bar" data-i="${i}">${rs}<rect class="hit" x="${X - gap / 2}" y="0" width="${bw + gap}" height="${H}"/></g>`;
+  }).join('');
+  const id = 'ch' + (++barChart.n); barChart.data[id] = S;
+  return `<div class="chart" data-ch="${id}"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="${esc(label)}">${bars}</svg>
+    <div class="ax"><span>${date(S[0].d)}</span><span>${esc(axis)} · máx. ${num(max)}</span><span>${date(S[n - 1].d)}</span></div></div>`;
+}
+barChart.n = 0; barChart.data = {};
+setInterval(() => { for (const k in barChart.data) if (!document.querySelector(`[data-ch="${k}"]`)) delete barChart.data[k]; }, 60000);
+(() => {
+  const tip = document.createElement('div'); tip.className = 'ctip'; tip.setAttribute('role', 'tooltip'); document.body.appendChild(tip);
+  let cur = null;
+  const hide = () => { tip.classList.remove('on'); cur?.svg.classList.remove('hov'); cur?.g.classList.remove('on'); cur = null; };
+  const show = e => {
+    const g = e.target.closest?.('.chart .bar'); if (!g) return hide();
+    const svg = g.ownerSVGElement, S = barChart.data[g.closest('.chart').dataset.ch]; if (!S) return hide();
+    if (!cur || cur.g !== g) {
+      cur?.g.classList.remove('on'); g.classList.add('on'); svg.classList.add('hov'); cur = { g, svg };
+      const x = S[+g.dataset.i], wd = new Date(x.d + 'T12:00').toLocaleDateString('es-MX', { weekday:'long' });
+      tip.innerHTML = `<div class="th">${date(x.d)}<em>${wd}</em></div>`
+        + x.parts.map(([v, c, l]) => `<div class="tr"><i style="background:${c}"></i><span>${esc(l)}</span><b>${num(v)}</b></div>`).join('')
+        + (x.total ? `<div class="tr tt"><span>${esc(x.total[0])}</span><b>${num(x.total[1])}</b></div>` : '')
+        + (x.foot ? `<div class="tf">${x.foot}</div>` : '');
+    }
+    const r = g.querySelector('.hit').getBoundingClientRect(), tw = tip.offsetWidth, th = tip.offsetHeight;
+    let left = r.left + r.width / 2 - tw / 2, top = r.top - th - 10;
+    if (top < 8) top = r.bottom + 10;
+    left = Math.max(8, Math.min(innerWidth - tw - 8, left));
+    tip.style.left = left + 'px'; tip.style.top = top + 'px'; tip.classList.add('on');
+  };
+  document.addEventListener('pointermove', show, { passive:true });
+  document.addEventListener('pointerdown', show, { passive:true });
+  addEventListener('scroll', hide, { passive:true, capture:true });
+})();
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uniq = (rows, f) => [...new Set(rows.map(f))];
 const iso = d => d.toISOString().slice(0, 10);
@@ -1410,21 +1475,14 @@ const sum = f => R.reduce((s, r) => s + f(r), 0);
 // ============================================================
 function serieDiaria() {
   const M = new Map();
-  for (let d = RANGO.from; d <= RANGO.to; d = addD(d, 1)) M.set(d, [0, 0]);
-  for (const [d, , , , , , , , , e1, e2] of D.r) { const v = M.get(d); if (v) { v[0] += e1; v[1] += e2; } }
+  for (let d = RANGO.from; d <= RANGO.to; d = addD(d, 1)) M.set(d, [0, 0, 0]);
+  for (const [d, , , , , , , , u, e1, e2] of D.r) { const v = M.get(d); if (v) { v[0] += u; v[1] += e1; v[2] += e2; } }
   return [...M.entries()];
 }
 function chartSvg() {
-  const S = serieDiaria(), n = S.length, max = Math.max(1, ...S.map(([, v]) => v[0] + v[1]));
-  const W = 600, H = 110, gap = n > 40 ? 1 : 3, bw = Math.max(1, (W - gap * (n - 1)) / n);
-  const bars = S.map(([d, [a, b]], i) => {
-    const x = i * (bw + gap), ha = a / max * H, hb = b / max * H;
-    return `<g><title>${date(d)}: ${a} ${EV1} · ${b} ${EV2}</title>
-      <rect x="${x}" y="${H - ha - hb}" width="${bw}" height="${hb}" rx="2" fill="#ffffff"/>
-      <rect x="${x}" y="${H - ha}" width="${bw}" height="${ha}" rx="2" fill="#d71920"/></g>`;
-  }).join('');
-  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Cotizaciones por día">${bars}</svg>
-    <div class="ax"><span>${date(S[0][0])}</span><span>Cotizaciones por día · máx. ${num(max)}</span><span>${date(S[n - 1][0])}</span></div>`;
+  const S = serieDiaria();
+  return barChart(S.map(([d, [u, a, b]]) => ({ d, parts:[[u, '#d71920', 'Usuarios de campaña']],
+    foot: `${num(a)} ${esc(EV1)} · ${num(b)} ${esc(EV2)}` })), { label:'Usuarios de campaña por día', axis:'Usuarios de campaña por día' });
 }
 // Qué parte del total de usuarios del sitio (GA4 Audience, mismo periodo) llegó por campañas
 function siteShare(u) {
@@ -1436,18 +1494,16 @@ function siteShare(u) {
 function drawKpis() {
   const ps = f => P ? P.reduce((s, r) => s + f(r), 0) : 0;
   const nc = rs => uniq(rs, r => r.c).length;
-  const e1 = sum(r => r.e1), e2 = sum(r => r.e2);
+  const e1 = sum(r => r.e1), e2 = sum(r => r.e2), u = sum(r => r.u);
   const bad = R.filter(r => r.lv === 'err').length, warn = R.filter(r => r.lv === 'warn').length, ok = R.filter(r => r.lv === 'ok').length, tot = R.length || 1;
   $('kpis').innerHTML = `
     <div class="tile t-hero">
-      <div class="l"><i class="ph ph-receipt"></i>Cotizaciones desde campañas</div>
-      <div class="pair">
-        <div><div class="v">${num(e1)}</div><div class="n"><i class="swc" style="background:#d71920"></i>${EV1} ${dl(e1, ps(r => r.e1))}</div></div>
-        <div><div class="v">${num(e2)}</div><div class="n"><i class="swc" style="background:#fff"></i>${EV2} ${dl(e2, ps(r => r.e2))}</div></div>
-      </div>
-      <div class="chart">${chartSvg()}</div>
+      <div class="l"><i class="ph ph-users"></i>Usuarios de campaña</div>
+      <div class="g-kv">${num(u)} ${P ? gdl(u, ps(r => r.u)) : ''}</div><div class="g-sub">${P ? `Periodo anterior: ${num(ps(r => r.u))} · ` : ''}${siteShare(u)}</div>
+      ${chartSvg()}
     </div>
-    <div class="tile t-sm t-red"><div class="l"><i class="ph ph-users"></i>Usuarios con UTM</div><div class="v">${num(sum(r => r.u))}${dl(sum(r => r.u), ps(r => r.u))}</div><div class="s">${siteShare(sum(r => r.u))}</div></div>
+    <div class="tile t-sm t-red"><div class="l"><i class="ph ph-receipt"></i>Cotizaciones</div><div class="v">${num(e1 + e2)}${dl(e1 + e2, ps(r => r.e1 + r.e2))}</div>
+      <div class="s">${num(e1)} ${EV1} ${dl(e1, ps(r => r.e1))}<br>${num(e2)} ${EV2} ${dl(e2, ps(r => r.e2))}</div></div>
     <div class="tile t-sm t-graph"><div class="l"><i class="ph ph-flag"></i>Campañas activas</div><div class="v">${num(nc(R))}${P ? dl(nc(R), nc(P.filter(r => r.u >= 5 || r.e1 || r.e2))) : ''}</div><div class="s">${nc(R.filter(r => r.e1 + r.e2))} generaron cotizaciones</div></div>
     <div class="tile t-md"><div class="l"><i class="ph ph-seal-check"></i>Calidad de las UTMs usadas</div>
       <div class="v">${num(bad)} <span style="font-size:15px;font-weight:700;color:var(--gray-500)">mal construidas de ${num(R.length)}</span></div>
@@ -1615,6 +1671,7 @@ $('board').addEventListener('dragend', () => { MM_DRAG = ''; document.querySelec
 $('board').addEventListener('dragover', e => { const c = e.target.closest('.bcol'); if (!c || !MM_DRAG) return; e.preventDefault(); document.querySelectorAll('.bcol.over').forEach(x => x !== c && x.classList.remove('over')); c.classList.add('over'); });
 $('board').addEventListener('drop', e => { const c = e.target.closest('.bcol'); if (!c || !MM_DRAG) return; e.preventDefault(); const m = MM_DRAG; MM_DRAG = ''; mmSet('m:' + m, c.dataset.c); });
 function cbOpen() {
+  if (!can.admin()) return;
   MM_EDIT = { ...CMAP }; MM_OPEN = new Set(); drawBoard();
   $('cb_modal').hidden = false; requestAnimationFrame(() => $('cb_modal').classList.add('on'));
   document.body.style.overflow = 'hidden'; $('cb_x').focus();
@@ -2627,26 +2684,27 @@ async function loadGa4(force = false) {
   GA_LOADING = ''; $('view-ga4').classList.remove('loading');
 }
 function gaChart(daily) {
-  if (!daily.length) return '';
-  const W = 600, H = 110, n = daily.length, max = Math.max(1, ...daily.map(d => d[1])), gap = n > 40 ? 1 : 3, bw = Math.max(1, (W - gap * (n - 1)) / n);
-  const bars = daily.map(([d, a, nw], i) => {
-    const x = i * (bw + gap), ha = a / max * H, hn = Math.min(ha, nw / max * H);
-    return `<g><title>${date(d)}: ${num(a)} activos · ${num(nw)} nuevos</title><rect x="${x}" y="${H - ha}" width="${bw}" height="${ha}" rx="2" fill="#ffffff"/><rect x="${x}" y="${H - hn}" width="${bw}" height="${hn}" rx="2" fill="var(--red)"/></g>`;
-  }).join('');
-  return `<div class="chart"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Usuarios activos por día">${bars}</svg>
-    <div class="ax"><span>${date(daily[0][0])}</span><span>Activos por día (rojo: nuevos) · máx. ${num(max)}</span><span>${date(daily[n - 1][0])}</span></div></div>`;
+  return barChart(daily.map(([d, a, nw]) => { const n = Math.min(a, nw), r = Math.max(0, a - n);
+    return { d, parts:[[n, '#d71920', 'Nuevos'], [r, '#ffffff', 'Recurrentes']], total:['Totales', a], foot: a ? `${pct(n / a)} nuevos` : '' }; }),
+    { label:'Usuarios totales por día', axis:'Usuarios por día (rojo: nuevos · blanco: recurrentes)' });
 }
 const pageName = p => p === '/' ? 'Homepage' : (p || '(not set)');
 const gpct = (a, b) => b ? pct(a / b) : '0%';
 function drawGa4() {
   const g = GA, c = g.totals.cur, p = g.totals.prev, ret = x => Math.max(0, x.active - x.new);
   $('g_period').textContent = `Comparado con ${date(g.range.pFrom)} al ${date(g.range.pTo)}`;
-  $('g_kpi').innerHTML = `<div class="l"><i class="ph ph-users-three"></i>Usuarios activos</div>
-    <div class="g-kv">${num(c.active)} ${gdl(c.active, p.active)}</div><div class="g-sub">Periodo anterior: ${num(p.active)}</div>${gaChart(g.daily)}`;
-  $('g_new').innerHTML = `<div class="l"><i class="ph ph-user-plus"></i>Usuarios nuevos</div><div class="v">${num(c.new)}</div><div class="s g-vs">${gdl(c.new, p.new)}<span>antes ${num(p.new)}</span></div>`;
-  $('g_ret').innerHTML = `<div class="l"><i class="ph ph-arrows-counter-clockwise"></i>Usuarios recurrentes</div><div class="v">${num(ret(c))}</div><div class="s g-vs">${gdl(ret(c), ret(p))}<span>antes ${num(ret(p))}</span></div>`;
+  $('g_kpi').innerHTML = `<div class="l"><i class="ph ph-users-three"></i>Usuarios totales</div>
+    <div class="g-kv">${num(c.active)} ${gdl(c.active, p.active)}</div><div class="g-sub">Periodo anterior: ${num(p.active)}</div>
+    <div class="kpi-split">
+      <div class="k"><div class="kl"><i class="swc" style="background:var(--red)"></i>Usuarios nuevos</div><div class="kv">${num(c.new)} ${gdl(c.new, p.new)}</div><div class="ks">antes ${num(p.new)}</div></div>
+      <div class="k"><div class="kl"><i class="swc" style="background:#fff"></i>Usuarios recurrentes</div><div class="kv">${num(ret(c))} ${gdl(ret(c), ret(p))}</div><div class="ks">antes ${num(ret(p))}</div></div>
+    </div>${gaChart(g.daily)}`;
+  // Tarjetas pequeñas: ritmo diario (no repiten los datos del hero)
+  const dd = g.daily, days = dd.length || 1, avg = dd.reduce((a, x) => a + x[1], 0) / days, pk = dd.reduce((m, x) => x[1] > (m?.[1] ?? -1) ? x : m, null);
+  $('g_new').innerHTML = `<div class="l"><i class="ph ph-calendar-dots"></i>Promedio diario</div><div class="v">${num(avg)}</div><div class="s">usuarios por día en ${num(dd.length)} días</div>`;
+  $('g_ret').innerHTML = `<div class="l"><i class="ph ph-lightning"></i>Día pico</div><div class="v">${pk ? num(pk[1]) : '-'}</div><div class="s">${pk ? `${date(pk[0])} · ${avg ? '+' + pct(pk[1] / avg - 1) + ' vs promedio' : ''}` : 'sin datos'}</div>`;
   const pn = c.active ? c.new / c.active : 0;
-  $('g_mix').innerHTML = `<div class="l"><i class="ph ph-chart-pie-slice"></i>Usuarios activos = nuevos + recurrentes</div>
+  $('g_mix').innerHTML = `<div class="l"><i class="ph ph-chart-pie-slice"></i>Usuarios totales = nuevos + recurrentes</div>
     <div class="v" style="font-size:30px;margin-top:10px">${num(c.active)} <span style="font-size:15px;font-weight:600;color:var(--gray-500)">= ${num(c.new)} + ${num(ret(c))}</span></div>
     <div class="mixbar"><i style="width:${pn * 100}%;background:var(--red)"></i><i style="width:${(1 - pn) * 100}%;background:var(--graphite)"></i></div>
     <div class="legend-i"><span><i style="background:var(--red)"></i>Nuevos ${pct(pn)}</span><span><i style="background:var(--graphite)"></i>Recurrentes ${pct(1 - pn)}</span></div>`;
@@ -2750,7 +2808,7 @@ $('bm_colp').oninput = () => { $('bm_col').value = $('bm_colp').value; };
 $('bm_col').oninput = () => { if (/^#[0-9a-f]{6}$/i.test($('bm_col').value)) $('bm_colp').value = $('bm_col').value; };
 $('bm_modal').addEventListener('click', e => { if (e.target === $('bm_modal') || e.target.closest('[data-bm-x]')) modalClose('bm_modal'); });
 $('bl_modal').addEventListener('click', e => { if (e.target === $('bl_modal') || e.target.closest('[data-bl-x]')) modalClose('bl_modal'); });
-$('bl_open').onclick = () => { if (!BRANDS) loadBrands(); modalOpen('bl_modal'); };
+$('bl_open').onclick = () => { if (!can.admin()) return; if (!BRANDS) loadBrands(); modalOpen('bl_modal'); };
 $('b_add').onclick = () => bmOpen(null);
 $('b_table').addEventListener('click', e => { if (e.target.closest('#b_add2')) bmOpen(null); });
 $('b_table').addEventListener('click', e => { const b = e.target.closest('[data-bedit]'); if (b) bmOpen(BRANDS.find(x => x.id === b.dataset.bedit)); });
