@@ -166,7 +166,6 @@
   .stack i { display:block; height:100%; }
   .legend { display:flex; gap:16px; flex-wrap:wrap; font-size:13px; font-weight:600; }
   .legend span { display:flex; align-items:center; gap:6px; } .legend i { width:10px; height:10px; border-radius:3px; }
-  .skel { background:linear-gradient(90deg, #e6e8eb 0, #f3f4f6 50%, #e6e8eb 100%) !important; background-size:200% 100% !important; animation:sk 1.2s linear infinite; min-height:130px; box-shadow:none !important; }
   @keyframes sk { to { background-position:-200% 0; } }
 
   /* Canales */
@@ -338,6 +337,40 @@
   .toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:var(--black); color:var(--white); padding:11px 16px; border-radius:999px; font-weight:600; font-size:13px; display:flex; align-items:center; gap:8px; box-shadow:var(--shadow-pop); z-index:80; animation:popIn .2s var(--ease); }
   .toast .ph-fill { color:#7ee2a8; } .toast.err .ph-fill { color:#ff9296; }
 
+  /* ===== Controles de vista y filtros ===== */
+  .ctl-row { display:flex; align-items:center; gap:10px; margin:0 0 12px; min-width:0; }
+  .ctl-lab { display:flex; align-items:center; gap:6px; font-weight:700; font-size:12px; color:var(--gray-500); text-transform:uppercase; letter-spacing:.04em; white-space:nowrap; flex:none; }
+  .fbar .lab, .lfilters .lab { text-transform:uppercase; letter-spacing:.04em; font-size:12px; color:var(--gray-500); }
+  .only-m { display:none !important; }
+  .mbar { gap:8px; align-items:center; margin:0 0 12px; }
+  .mbar .btn { flex:none; } .mbar .fc { background:var(--red); color:var(--white); border-radius:999px; font-size:11px; padding:1px 7px; margin-left:2px; }
+  .mbar .fc:empty { display:none; }
+  .sheet-h { justify-content:space-between; align-items:center; width:100%; margin-bottom:4px; }
+  .sheet-h b { font-size:16px; font-weight:600; }
+  .sheet-bg { position:fixed; inset:0; background:rgba(13,14,16,.45); z-index:48; opacity:0; pointer-events:none; transition:opacity .25s var(--ease); }
+  .sheet-bg.on { opacity:1; pointer-events:auto; }
+
+  /* ===== Menú lateral (móvil) ===== */
+  .hb { display:none; width:40px; height:40px; border-radius:12px; border:1px solid var(--graphite-2); background:transparent; color:var(--white); font-size:20px; place-items:center; flex:none; }
+  .drawer { position:fixed; inset:0 auto 0 0; width:min(300px, 84vw); background:var(--black); color:var(--white); z-index:49; transform:translateX(-102%); transition:transform .3s var(--ease); display:flex; flex-direction:column; padding:18px 14px; gap:6px; box-shadow:var(--shadow-pop); }
+  .drawer.on { transform:none; }
+  .drawer-h { display:flex; justify-content:space-between; align-items:center; padding:0 6px 14px; border-bottom:1px solid var(--graphite-2); margin-bottom:8px; }
+  .drawer-h img { height:26px; }
+  .drawer .ibtn { color:var(--gray-300); }
+  .dr-item { display:flex; align-items:center; gap:12px; width:100%; border:0; background:none; color:var(--gray-300); padding:12px 12px; border-radius:12px; font-size:15px; font-weight:600; text-align:left; }
+  .dr-item i { font-size:20px; } .dr-item:hover { background:var(--graphite); color:var(--white); }
+  .dr-item.on { background:var(--white); color:var(--black); }
+
+  /* ===== Esqueletos de carga ===== */
+  .sk { position:relative; overflow:hidden; background:#e9ebee; border-radius:8px; }
+  .sk::after { content:''; position:absolute; inset:0; transform:translateX(-100%); background:linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent); animation:skw 1.3s ease-in-out infinite; }
+  .t-hero .sk, .sk.dk { background:#1d1f24; } .t-hero .sk::after, .sk.dk::after { background:linear-gradient(90deg, transparent, rgba(255,255,255,.07), transparent); }
+  @keyframes skw { to { transform:translateX(100%); } }
+  .sk-l { height:12px; width:45%; } .sk-v { height:40px; width:60%; margin-top:14px; } .sk-s { height:10px; width:35%; margin-top:12px; }
+  .sk-chart { height:120px; margin-top:auto; border-radius:12px; }
+  .sk-row { height:44px; margin-bottom:8px; border-radius:10px; }
+  .loading #kpis .tile, .loading #canales .tile, .loading #out { opacity:.55; transition:opacity .2s; }
+
   /* ===== Footer ===== */
   .foot { background:var(--black); color:var(--gray-300); }
   .foot-in { max-width:1320px; margin:0 auto; padding:30px 20px; display:grid; grid-template-columns:2fr 1fr 1fr; gap:24px; font-size:13px; line-height:1.6; }
@@ -355,13 +388,26 @@
     .b-form, .b-prev { grid-column:1 / -1; }
     .rules { grid-template-columns:1fr 1fr; }
   }
+  @media (max-width:860px) {
+    .hb { display:grid; }
+    .top #nav { display:none; }
+    .hl-btn .hl-t { display:none; }
+  }
   @media (max-width:720px) {
-    .top-in { height:auto; flex-wrap:wrap; padding:10px 14px; gap:10px; }
+    .only-m { display:flex !important; } .only-d { display:none !important; }
+    .fsheet { position:fixed; left:0; right:0; bottom:0; z-index:50; margin:0 !important; border-radius:20px 20px 0 0; background:var(--white) !important; box-shadow:var(--shadow-pop);
+      padding:16px 16px calc(16px + env(safe-area-inset-bottom)) !important; max-height:82dvh; overflow:auto; transform:translateY(105%); transition:transform .3s var(--ease);
+      display:flex !important; flex-direction:column; align-items:stretch !important; gap:10px !important; }
+    .fsheet.on { transform:none; }
+    .fsheet > .lab, .fsheet > .div, .fsheet > span[style*="flex:1"] { display:none !important; }
+    .fsheet .dd-btn { width:100%; border-radius:var(--r-sm); padding:11px 14px; } .fsheet .dd-btn .dv { max-width:none; margin-left:auto; } .fsheet .dd-btn.active .dv { color:var(--white); }
+    .fsheet .clear { align-self:flex-start; }
+    .top-in { height:60px; padding:0 12px; gap:8px; }
+    .dp-btn > .ph-caret-down { display:none; } .dp-btn { gap:6px; } .hl-btn { padding:7px; }
     .brand-t span { display:none; }
-    .top .sp { display:none; }
-    .top .seg { order:3; width:100%; } .top .seg button { flex:1; justify-content:center; }
-    .dp { margin-left:auto; } .dp-btn .lbl-long { display:none; }
-    .dp-pop { position:fixed; left:10px; right:10px; top:112px; flex-direction:column; max-height:calc(100dvh - 130px); overflow:auto; }
+    .brand .logo { height:22px; }
+    .dp-btn .lbl-long { display:none; } .dp-btn { padding-left:10px; padding-right:10px; } .um-btn .nm-t { display:none; }
+    .dp-pop { position:fixed; left:10px; right:10px; top:68px; flex-direction:column; max-height:calc(100dvh - 130px); overflow:auto; }
     .dp-presets { flex-direction:row; flex-wrap:wrap; } .dp-months { flex-direction:column; } .dg { grid-template-columns:repeat(7, 1fr); }
     main { padding:20px 12px 36px; } h1 { font-size:24px; } .intro .cmp { text-align:left; }
     .bento { gap:10px; } .t-sm, .cn, .gcard, .gcard.lg, .lcard { grid-column:1 / -1; }
@@ -514,7 +560,7 @@
   .brand .logo { height:28px; width:auto; display:block; }
   .brand-sep { width:1px; height:24px; background:#3a3d44; }
   .brand .brand-t { font-weight:600; color:var(--gray-300); }
-  @media (max-width:720px) { .brand .logo { height:24px; } .brand-sep, .brand .brand-t { display:none; } }
+  @media (max-width:720px) { .brand .logo { height:20px; } .brand-sep, .brand .brand-t { display:none; } }
 </style>
 
 </head>
@@ -535,9 +581,19 @@
 
 <!-- ===================== APLICACIÓN ===================== -->
 <div id="app" hidden>
+<aside class="drawer" id="drawer" aria-label="Menú" inert>
+  <div class="drawer-h"><img class="logo" src="/logo-motomundo.png" alt="Motomundo"><button class="ibtn" id="dr_x" aria-label="Cerrar menú"><i class="ph ph-x"></i></button></div>
+  <button class="dr-item" data-go="reporte"><i class="ph ph-chart-bar"></i>Reporte</button>
+  <button class="dr-item" data-go="utms" data-need="crear"><i class="ph ph-link-simple"></i>Constructor</button>
+  <button class="dr-item" data-go="usuarios" data-need="admin"><i class="ph ph-users-three"></i>Usuarios</button>
+  <button class="dr-item" data-go="bitacora" data-need="admin"><i class="ph ph-clock-counter-clockwise"></i>Bitácora</button>
+  <button class="dr-item" data-go="config" data-need="admin"><i class="ph ph-gear-six"></i>Configuración</button>
+</aside>
+<div class="sheet-bg" id="sheet_bg"></div>
 <header class="top">
   <div class="top-in">
-    <a class="brand" href="#/reporte" aria-label="Motomundo Campañas, inicio"><img class="logo" src="/logo-motomundo.png" alt="Motomundo"><span class="brand-sep"></span><span class="brand-t">Campañas</span></a>
+    <button class="hb" id="hb" aria-label="Abrir menú" aria-expanded="false" aria-controls="drawer"><i class="ph ph-list"></i></button>
+    <a class="brand" href="#/reporte" aria-label="Motomundo Campañas, inicio"><img class="logo" src="/logo-motomundo.png" alt="Motomundo"></a>
     <div class="seg dark" id="nav" role="tablist" aria-label="Secciones">
       <span class="pill" aria-hidden="true"></span>
       <button data-r="reporte" role="tab"><i class="ph ph-chart-bar"></i>Reporte</button>
@@ -586,21 +642,32 @@
       <div class="cmp"><b>Motomundo - GA4</b><br><span id="period"></span></div>
     </div>
     <div class="bento">
-      <div class="contents" id="kpis"><div class="tile skel t-hero"></div><div class="tile skel t-sm"></div><div class="tile skel t-sm"></div><div class="tile skel t-md"></div></div>
-      <div class="contents" id="canales"></div>
+      <div class="contents" id="kpis">
+        <div class="tile t-hero" aria-busy="true"><div class="sk sk-l"></div><div style="display:flex;gap:18px"><div class="sk sk-v" style="width:40%"></div><div class="sk sk-v" style="width:40%"></div></div><div class="sk sk-chart"></div></div>
+        <div class="tile t-sm"><div class="sk sk-l"></div><div class="sk sk-v"></div><div class="sk sk-s"></div></div>
+        <div class="tile t-sm"><div class="sk sk-l"></div><div class="sk sk-v"></div><div class="sk sk-s"></div></div>
+        <div class="tile t-md"><div class="sk sk-l"></div><div class="sk sk-v" style="width:35%"></div><div class="sk sk-s" style="width:100%;height:8px"></div></div>
+      </div>
+      <div class="contents" id="canales"><div class="tile cn"><div class="sk sk-l"></div><div class="sk sk-s" style="width:60%"></div><div class="sk sk-v" style="width:90%;height:34px"></div></div><div class="tile cn"><div class="sk sk-l"></div><div class="sk sk-s" style="width:60%"></div><div class="sk sk-v" style="width:90%;height:34px"></div></div><div class="tile cn"><div class="sk sk-l"></div><div class="sk sk-s" style="width:60%"></div><div class="sk sk-v" style="width:90%;height:34px"></div></div><div class="tile cn"><div class="sk sk-l"></div><div class="sk sk-s" style="width:60%"></div><div class="sk sk-v" style="width:90%;height:34px"></div></div></div>
       <div class="tile card" id="report">
         <div class="card-h">
           <h2>Detalle por UTM</h2>
           <div class="toolbar">
-            <div class="seg" id="groupBy" aria-label="Agrupar por"><span class="pill"></span></div>
             <div class="seg icons" id="viewMode" aria-label="Visualización"><span class="pill"></span>
               <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button>
               <button data-v="bento" title="Tarjetas" aria-label="Tarjetas"><i class="ph ph-squares-four"></i></button>
             </div>
           </div>
         </div>
-        <div class="fbar" id="fbar">
-          <span class="lab"><i class="ph ph-funnel-simple"></i>Filtros</span>
+        <div class="ctl-row">
+          <span class="ctl-lab"><i class="ph ph-stack"></i>Ver por</span>
+          <div class="seg only-d" id="groupBy" aria-label="Ver por"><span class="pill"></span></div>
+          <span class="only-m" id="gbdd" style="flex:1"></span>
+        </div>
+        <div class="mbar only-m"><button class="btn btn-ghost" data-sheet="fbar"><i class="ph ph-funnel-simple"></i>Filtros<span class="fc" id="fc"></span></button></div>
+        <div class="fbar fsheet" id="fbar">
+          <div class="sheet-h only-m"><b>Filtros</b><button class="ibtn" data-sheet-x aria-label="Cerrar filtros"><i class="ph ph-x"></i></button></div>
+          <span class="lab"><i class="ph ph-funnel-simple"></i>Filtrar</span>
           <span id="fpills" style="display:contents"></span>
           <span class="div"></span>
           <span id="fstate" style="display:contents"></span>
@@ -608,9 +675,10 @@
           <span style="flex:1"></span>
           <label class="search"><i class="ph ph-magnifying-glass"></i><input id="q" placeholder="Buscar campaña, término, página…" aria-label="Buscar"></label>
           <button class="clear" id="clear"><i class="ph ph-x"></i>Limpiar</button>
+          <button class="btn btn-red btn-block only-m" data-sheet-x>Ver resultados</button>
         </div>
         <div class="count" id="count"></div>
-        <div id="out"></div>
+        <div id="out"><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div></div>
       </div>
     </div>
   </section>
@@ -665,20 +733,27 @@
         <div class="card-h">
           <h2>UTMs guardadas</h2>
           <div class="toolbar">
-            <div class="seg" id="libGroup" aria-label="Agrupar por"><span class="pill"></span></div>
             <div class="seg icons" id="libView" aria-label="Visualización"><span class="pill"></span>
               <button data-v="bento" title="Tarjetas" aria-label="Tarjetas"><i class="ph ph-squares-four"></i></button>
               <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button>
             </div>
           </div>
         </div>
-        <div class="lfilters" id="lfilters">
-          <span class="lab"><i class="ph ph-funnel-simple"></i>Filtros</span>
+        <div class="ctl-row">
+          <span class="ctl-lab"><i class="ph ph-stack"></i>Ver por</span>
+          <div class="seg only-d" id="libGroup" aria-label="Ver por"><span class="pill"></span></div>
+          <span class="only-m" id="lgdd" style="flex:1"></span>
+        </div>
+        <div class="mbar only-m"><button class="btn btn-ghost" data-sheet="lfilters"><i class="ph ph-funnel-simple"></i>Filtros<span class="fc" id="lfc"></span></button></div>
+        <div class="lfilters fsheet" id="lfilters">
+          <div class="sheet-h only-m"><b>Filtros</b><button class="ibtn" data-sheet-x aria-label="Cerrar filtros"><i class="ph ph-x"></i></button></div>
+          <span class="lab"><i class="ph ph-funnel-simple"></i>Filtrar</span>
           <span id="lf_pills" style="display:contents"></span>
           <label class="sw"><input type="checkbox" id="lf_mine"><span class="tr"></span>Solo mías</label>
           <span style="flex:1"></span>
           <label class="search"><i class="ph ph-magnifying-glass"></i><input id="lq" placeholder="Buscar UTM…" aria-label="Buscar UTM"></label>
           <button class="clear" id="lf_clear"><i class="ph ph-x"></i>Limpiar</button>
+          <button class="btn btn-red btn-block only-m" data-sheet-x>Ver resultados</button>
         </div>
         <div id="lib"></div>
       </div>
@@ -1001,14 +1076,14 @@ let D = { s: [], r: [] }, CARGADO = { from: '', to: '' };
 // Lee de Supabase (con la sesión del usuario) y compacta: D.s = textos, D.r = [fecha, c, s, m, t, x, h, p, usuarios, ev1, ev2]
 async function asegurarDatos(from, to) {
   if (CARGADO.from && from >= CARGADO.from && to <= CARGADO.to) return;
-  const rows = [];
-  for (let i = 0; ; i += 1000) {
-    const { data, error } = await sb.from('ga4_utm_daily')
-      .select('date,campaign,source,medium,term,content,host,landing_page,users,cotiza_producto,cotizacion_credito')
-      .gte('date', from).lte('date', to).order('date').range(i, i + 999);
-    if (error) throw new Error(error.message);
-    rows.push(...data); if (data.length < 1000) break;
-  }
+  // Páginas de 1000 filas pedidas en paralelo (la API entrega máximo 1000 por consulta)
+  const COLS = 'date,campaign,source,medium,term,content,host,landing_page,users,cotiza_producto,cotizacion_credito';
+  const page = i => sb.from('ga4_utm_daily').select(COLS).gte('date', from).lte('date', to).order('date').order('campaign').order('source').order('medium').order('term').order('content').order('landing_page').range(i, i + 999);
+  const first = await sb.from('ga4_utm_daily').select(COLS, { count: 'exact' }).gte('date', from).lte('date', to).order('date').order('campaign').order('source').order('medium').order('term').order('content').order('landing_page').range(0, 999);
+  if (first.error) throw new Error(first.error.message);
+  const rest = await Promise.all(Array.from({ length: Math.max(0, Math.ceil((first.count || 0) / 1000) - 1) }, (_, k) => page((k + 1) * 1000)));
+  const bad = rest.find(x => x.error); if (bad) throw new Error(bad.error.message);
+  const rows = first.data.concat(...rest.map(x => x.data));
   const s = [], idx = new Map(), ix = v => (idx.has(v) ? idx.get(v) : (idx.set(v, s.length), s.push(v), s.length - 1));
   D = { s, r: rows.map(r => [r.date, ix(r.campaign), ix(r.source), ix(r.medium), ix(r.term), ix(r.content), ix(r.host), ix(r.landing_page), r.users, r.cotiza_producto, r.cotizacion_credito]) };
   CARGADO = { from, to };
@@ -1134,12 +1209,15 @@ function fillFilters() {
     FD[d].set(F[d]);
   });
   $('clear').disabled = !ORDER.some(d => F[d]) && !estado && !$('only').checked && !$('q').value;
+  $('fc').textContent = (ORDER.filter(d => F[d]).length + !!estado + $('only').checked + !!$('q').value) || '';
 }
 $('clear').onclick = () => { ORDER.forEach(d => F[d] = ''); estado = ''; FE.set(''); $('q').value = ''; $('only').checked = false; update(); };
 $('q').oninput = () => { draw(); $('clear').disabled = false; };
 $('only').onchange = () => { draw(); fillFilters(); };
 
-const GB = Seg($('groupBy'), ORDER.map(d => [d, DIMS[d], DIM_IC[d]]), view, v => { view = v; draw(); });
+const GB_OPTS = ORDER.map(d => ({ v: d, l: DIMS[d], ic: DIM_IC[d] }));
+const GBD = Dropdown($('gbdd'), { options: GB_OPTS, value: view, search: false, block: true, onChange: v => { view = v; GB.set(v); draw(); } });
+const GB = Seg($('groupBy'), ORDER.map(d => [d, DIMS[d], DIM_IC[d]]), view, v => { view = v; GBD.set(v); draw(); });
 Seg($('viewMode'), null, mode, v => { mode = v; draw(); });
 
 const fmtDim = (d, v) => d === 'p' ? `<span class="page">${esc(v)}</span>` : d === 't' || d === 'x' ? `<span class="term">${esc(v)}</span>` : esc(v);
@@ -1208,6 +1286,7 @@ $('out').addEventListener('click', e => {
 });
 $('out').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('tr.grp')) { e.preventDefault(); e.target.click(); } });
 function update() { fillFilters(); drawCanales(); draw(); if (LINKS) drawLib(); }
+$('q').addEventListener('input', fillFilters); $('only').addEventListener('change', fillFilters);
 
 // ============================================================
 // Selector de periodo (un solo control)
@@ -1230,13 +1309,14 @@ async function aplicarRango(from, to, preset) {
   const name = PRESETS.find(p => p[0] === preset)?.[1];
   const label = `${name ? `<b>${name}</b><span class="lbl-long"> · ${date(from)} – ${date(to)}</span>` : `<b>${date(from)} – ${date(to)}</b>`}`;
   $('dp_label').innerHTML = label + ' <span class="muted">· cargando…</span>';
+  if (R.length) $('view-reporte').classList.add('loading');
   $('period').textContent = pFrom >= REPORT.minDate ? `Comparado con ${date(pFrom)} – ${date(pTo)}` : 'Sin periodo anterior para comparar';
   try { await asegurarDatos(pFrom < REPORT.minDate ? from : pFrom, to); }
-  catch (e) { $('kpis').innerHTML = `<div class="tile t-full"><b style="color:var(--red)">No se pudieron cargar los datos.</b> ${esc(e.message)}</div>`; $('dp_label').innerHTML = label; return; }
+  catch (e) { $('view-reporte').classList.remove('loading'); $('kpis').innerHTML = `<div class="tile t-full"><b style="color:var(--red)">No se pudieron cargar los datos.</b> ${esc(e.message)}</div>`; $('dp_label').innerHTML = label; return; }
   $('dp_label').innerHTML = label;
   R = agg(from, to).filter(r => r.u >= 5 || r.e1 || r.e2);
   P = pFrom >= REPORT.minDate ? agg(pFrom, pTo) : null;
-  drawKpis(); update();
+  drawKpis(); update(); $('view-reporte').classList.remove('loading');
 }
 function drawCal() {
   $('dp_presets').innerHTML = PRESETS.map(([k, l]) => `<button data-k="${k}" class="${RANGO.preset === k ? 'on' : ''}">${l}${RANGO.preset === k ? '<i class="ph ph-check"></i>' : ''}</button>`).join('');
@@ -1421,9 +1501,11 @@ async function start() {
   subscribeRealtime(); pushState().catch(() => {});
   if (can.admin()) runHealth(true);
   try {
-    const q1 = await sb.from('ga4_utm_daily').select('date').order('date', { ascending: true }).limit(1);
-    const q2 = await sb.from('ga4_utm_daily').select('date').order('date', { ascending: false }).limit(1);
-    const q3 = await sb.from('ga4_sync_log').select('ran_at').order('ran_at', { ascending: false }).limit(1);
+    const [q1, q2, q3] = await Promise.all([
+      sb.from('ga4_utm_daily').select('date').order('date', { ascending: true }).limit(1),
+      sb.from('ga4_utm_daily').select('date').order('date', { ascending: false }).limit(1),
+      sb.from('ga4_sync_log').select('ran_at').order('ran_at', { ascending: false }).limit(1),
+    ]);
     const min = q1.data?.[0]?.date, max = q2.data?.[0]?.date;
     if (!max) throw new Error(q1.error?.message || 'Todavía no hay datos sincronizados');
     REPORT.minDate = min; REPORT.maxDate = AYER = max; calMonth = AYER.slice(0, 7);
@@ -1612,7 +1694,8 @@ $('lf_clear').onclick = () => { Object.keys(LF).forEach(k => { LF[k] = ''; LFD[k
 const LG_KEY = LV;
 const LG_IC = Object.fromEntries(ORDER.map(d => [d, k => d === 'g' ? (CANAL_INFO[k]?.[1] || DIM_IC.g) : DIM_IC[d]]));
 libGroup = 'g';
-Seg($('libGroup'), ORDER.map(d => [d, DIMS[d], DIM_IC[d]]), libGroup, v => { libGroup = v; drawLib(); });
+const LGD = Dropdown($('lgdd'), { options: GB_OPTS, value: libGroup, search: false, block: true, onChange: v => { libGroup = v; LGS.set(v); drawLib(); } });
+const LGS = Seg($('libGroup'), ORDER.map(d => [d, DIMS[d], DIM_IC[d]]), libGroup, v => { libGroup = v; LGD.set(v); drawLib(); });
 Seg($('libView'), null, libView, v => { libView = v; drawLib(); });
 const ago = s => { const d = (Date.now() - new Date(s)) / 864e5; return d < 1 ? 'hoy' : d < 2 ? 'ayer' : `hace ${Math.floor(d)} días`; };
 function libActions(l, u) {
@@ -1644,6 +1727,7 @@ function drawLib() {
     && libMatch(l) && (!LF.estado || lvOf(l) === LF.estado) && (!mine || l.created_by === ME.id));
   fillLibFilters();
   $('lf_clear').disabled = !Object.values(LF).some(Boolean) && !q && !mine;
+  $('lfc').textContent = (Object.values(LF).filter(Boolean).length + !!q + !!mine) || '';
   if (!LINKS.length) return swap($('lib'), `<div class="empty"><i class="ph ph-link-simple-break"></i><b>Todavía no hay UTMs guardadas</b><span>Arma la primera arriba y pulsa "Guardar UTM".</span></div>`);
   if (!ls.length) return swap($('lib'), `<div class="empty"><i class="ph ph-funnel-x"></i><b>Ninguna UTM coincide con los filtros</b></div>`);
   const kf = LG_KEY[libGroup], M = new Map();
@@ -2070,6 +2154,27 @@ $('c_mtest').onclick = async () => {
   $('c_mtest').disabled = false;
 };
 $('cfg_check').onclick = () => runHealth(true);
+// Menú lateral (móvil) y hojas de filtros
+function drawer(on) {
+  $('drawer').classList.toggle('on', on); $('drawer').inert = !on; $('sheet_bg').classList.toggle('on', on);
+  $('hb').setAttribute('aria-expanded', on); if (on) $('drawer').querySelector('.dr-item:not([hidden])')?.focus();
+}
+let SHEET = null;
+function sheet(id) {
+  SHEET?.classList.remove('on'); SHEET = id ? $(id) : null;
+  SHEET?.classList.add('on'); $('sheet_bg').classList.toggle('on', !!SHEET);
+}
+$('hb').onclick = () => drawer(true);
+$('dr_x').onclick = () => drawer(false);
+$('drawer').addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) { location.hash = '#/' + b.dataset.go; drawer(false); } });
+$('sheet_bg').onclick = () => { drawer(false); sheet(null); };
+document.addEventListener('click', e => {
+  const o = e.target.closest('[data-sheet]'); if (o) return sheet(o.dataset.sheet);
+  if (e.target.closest('[data-sheet-x]')) sheet(null);
+});
+addEventListener('keydown', e => { if (e.key === 'Escape' && !ddOpen) { drawer(false); sheet(null); } });
+matchMedia('(min-width:721px)').addEventListener('change', () => sheet(null));
+
 const NAV = Seg($('nav'), null, 'reporte', r => { location.hash = '#/' + r; });
 const VIEWS = { reporte: () => true, utms: can.crear, usuarios: can.admin, bitacora: can.admin, config: can.admin };
 function route() {
@@ -2077,7 +2182,7 @@ function route() {
   if (!ME) return;
   let r = (location.hash.match(/^#\/(\w+)/) || [])[1] || 'reporte';
   if (!VIEWS[r] || !VIEWS[r]()) r = 'reporte';
-  NAV.set(r);
+  NAV.set(r); document.querySelectorAll('.dr-item').forEach(b => b.classList.toggle('on', b.dataset.go === r));
   Object.keys(VIEWS).forEach(v => { const el = $('view-' + v); const show = v === r; if (show && el.hidden) { el.hidden = false; el.classList.remove('view'); void el.offsetWidth; el.classList.add('view'); } else if (!show) el.hidden = true; });
   if (r === 'usuarios' && !USERS) loadUsers();
   if (r === 'bitacora' && !ACTS) loadActs();
