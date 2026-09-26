@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Campañas UTM · Motomundo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300..800&display=swap" rel="stylesheet">
 <!-- Íconos: Phosphor (regular + fill) -->
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" integrity="sha384-6p9AefaqUhEVheRlj1mpAkbngHXy9mbYMrIdcIt4Jlc9lOLIablJq3bBsLOjGwZ7" crossorigin="anonymous">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" integrity="sha384-pPVoXE8ft+zxKtxIDDI7SfTK6y95NHm4qa+hKEg/hs8VkjW5IP+9/dGOPCbDpUPl" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" integrity="sha384-GFr3yTh5lJznCbZfpTtXnwboFsxqtTQoeTZCRHhE0579KrRmlCzen5AA8ohaB5ug" crossorigin="anonymous"></script>
 <style>
   /* ===== Tokens: rojo · blanco · gris oscuro · negro ===== */
   :root {
@@ -478,7 +478,7 @@
       <h2>Cada UTM, cada cotización, en un solo lugar.</h2>
       <p>Construye links con el estándar de Motomundo y mide lo que generan en Google Analytics 4.</p>
     </div>
-    <div class="stats"><div><b>GA4</b><span>Actualizado a diario</span></div><div><b>2</b><span>Eventos de cotización</span></div><div><b>4</b><span>Canales</span></div></div>
+    <div></div>
   </div>
   <div class="auth-panel"><div class="auth-card" id="authCard"></div></div>
 </div>
@@ -1199,7 +1199,7 @@ function showAuth(screen, extra = {}) {
     setTimeout(() => $('l_mail')?.focus(), 50);
   }
   if (screen === 'recuperar') {
-    c.innerHTML = `<h1>Recuperar contraseña</h1><p>Escribe tu correo. El administrador recibirá tu solicitud al instante y te enviará un enlace para crear una contraseña nueva.</p>
+    c.innerHTML = `<h1>Recuperar contraseña</h1><p>Escribe tu correo y te enviaremos un enlace para crear una contraseña nueva.</p>
       <form id="f_rec" novalidate>
         <label class="field"><span>Correo</span><input class="inp" id="r_mail" type="email" autocomplete="username" required></label>
         <div id="r_msg"></div>
@@ -1211,7 +1211,7 @@ function showAuth(screen, extra = {}) {
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)) { $('r_msg').innerHTML = msg('err', 'Escribe un correo válido.'); return; }
       $('r_go').disabled = true;
       await sb.functions.invoke('admin-users', { body: { action: 'forgot', email: mail } });
-      $('r_msg').innerHTML = msg('ok', 'Listo. Si el correo está registrado, el administrador ya recibió tu solicitud y te hará llegar el enlace.');
+      $('r_msg').innerHTML = msg('ok', 'Listo. Si el correo está registrado, te llegará un enlace en unos minutos (revisa también la carpeta de spam). Si no llega, pide ayuda al administrador.');
     };
   }
   if (screen === 'crear') {
@@ -1309,7 +1309,7 @@ function subscribeRealtime() {
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'activity_log' }, ({ new: a }) => {
       if (ME.role !== 'admin') return;
       ACTS?.unshift(a); if (!$('view-bitacora').hidden) drawActs();
-      if (a.action === 'auth.recuperar_solicitud') notify({ icon:'ph-key', tone:'warn', title:'Solicitud de recuperación', body:`${esc(a.summary)} pidió recuperar su contraseña. Genera su enlace en Usuarios.`, ms: 15000 });
+      if (a.action === 'auth.recuperar_solicitud') notify({ icon:'ph-key', tone:'warn', title:'Solicitud de recuperación', body:`${esc(a.summary)} pidió recuperar su contraseña.${a.detail?.correo_enviado ? ' Se le envió el enlace por correo.' : ' No se pudo enviar el correo: genera su enlace en Usuarios.'}`, ms: 15000 });
     })
     .subscribe();
 }
@@ -1508,20 +1508,27 @@ function inviteText(name, link, type = 'invite') {
     ? `Hola ${name || ''}, te creé un usuario en Motomundo Campañas. Entra a este enlace para crear tu contraseña: ${link}`
     : `Hola ${name || ''}, este es tu enlace para crear una contraseña nueva en Motomundo Campañas: ${link}`;
 }
-function showLink({ name, email, link, type = 'invite' }) {
+function showLink({ name, email, link, type = 'invite', emailed, uid }) {
   const t = inviteText(name, link, type);
   $('u_link').innerHTML = `<div class="l"><i class="ph ph-envelope-simple-open"></i>${type === 'invite' ? 'Invitación lista' : 'Enlace de recuperación listo'}</div>
     <h2 style="color:#fff">${esc(name || email)}</h2>
-    <p style="margin:0;color:var(--gray-300);line-height:1.5">Envíale este enlace. Con él ${type === 'invite' ? 'crea' : 'restablece'} su contraseña (escribiéndola dos veces). Es de un solo uso.</p>
+    <p style="margin:0;color:var(--gray-300);line-height:1.5">${emailed ? `<b style="color:#7ee2a8">Correo enviado a ${esc(email)}.</b> ` : ''}Con este enlace ${type === 'invite' ? 'crea' : 'restablece'} su contraseña (escribiéndola dos veces). Es de un solo uso.</p>
     <div class="out">${esc(link)}</div>
     <div class="actions" style="margin-top:0">
       <button class="btn btn-red" data-copy="${esc(link)}"><i class="ph ph-copy"></i>Copiar enlace</button>
-      <a class="btn btn-ghost-dark" href="mailto:${esc(email)}?subject=${encodeURIComponent(type === 'invite' ? 'Tu acceso a Motomundo Campañas' : 'Recupera tu contraseña de Motomundo Campañas')}&body=${encodeURIComponent(t)}"><i class="ph ph-envelope-simple"></i>Enviar por correo</a>
+      ${uid ? `<button class="btn btn-ghost-dark" data-resend="${uid}"><i class="ph ph-envelope-simple"></i>${emailed ? 'Reenviar correo' : 'Enviar por correo'}</button>` : ''}
+      <a class="btn btn-ghost-dark" href="mailto:${esc(email)}?subject=${encodeURIComponent(type === 'invite' ? 'Tu acceso a Motomundo Campañas' : 'Recupera tu contraseña de Motomundo Campañas')}&body=${encodeURIComponent(t)}"><i class="ph ph-envelope-open"></i>Desde mi correo</a>
       <a class="btn btn-ghost-dark" href="https://wa.me/?text=${encodeURIComponent(t)}" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo"></i>WhatsApp</a>
     </div>`;
   $('u_link').scrollIntoView({ behavior:'smooth', block:'nearest' });
 }
-$('u_link').addEventListener('click', e => { const c = e.target.closest('[data-copy]'); if (c) copy(c.dataset.copy, 'Enlace copiado'); });
+$('u_link').addEventListener('click', async e => {
+  const c = e.target.closest('[data-copy]'); if (c) return copy(c.dataset.copy, 'Enlace copiado');
+  const r = e.target.closest('[data-resend]');
+  if (r) { r.disabled = true; try { const u = USERS?.find(x => x.id === r.dataset.resend) || {}; const j = await adminCall({ action:'link', user_id: r.dataset.resend, send: true });
+    j.emailed ? toast('Correo enviado') : toast(j.email_error || 'No se pudo enviar el correo', true); showLink({ name: u.full_name, email: u.email, link: j.link, type: j.pending ? 'invite' : 'recovery', emailed: j.emailed, uid: r.dataset.resend }); }
+    catch (err) { toast(err.message, true); r.disabled = false; } }
+});
 $('u_create').onclick = async () => {
   const name = $('u_name').value.trim(), email = $('u_mail').value.trim().toLowerCase();
   if (!name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { $('u_msg').innerHTML = msg('err', 'Escribe el nombre y un correo válido.'); return; }
@@ -1529,8 +1536,8 @@ $('u_create').onclick = async () => {
   $('u_create').disabled = true; $('u_msg').innerHTML = '';
   try {
     const r = await adminCall({ action:'invite', email, full_name: name, role: UR.value, canal: UC.value || null });
-    $('u_msg').innerHTML = msg('ok', `Usuario creado. Envíale la invitación.`);
-    showLink({ name, email, link: r.link }); $('u_name').value = ''; $('u_mail').value = '';
+    $('u_msg').innerHTML = r.emailed ? msg('ok', `Usuario creado. Le enviamos la invitación a ${esc(email)}.`) : msg('info', `Usuario creado. ${esc(r.email_error || 'No se envió el correo')}: compártele el enlace.`);
+    showLink({ name, email, link: r.link, emailed: r.emailed, uid: r.id }); $('u_name').value = ''; $('u_mail').value = '';
     loadUsers();
   } catch (e) { $('u_msg').innerHTML = msg('err', esc(e.message)); }
   $('u_create').disabled = false;
@@ -1581,7 +1588,7 @@ async function updUser(u, patch) {
 }
 $('users').addEventListener('click', async e => {
   const l = e.target.closest('[data-ulink]'), a = e.target.closest('[data-uact]'), d = e.target.closest('[data-udel]');
-  if (l) { const u = USERS.find(x => x.id === l.dataset.ulink); try { const r = await adminCall({ action:'link', user_id: u.id }); showLink({ name: u.full_name, email: u.email, link: r.link, type: r.pending ? 'invite' : 'recovery' }); } catch (err) { toast(err.message, true); } }
+  if (l) { const u = USERS.find(x => x.id === l.dataset.ulink); try { const r = await adminCall({ action:'link', user_id: u.id }); showLink({ name: u.full_name, email: u.email, link: r.link, type: r.pending ? 'invite' : 'recovery', uid: u.id }); } catch (err) { toast(err.message, true); } }
   if (a) { const u = USERS.find(x => x.id === a.dataset.uact); updUser(u, { active: !u.active }); }
   if (d) {
     const u = USERS.find(x => x.id === d.dataset.udel);

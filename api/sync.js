@@ -1,5 +1,5 @@
+import { timingSafeEqual } from 'node:crypto';
 import { fetchDaily } from '../lib/ga4sync.js';
-import { rpc } from '../lib/supabase.js';
 
 // Fecha de Honduras (UTC-6) desplazada n días
 const hnDate = (n = 0) => new Date(Date.now() - 6 * 3600e3 + n * 864e5).toISOString().slice(0, 10);
@@ -9,7 +9,10 @@ const addD = (s, n) => new Date(Date.parse(s + 'T12:00Z') + n * 864e5).toISOStri
 // - Cron diario (vercel.json): últimos 3 días hasta ayer (GA4 a veces completa datos con retraso)
 // - Manual: /api/sync?from=2026-09-01&to=2026-09-24 con el header Authorization: Bearer <CRON_SECRET>
 export default async function handler(req, res) {
-  if (req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) return res.status(401).json({ error: 'no autorizado' });
+  const auth = req.headers.authorization || '', expected = `Bearer ${process.env.CRON_SECRET}`;
+  if (!process.env.CRON_SECRET || auth.length !== expected.length || !timingSafeEqual(Buffer.from(auth), Buffer.from(expected))) return res.status(401).json({ error: 'no autorizado' });
+  const isDate = s => /^\d{4}-\d{2}-\d{2}$/.test(s);
+  if ((req.query.from && !isDate(req.query.from)) || (req.query.to && !isDate(req.query.to))) return res.status(400).json({ error: 'fechas inválidas' });
   try {
     const to = req.query.to || hnDate(-1), from = req.query.from || addD(to, -2);
     const rows = await fetchDaily(from, to);
@@ -17,10 +20,23 @@ export default async function handler(req, res) {
     for (const r of rows) (byDay.get(r.date) || byDay.set(r.date, []).get(r.date)).push(r);
     const result = {};
     for (let d = from; d <= to; d = addD(d, 1)) {
-      result[d] = await rpc('ga4_sync_upsert', { p_secret: process.env.SYNC_SECRET, p_from: d, p_to: d, p_rows: byDay.get(d) || [] });
+      result[d] = await ingest(d, byDay.get(d) || []);
     }
     res.status(200).json({ from, to, rows: rows.length, porDia: result });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: 'Falló la sincronización' });
   }
+}
+
+// Envía las filas a la función ga4-ingest de Supabase, que escribe con la llave de servicio
+async function ingest(day, rows) {
+  const res = await fetch(`${process.env.SUPABASE_URL}/functions/v1/ga4-ingest`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', apikey: process.env.SUPABASE_KEY, 'x-sync-secret': process.env.SYNC_SECRET },
+    body: JSON.stringify({ from: day, to: day, rows }),
+  });
+  const j = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(`Supabase ${res.status}: ${j.error || ''}`);
+  return j.rows;
 }
