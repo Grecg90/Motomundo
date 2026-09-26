@@ -4,184 +4,208 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Campañas UTM · Motomundo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Raleway:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<!-- Íconos: Phosphor (regular + fill) -->
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
 <style>
   /* ===== Tokens: rojo · blanco · gris oscuro · negro ===== */
   :root {
     --red:#d71920; --red-600:#b3141a; --red-50:#fdecec; --red-100:#f9d3d4;
-    --black:#0d0e10; --ink:#17181b; --graphite:#2a2c31; --gray-700:#3d4047; --gray-500:#6c7079; --gray-300:#c9ccd2; --gray-200:#e3e5e9; --gray-100:#f1f2f4; --white:#fff;
-    --ok:#1f7a4a; --ok-50:#e5f4ec; --warn:#9a5b00; --warn-50:#fdf1dc;
-    --r-lg:20px; --r-md:12px; --r-sm:8px;
-    --shadow:0 1px 2px rgba(13,14,16,.06), 0 8px 24px -12px rgba(13,14,16,.18);
-    --display:'Raleway', system-ui, sans-serif; --body:'Nunito', system-ui, sans-serif;
+    --black:#0d0e10; --ink:#17181b; --graphite:#26282d; --graphite-2:#32353b; --gray-700:#3d4047; --gray-500:#6a6e77; --gray-300:#c7cad0; --gray-200:#e2e4e8; --gray-100:#f0f1f3; --white:#fff;
+    --ok:#1c7a47; --ok-50:#e4f4eb; --warn:#935600; --warn-50:#fdf0da; --warn-dot:#e0a030;
+    --r-lg:20px; --r-md:14px; --r-sm:10px;
+    --shadow:0 1px 2px rgba(13,14,16,.05), 0 10px 28px -14px rgba(13,14,16,.22);
+    --shadow-pop:0 24px 60px -18px rgba(13,14,16,.45), 0 0 0 1px rgba(13,14,16,.06);
+    --font:'Exo 2', system-ui, sans-serif; --mono:ui-monospace, 'SF Mono', Menlo, monospace;
     --ease:cubic-bezier(.2,.8,.2,1);
   }
   * { box-sizing:border-box; }
-  html { -webkit-text-size-adjust:100%; }
-  body { margin:0; font-family:var(--body); font-size:14px; color:var(--ink); background:var(--gray-100); }
-  .num, .kpi .v, .cn .nums b, td, .dp-btn { font-variant-numeric:lining-nums tabular-nums; }
-  button, input, select { font:inherit; color:inherit; }
+  html { -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+  body { margin:0; font-family:var(--font); font-size:14px; color:var(--ink); background:var(--gray-100); font-variant-numeric:lining-nums tabular-nums; }
+  button, input, select, textarea { font:inherit; color:inherit; }
+  button { cursor:pointer; }
   :focus-visible { outline:2px solid var(--red); outline-offset:2px; }
+  .ph, .ph-fill { font-size:1.15em; line-height:1; flex:none; }
   .muted { color:var(--gray-500); }
-  .err { color:var(--red); }
+  [hidden] { display:none !important; }
 
   /* ===== Header ===== */
   .top { background:var(--black); color:var(--white); position:sticky; top:0; z-index:30; }
-  .top-in { max-width:1320px; margin:0 auto; padding:0 20px; height:68px; display:flex; align-items:center; gap:20px; }
-  .brand { display:flex; align-items:center; gap:12px; min-width:0; }
-  .mark { width:36px; height:36px; border-radius:10px; background:var(--red); display:grid; place-items:center; font-family:var(--display); font-weight:900; font-size:18px; flex:none; }
-  .brand-t { font-family:var(--display); font-weight:800; font-size:17px; letter-spacing:-.01em; white-space:nowrap; }
+  .top-in { max-width:1320px; margin:0 auto; padding:0 20px; height:68px; display:flex; align-items:center; gap:18px; }
+  .brand { display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit; }
+  .mark { width:36px; height:36px; border-radius:10px; background:var(--red); display:grid; place-items:center; font-weight:900; font-size:19px; flex:none; }
+  .brand-t { font-weight:800; font-size:17px; letter-spacing:-.01em; white-space:nowrap; }
   .brand-t span { color:var(--gray-300); font-weight:600; }
-  .top nav { display:flex; gap:4px; margin-left:12px; }
-  .top nav a { color:var(--gray-300); text-decoration:none; font-weight:600; font-size:13px; padding:7px 12px; border-radius:999px; transition:background .2s var(--ease), color .2s var(--ease); }
-  .top nav a:hover { color:var(--white); background:rgba(255,255,255,.08); }
-  .top nav a.on { color:var(--white); background:var(--graphite); }
-  .top .sp { flex:1; }
+  .sp { flex:1; }
+
+  /* ===== Segmented control con píldora deslizante (header, agrupar, vistas) ===== */
+  .seg { position:relative; display:inline-flex; padding:4px; border-radius:999px; background:var(--gray-100); max-width:100%; overflow-x:auto; scrollbar-width:none; }
+  .seg::-webkit-scrollbar { display:none; }
+  .seg .pill { position:absolute; top:4px; bottom:4px; left:0; width:0; border-radius:999px; background:var(--black); transition:transform .28s var(--ease), width .28s var(--ease); z-index:0; pointer-events:none; }
+  .seg button { position:relative; z-index:1; border:0; background:none; padding:8px 14px; border-radius:999px; font-weight:700; font-size:13px; color:var(--gray-700); white-space:nowrap; display:flex; align-items:center; gap:7px; transition:color .2s var(--ease); }
+  .seg button:hover { color:var(--ink); }
+  .seg button.on { color:var(--white); }
+  .seg.dark { background:var(--graphite); } .seg.dark button { color:var(--gray-300); } .seg.dark button:hover { color:var(--white); } .seg.dark .pill { background:var(--white); } .seg.dark button.on { color:var(--black); }
+  .seg.icons button { padding:8px 11px; }
 
   /* ===== Selector de fecha ===== */
   .dp { position:relative; }
-  .dp-btn { display:flex; gap:10px; align-items:center; background:var(--graphite); color:var(--white); border:1px solid #3a3d44; border-radius:999px; padding:8px 14px 8px 12px; cursor:pointer; font-size:13px; white-space:nowrap; transition:border-color .2s var(--ease); }
-  .dp-btn:hover { border-color:#5a5e67; }
-  .dp-btn svg { width:16px; height:16px; flex:none; }
+  .dp-btn { display:flex; gap:10px; align-items:center; background:var(--graphite); color:var(--white); border:1px solid var(--graphite-2); border-radius:999px; padding:8px 14px 8px 12px; font-size:13px; white-space:nowrap; transition:border-color .2s var(--ease), background .2s var(--ease); }
+  .dp-btn:hover, .dp-btn[aria-expanded="true"] { border-color:#565a63; background:#2d3036; }
   .dp-btn b { font-weight:800; }
-  .dp-btn .car { width:8px; height:8px; border-right:2px solid var(--gray-300); border-bottom:2px solid var(--gray-300); transform:rotate(45deg) translateY(-2px); margin-left:2px; }
-  .dp-pop { position:absolute; right:0; top:calc(100% + 10px); z-index:40; background:var(--white); color:var(--ink); border-radius:var(--r-lg); box-shadow:0 24px 60px -20px rgba(13,14,16,.45), 0 0 0 1px var(--gray-200); display:flex; overflow:hidden;
-    transform-origin:top right; animation:pop .18s var(--ease); }
-  @keyframes pop { from { opacity:0; transform:translateY(-4px) scale(.98); } }
-  .dp-pop[hidden] { display:none; }
-  .dp-presets { display:flex; flex-direction:column; gap:2px; padding:12px; background:var(--gray-100); min-width:180px; }
-  .dp-presets button { white-space:nowrap; }
-  .dp-presets button { text-align:left; background:none; border:0; border-radius:var(--r-sm); padding:8px 12px; cursor:pointer; font-weight:600; }
+  .dp-btn .ph-caret-down { transition:transform .2s var(--ease); } .dp-btn[aria-expanded="true"] .ph-caret-down { transform:rotate(180deg); }
+  .dp-pop { position:absolute; right:0; top:calc(100% + 10px); z-index:40; background:var(--white); color:var(--ink); border-radius:var(--r-lg); box-shadow:var(--shadow-pop); display:flex; overflow:hidden; transform-origin:top right; }
+  .pop-in { animation:popIn .18s var(--ease); }
+  @keyframes popIn { from { opacity:0; transform:translateY(-6px) scale(.98); } }
+  .dp-presets { display:flex; flex-direction:column; gap:2px; padding:12px; background:var(--gray-100); min-width:184px; }
+  .dp-presets button { text-align:left; background:none; border:0; border-radius:var(--r-sm); padding:9px 12px; font-weight:600; white-space:nowrap; display:flex; align-items:center; justify-content:space-between; gap:10px; }
   .dp-presets button:hover { background:var(--gray-200); }
   .dp-presets button.on { background:var(--black); color:var(--white); }
-  .dp-cal { padding:14px 16px; position:relative; }
-  .dp-nav { position:absolute; left:10px; right:10px; top:10px; display:flex; justify-content:space-between; pointer-events:none; }
-  .dp-nav button { pointer-events:auto; width:30px; height:30px; border:0; border-radius:50%; background:none; cursor:pointer; font-size:0; position:relative; }
+  .dp-cal { padding:14px 16px 16px; position:relative; }
+  .dp-nav { position:absolute; left:12px; right:12px; top:12px; display:flex; justify-content:space-between; pointer-events:none; }
+  .dp-nav button { pointer-events:auto; width:30px; height:30px; border:0; border-radius:50%; background:none; display:grid; place-items:center; color:var(--gray-700); }
   .dp-nav button:hover { background:var(--gray-100); }
-  .dp-nav button::after { content:''; position:absolute; inset:0; margin:auto; width:7px; height:7px; border-left:2px solid var(--gray-700); border-bottom:2px solid var(--gray-700); transform:rotate(45deg); }
-  .dp-nav button#dp_nextm::after { transform:rotate(-135deg); }
-  .dp-months { display:flex; gap:22px; }
-  .mo .mt { text-align:center; font-family:var(--display); font-weight:700; margin:4px 0 8px; text-transform:capitalize; }
-  .dg { display:grid; grid-template-columns:repeat(7, 34px); gap:2px 0; }
+  .dp-months { display:flex; gap:24px; }
+  .mo .mt { text-align:center; font-weight:800; margin:6px 0 10px; text-transform:capitalize; }
+  .dg { display:grid; grid-template-columns:repeat(7, 36px); row-gap:2px; }
   .dg .wd { text-align:center; font-size:11px; color:var(--gray-500); font-weight:700; padding:4px 0; }
-  .dg button { height:32px; border:0; background:none; cursor:pointer; border-radius:var(--r-sm); font-size:13px; font-weight:600; }
-  .dg button:hover:not(.off) { background:var(--gray-100); }
-  .dg button.in { background:var(--red-50); border-radius:0; }
+  .dg button { height:34px; border:0; background:none; border-radius:var(--r-sm); font-size:13px; font-weight:600; transition:background .12s; }
+  .dg button:hover:not(.off):not(.edge) { background:var(--gray-100); }
+  .dg button.in { background:var(--red-50); border-radius:0; color:var(--red-600); }
   .dg button.edge { background:var(--red); color:var(--white); }
+  .dg button.today { box-shadow:inset 0 0 0 1px var(--gray-300); }
   .dg button.off { color:var(--gray-300); cursor:default; }
   .dp-foot { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:12px; padding-top:12px; border-top:1px solid var(--gray-200); color:var(--gray-500); font-size:13px; }
-  .dp-apply { background:var(--red); color:var(--white); border:0; border-radius:999px; padding:8px 18px; font-weight:700; cursor:pointer; }
-  .dp-apply:hover { background:var(--red-600); } .dp-apply:disabled { opacity:.35; cursor:default; }
+  .dp-foot b { color:var(--ink); }
 
-  /* ===== Página ===== */
+  /* ===== Botones ===== */
+  .btn { text-decoration:none; display:inline-flex; align-items:center; gap:8px; border:1px solid transparent; border-radius:999px; padding:9px 16px; font-weight:700; font-size:13px; white-space:nowrap; transition:background .15s var(--ease), border-color .15s var(--ease), color .15s var(--ease), transform .1s; }
+  .btn:active:not(:disabled) { transform:scale(.97); }
+  .btn:disabled { opacity:.4; cursor:default; }
+  .btn-red { background:var(--red); color:var(--white); } .btn-red:hover:not(:disabled) { background:var(--red-600); }
+  .btn-dark { background:var(--black); color:var(--white); } .btn-dark:hover:not(:disabled) { background:var(--graphite); }
+  .btn-ghost { background:var(--white); border-color:var(--gray-200); color:var(--gray-700); } .btn-ghost:hover:not(:disabled) { border-color:var(--ink); color:var(--ink); }
+  .btn-ghost-dark { background:transparent; border-color:var(--graphite-2); color:var(--gray-300); } .btn-ghost-dark:hover:not(:disabled) { border-color:#6a6e77; color:var(--white); }
+  .ibtn { width:32px; height:32px; border-radius:50%; border:0; background:none; display:grid; place-items:center; color:var(--gray-500); transition:background .15s, color .15s; }
+  .ibtn:hover { background:var(--gray-100); color:var(--ink); }
+  .ibtn.danger:hover { background:var(--red-50); color:var(--red); }
+
+  /* ===== Desplegable propio (con buscador) ===== */
+  .dd-btn { display:inline-flex; align-items:center; gap:8px; max-width:100%; background:var(--white); border:1px solid var(--gray-200); border-radius:999px; padding:7px 12px 7px 14px; font-size:13px; font-weight:600; color:var(--gray-700); transition:border-color .15s var(--ease), background .15s var(--ease), color .15s; }
+  .dd-btn:hover, .dd-btn[aria-expanded="true"] { border-color:var(--gray-300); color:var(--ink); }
+  .dd-btn .k { color:var(--gray-500); font-weight:600; }
+  .dd-btn .dv { font-weight:800; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px; }
+  .dd-btn .ph-caret-down { color:var(--gray-500); transition:transform .2s var(--ease); } .dd-btn[aria-expanded="true"] .ph-caret-down { transform:rotate(180deg); }
+  .dd-btn.active { background:var(--black); border-color:var(--black); color:var(--white); }
+  .dd-btn.active .k { color:var(--gray-300); } .dd-btn.active .dv, .dd-btn.active .ph-caret-down { color:var(--white); }
+  .dd-btn.block { width:100%; border-radius:var(--r-sm); justify-content:space-between; padding:10px 12px; }
+  .dd-btn.block .dv { max-width:none; }
+  .dd-btn.darkin { background:var(--graphite); border-color:var(--graphite-2); color:var(--white); } .dd-btn.darkin .dv { color:var(--white); } .dd-btn.darkin:hover { border-color:#6a6e77; }
+  .dd-pop { position:fixed; z-index:60; width:320px; max-width:calc(100vw - 24px); background:var(--white); border-radius:var(--r-md); box-shadow:var(--shadow-pop); overflow:hidden; display:flex; flex-direction:column; max-height:min(420px, 70vh); }
+  .dd-search { display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:1px solid var(--gray-200); color:var(--gray-500); }
+  .dd-search input { flex:1; border:0; outline:0; background:none; font-size:14px; min-width:0; color:var(--ink); }
+  .dd-list { overflow-y:auto; padding:6px; overscroll-behavior:contain; }
+  .dd-opt { width:100%; display:flex; align-items:center; gap:10px; text-align:left; border:0; background:none; border-radius:var(--r-sm); padding:8px 10px; font-size:13px; }
+  .dd-opt .lb { flex:1; min-width:0; overflow-wrap:anywhere; font-weight:600; }
+  .dd-opt .mt { font-size:12px; color:var(--gray-500); white-space:nowrap; font-weight:700; }
+  .dd-opt .ck { width:16px; color:var(--red); visibility:hidden; }
+  .dd-opt.sel .ck { visibility:visible; } .dd-opt.sel .lb { font-weight:800; }
+  .dd-opt.hl { background:var(--gray-100); }
+  .dd-empty { padding:18px; text-align:center; color:var(--gray-500); font-size:13px; }
+  .dd-sep { height:1px; background:var(--gray-200); margin:4px 6px; }
+
+  /* ===== Switch ===== */
+  .sw { display:inline-flex; align-items:center; gap:10px; font-weight:700; font-size:13px; color:var(--gray-700); white-space:nowrap; cursor:pointer; user-select:none; }
+  .sw input { position:absolute; opacity:0; pointer-events:none; }
+  .sw .tr { width:34px; height:20px; border-radius:999px; background:var(--gray-300); position:relative; transition:background .2s var(--ease); flex:none; }
+  .sw .tr::after { content:''; position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:var(--white); box-shadow:0 1px 2px rgba(0,0,0,.25); transition:transform .2s var(--ease); }
+  .sw input:checked + .tr { background:var(--red); } .sw input:checked + .tr::after { transform:translateX(14px); }
+  .sw input:focus-visible + .tr { outline:2px solid var(--red); outline-offset:2px; }
+
+  /* ===== Página / vistas ===== */
   main { max-width:1320px; margin:0 auto; padding:28px 20px 48px; }
+  .view { animation:viewIn .28s var(--ease); }
+  @keyframes viewIn { from { opacity:0; transform:translateY(8px); } }
   .intro { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:20px; }
-  h1 { font-family:var(--display); font-weight:800; font-size:30px; letter-spacing:-.025em; line-height:1.1; margin:0; }
+  h1 { font-weight:800; font-size:30px; letter-spacing:-.02em; line-height:1.1; margin:0; }
+  h2 { font-weight:800; font-size:18px; letter-spacing:-.01em; margin:0; }
   .intro p { margin:6px 0 0; color:var(--gray-500); font-size:15px; }
   .intro .cmp { font-size:13px; color:var(--gray-500); text-align:right; }
   .intro .cmp b { color:var(--ink); }
 
   /* ===== Bento ===== */
-  .bento { display:grid; grid-template-columns:repeat(12, 1fr); gap:14px; margin-bottom:14px; }
-  .bento > #kpis, .bento > #canales { display:contents; }
+  .bento { display:grid; grid-template-columns:repeat(12, minmax(0, 1fr)); gap:14px; margin-bottom:14px; }
+  .bento > .contents { display:contents; }
   .tile { background:var(--white); border-radius:var(--r-lg); padding:20px 22px; box-shadow:var(--shadow); min-width:0; position:relative; }
-  .tile .l { font-size:13px; font-weight:700; color:var(--gray-500); }
-  .tile .v { font-family:var(--display); font-weight:800; font-size:34px; letter-spacing:-.03em; line-height:1; margin-top:10px; }
-  .tile .s { font-size:13px; color:var(--gray-500); margin-top:8px; }
+  .tile > .l { font-size:13px; font-weight:700; color:var(--gray-500); display:flex; align-items:center; gap:7px; }
+  .tile > .v { font-weight:800; font-size:34px; letter-spacing:-.02em; line-height:1; margin-top:10px; }
+  .tile > .s { font-size:13px; color:var(--gray-500); margin-top:8px; }
   .t-hero { grid-column:span 6; grid-row:span 2; background:var(--black); color:var(--white); display:flex; flex-direction:column; padding:24px 26px; overflow:hidden; }
   .t-hero .l { color:var(--gray-300); }
   .t-hero .pair { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:14px; }
-  .t-hero .pair .v { font-size:54px; }
-  .t-hero .pair .n { font-size:13px; font-weight:700; color:var(--gray-300); margin-top:8px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-  .t-hero .pair .sw { width:10px; height:10px; border-radius:3px; display:inline-block; }
+  .t-hero .pair .v { font-weight:800; font-size:56px; letter-spacing:-.02em; line-height:1; }
+  .t-hero .pair .n { font-size:13px; font-weight:700; color:var(--gray-300); margin-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .t-hero .pair .swc { width:10px; height:10px; border-radius:3px; display:inline-block; }
   .chart { margin-top:auto; padding-top:18px; }
   .chart svg { width:100%; height:110px; display:block; overflow:visible; }
   .chart .ax { display:flex; justify-content:space-between; font-size:11px; color:var(--gray-500); margin-top:6px; }
-  .chart rect { transition:opacity .15s; } .chart g:hover rect { opacity:.75; }
-  .t-sm { grid-column:span 3; }
-  .t-md { grid-column:span 6; }
-  .t-red { background:var(--red); color:var(--white); }
-  .t-red .l, .t-red .s { color:#ffd9da; }
-  .t-graph { background:var(--graphite); color:var(--white); }
-  .t-graph .l, .t-graph .s { color:var(--gray-300); }
-  .stack { display:flex; height:12px; border-radius:999px; overflow:hidden; margin:16px 0 12px; background:var(--gray-100); }
+  .chart g:hover rect { opacity:.75; }
+  .t-sm { grid-column:span 3; } .t-md { grid-column:span 6; } .t-full { grid-column:1 / -1; }
+  .t-red { background:var(--red); color:var(--white); } .t-red .l, .t-red .s { color:#ffdcdd; }
+  .t-graph { background:var(--graphite); color:var(--white); } .t-graph .l, .t-graph .s { color:var(--gray-300); }
+  .t-black { background:var(--black); color:var(--white); } .t-black .l, .t-black .s { color:var(--gray-300); }
+  .stack { display:flex; height:12px; border-radius:999px; overflow:hidden; margin:16px 0 12px; background:var(--gray-100); gap:2px; }
   .stack i { display:block; height:100%; }
   .legend { display:flex; gap:16px; flex-wrap:wrap; font-size:13px; font-weight:600; }
   .legend span { display:flex; align-items:center; gap:6px; } .legend i { width:10px; height:10px; border-radius:3px; }
+  .skel { background:linear-gradient(90deg, #e6e8eb 0, #f3f4f6 50%, #e6e8eb 100%) !important; background-size:200% 100% !important; animation:sk 1.2s linear infinite; min-height:130px; box-shadow:none !important; }
+  @keyframes sk { to { background-position:-200% 0; } }
 
   /* Canales */
-  .cn { grid-column:span 3; text-align:left; border:0; cursor:pointer; transition:transform .2s var(--ease), box-shadow .2s var(--ease); }
+  .cn { grid-column:span 3; text-align:left; border:0; transition:transform .2s var(--ease), box-shadow .2s var(--ease); }
   .cn:hover { transform:translateY(-2px); }
   .cn:active { transform:translateY(0) scale(.99); }
   .cn.on { box-shadow:0 0 0 2px var(--red), var(--shadow); }
-  .cn .h { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
-  .cn .h b { font-family:var(--display); font-weight:800; font-size:20px; letter-spacing:-.02em; }
+  .cn .h { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  .cn .h b { font-weight:800; font-size:20px; letter-spacing:-.01em; display:flex; align-items:center; gap:8px; }
+  .cn .h b .ph { color:var(--red); }
   .cn .h span { font-size:12px; font-weight:700; color:var(--gray-500); white-space:nowrap; }
-  .cn .d { font-size:12px; color:var(--gray-500); margin:2px 0 14px; }
+  .cn .d { font-size:12px; color:var(--gray-500); margin:4px 0 14px; }
   .cn .nums { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; }
-  .cn .nums div { font-size:11px; font-weight:700; color:var(--gray-500); line-height:1.4; }
-  .cn .nums b { display:block; font-family:var(--display); font-weight:800; font-size:20px; color:inherit; letter-spacing:-.02em; margin-bottom:2px; }
-  .cn.t-red .h span, .cn.t-red .d, .cn.t-red .nums div { color:#ffd9da; }
-  .cn.t-graph .h span, .cn.t-graph .d, .cn.t-graph .nums div { color:var(--gray-300); }
+  .cn .nums div { font-size:11px; font-weight:700; color:var(--gray-500); line-height:1.45; }
+  .cn .nums b { display:block; font-weight:800; font-size:21px; color:var(--ink); letter-spacing:-.01em; margin-bottom:2px; }
 
   /* Variación vs periodo anterior */
-  .dl { display:inline-flex; align-items:center; gap:3px; font-family:var(--body); font-size:12px; font-weight:800; letter-spacing:0; white-space:nowrap; }
-  .dl::before { content:''; width:0; height:0; border-left:4px solid transparent; border-right:4px solid transparent; }
-  .dl.up { color:var(--ok); } .dl.up::before { border-bottom:6px solid currentColor; }
-  .dl.dn { color:var(--red); } .dl.dn::before { border-top:6px solid currentColor; }
-  .dl.eq { color:var(--gray-500); } .dl.eq::before { display:none; }
-  .tile .v .dl { margin-left:10px; vertical-align:middle; padding:3px 8px; border-radius:999px; font-size:12px; }
-  .tile .v .dl.up { background:var(--ok-50); } .tile .v .dl.dn { background:var(--red-50); } .tile .v .dl.eq { background:var(--gray-100); }
-  .t-hero .dl.up, .t-graph .dl.up { color:#7ee2a8; } .t-hero .dl.dn, .t-graph .dl.dn { color:#ff8a8e; }
-  .t-hero .v .dl, .t-graph .v .dl, .t-red .v .dl { background:rgba(255,255,255,.1) !important; }
-  .t-red .dl, .t-red .dl.dn, .t-red .dl.up { color:var(--white); }
+  .dl { display:inline-flex; align-items:center; gap:2px; font-size:12px; font-weight:800; letter-spacing:0; white-space:nowrap; }
+  .dl.up { color:var(--ok); } .dl.dn { color:var(--red); } .dl.eq { color:var(--gray-500); }
+  .tile > .v .dl { margin-left:10px; vertical-align:middle; padding:3px 8px 3px 6px; border-radius:999px; font-size:12px; }
+  .tile > .v .dl.up { background:var(--ok-50); } .tile > .v .dl.dn { background:var(--red-50); } .tile > .v .dl.eq { background:var(--gray-100); }
+  .t-hero .dl.up, .t-graph .dl.up, .t-black .dl.up { color:#7ee2a8; } .t-hero .dl.dn, .t-graph .dl.dn, .t-black .dl.dn { color:#ff9296; }
+  .t-hero .v .dl, .t-graph .v .dl, .t-red .v .dl, .t-black .v .dl { background:rgba(255,255,255,.12) !important; }
+  .t-red .dl { color:var(--white) !important; }
   td .dl { display:flex; justify-content:flex-end; margin-top:2px; font-size:11px; }
 
-  /* ===== Guía / constructor ===== */
-  details.guide { grid-column:1 / -1; padding:0; overflow:hidden; }
-  details.guide summary { cursor:pointer; padding:18px 22px; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:12px; }
-  details.guide summary::-webkit-details-marker { display:none; }
-  details.guide summary h2 { margin:0; font-family:var(--display); font-weight:800; font-size:18px; letter-spacing:-.015em; }
-  details.guide summary p { margin:2px 0 0; color:var(--gray-500); font-size:13px; }
-  details.guide summary .tg { font-weight:700; font-size:13px; color:var(--red); white-space:nowrap; }
-  details.guide summary .tg::after { content:'Abrir'; } details.guide[open] summary .tg::after { content:'Cerrar'; }
-  .gbody { padding:0 22px 22px; display:grid; grid-template-columns:7fr 5fr; gap:18px; }
-  .rules { display:grid; grid-template-columns:1fr 1fr; gap:10px; align-content:start; }
-  .rule { background:var(--gray-100); border-radius:var(--r-md); padding:14px 16px; }
-  .rule .k { font-size:12px; color:var(--gray-500); font-weight:700; }
-  .rule h4 { margin:2px 0 6px; font-family:var(--display); font-weight:800; font-size:16px; }
-  .rule p { margin:0; font-size:13px; color:var(--gray-700); line-height:1.5; }
-  .rule code { background:var(--white); border-radius:5px; padding:1px 6px; font-size:12px; display:inline-block; margin:2px 2px 0 0; }
-  .builder { background:var(--black); color:var(--white); border-radius:var(--r-md); padding:18px; display:grid; gap:10px; align-content:start; }
-  .builder label { display:grid; gap:4px; font-size:12px; font-weight:700; color:var(--gray-300); }
-  .builder input, .builder select { width:100%; min-width:0; background:var(--graphite); color:var(--white); border:1px solid #3a3d44; border-radius:var(--r-sm); padding:9px 11px; font-size:14px; }
-  .builder input::placeholder { color:#8e929b; }
-  .builder input:focus, .builder select:focus { border-color:var(--red); outline:none; }
-  .builder .muted { color:var(--gray-300); font-size:12px; }
-  .out { background:var(--ink); border:1px dashed #3a3d44; color:#f3f3f4; border-radius:var(--r-sm); padding:10px 12px; font-family:ui-monospace, Menlo, monospace; font-size:12px; overflow-wrap:anywhere; min-height:44px; }
-  .builder .issues li { color:#ffb3b5; } .builder .issues li.warn { color:#ffd48a; } .builder .issues li.okl { color:#7ee2a8; }
-  .builder .copy { background:var(--red); color:var(--white); border:0; padding:8px 16px; font-size:13px; }
-  .builder .copy:hover { background:var(--red-600); color:var(--white); }
-
-  /* ===== Tabla ===== */
+  /* ===== Reporte: barra de herramientas y filtros ===== */
   .card { grid-column:1 / -1; }
-  .toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px; }
-  .tabs { position:relative; display:flex; background:var(--gray-100); border-radius:999px; padding:4px; overflow-x:auto; scrollbar-width:none; }
-  .tabs .pill { position:absolute; top:4px; bottom:4px; left:0; background:var(--black); border-radius:999px; transition:transform .25s var(--ease); z-index:0; }
-  .tabs button { position:relative; z-index:1; border:0; background:none; padding:8px 14px; border-radius:999px; font-weight:700; font-size:13px; color:var(--gray-700); cursor:pointer; white-space:nowrap; transition:color .2s var(--ease); }
-  .tabs button.on { color:var(--white); }
-  .toolbar input#q { flex:1; min-width:200px; background:var(--gray-100); border:1px solid transparent; border-radius:999px; padding:9px 16px; }
-  .toolbar input#q:focus { background:var(--white); border-color:var(--gray-300); outline:none; }
-  .toolbar select, .filters select { background:var(--white); border:1px solid var(--gray-200); border-radius:var(--r-sm); padding:8px 10px; font-size:13px; }
-  .chk { display:flex; gap:8px; align-items:center; font-weight:600; font-size:13px; white-space:nowrap; cursor:pointer; }
-  .chk input { accent-color:var(--red); width:16px; height:16px; }
-  .filters { display:grid; grid-template-columns:repeat(7, minmax(0, 1fr)) auto; gap:8px; margin-bottom:12px; align-items:end; }
-  .filters label { display:flex; flex-direction:column; gap:4px; font-size:12px; color:var(--gray-500); font-weight:700; min-width:0; }
-  .filters select { width:100%; text-overflow:ellipsis; }
-  .filters select.on { border-color:var(--red); background:var(--red-50); color:var(--red-600); font-weight:700; }
-  .clear { border:0; background:none; color:var(--red); font-weight:700; cursor:pointer; padding:8px 4px; white-space:nowrap; }
+  .card-h { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+  .toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .toolbar .grow { flex:1; }
+  .search { display:flex; align-items:center; gap:8px; background:var(--gray-100); border:1px solid transparent; border-radius:999px; padding:0 14px; min-width:220px; flex:1; max-width:360px; transition:background .15s, border-color .15s; color:var(--gray-500); }
+  .search:focus-within { background:var(--white); border-color:var(--gray-300); }
+  .search input { border:0; outline:0; background:none; padding:9px 0; flex:1; min-width:0; color:var(--ink); }
+  .fbar { display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:12px; margin:0 0 14px; background:var(--gray-100); border-radius:var(--r-md); }
+  .fbar .lab { display:flex; align-items:center; gap:6px; font-weight:800; font-size:13px; color:var(--gray-700); padding:0 6px 0 4px; }
+  .fbar .div { width:1px; align-self:stretch; background:var(--gray-200); margin:2px 4px; }
+  .clear { border:0; background:none; color:var(--red); font-weight:800; font-size:13px; padding:7px 8px; display:inline-flex; align-items:center; gap:6px; border-radius:999px; }
+  .clear:hover:not(:disabled) { background:var(--red-50); }
   .clear:disabled { color:var(--gray-300); cursor:default; }
-  .count { color:var(--gray-500); font-size:13px; margin:0 0 8px; font-weight:600; }
+  .count { color:var(--gray-500); font-size:13px; margin:0 0 10px; font-weight:600; display:flex; gap:14px; flex-wrap:wrap; }
+  .count b { color:var(--ink); }
+  .swap { animation:swapIn .22s var(--ease); }
+  @keyframes swapIn { from { opacity:0; transform:translateY(6px); } }
+
+  /* Tabla */
   .table-wrap { overflow-x:auto; margin:0 -22px; padding:0 22px; }
   table { width:100%; border-collapse:collapse; }
   th { text-align:right; font-weight:700; color:var(--gray-500); font-size:12px; padding:10px 8px; border-bottom:1px solid var(--gray-200); white-space:nowrap; }
@@ -189,88 +213,182 @@
   th.l, td.l { text-align:left; }
   td:first-child { min-width:260px; }
   tr.grp { cursor:pointer; transition:background .15s; } tr.grp:hover { background:var(--gray-100); }
-  .nm { display:flex; gap:8px; align-items:baseline; } .nm b { font-family:var(--display); font-weight:700; overflow-wrap:anywhere; }
-  .caret { flex:none; width:7px; height:7px; border-right:2px solid var(--gray-500); border-bottom:2px solid var(--gray-500); transform:rotate(-45deg); transition:transform .2s var(--ease); position:relative; top:-1px; }
-  tr.grp.open .caret { transform:rotate(45deg); }
-  .sub2 { color:var(--gray-500); font-size:12px; margin:4px 0 0 15px; display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
-  tr.det td { background:#fafafb; font-size:13px; }
-  tr.det td.l:first-child { padding-left:30px; width:58%; }
-  tr.det.err td:first-child { box-shadow:inset 2px 0 0 var(--red); }
-  tr.det.warn td:first-child { box-shadow:inset 2px 0 0 #e0a030; }
+  .nm { display:flex; gap:8px; align-items:center; } .nm b { font-weight:700; overflow-wrap:anywhere; }
+  .caret { color:var(--gray-500); transition:transform .2s var(--ease); }
+  tr.grp.open .caret { transform:rotate(90deg); color:var(--ink); }
+  .sub2 { color:var(--gray-500); font-size:12px; margin:5px 0 0 24px; display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  tr.det td { background:#f8f8f9; font-size:13px; }
+  tr.det td.l:first-child { padding-left:32px; width:58%; }
+  tr.det.err td:first-child { box-shadow:inset 3px 0 0 var(--red); }
+  tr.det.warn td:first-child { box-shadow:inset 3px 0 0 var(--warn-dot); }
   .tag { display:inline-block; padding:2px 8px; border-radius:6px; background:var(--gray-100); font-size:12px; margin:1px 3px 1px 0; white-space:nowrap; font-weight:600; }
-  .page { display:inline-block; min-width:140px; font-family:ui-monospace, Menlo, monospace; font-size:12px; color:var(--ink); overflow-wrap:anywhere; }
+  .page { display:inline-block; font-family:var(--mono); font-size:12px; color:var(--ink); overflow-wrap:anywhere; }
   .term { color:var(--gray-500); font-size:12px; overflow-wrap:anywhere; }
   .ev { font-weight:800; } .ev.z { color:var(--gray-300); font-weight:600; }
-  th.ev1, th.ev2 { color:var(--ink); }
-  .empty { padding:36px; text-align:center; color:var(--gray-500); }
-  .utm { display:block; font-family:ui-monospace, Menlo, monospace; font-size:11.5px; color:var(--gray-500); line-height:1.6; overflow-wrap:anywhere; }
+  .empty { padding:40px 20px; text-align:center; color:var(--gray-500); display:grid; justify-items:center; gap:8px; }
+  .empty .ph { font-size:28px; color:var(--gray-300); }
+  .utm { display:block; font-family:var(--mono); font-size:11.5px; color:var(--gray-500); line-height:1.6; overflow-wrap:anywhere; }
   .utm i { font-style:normal; color:#9a9ea6; } .utm b { font-weight:600; color:var(--gray-700); }
   .lnk { text-decoration:none; } .lnk:hover b, .lnk:hover .host { text-decoration:underline; }
   .host { color:var(--red-600); font-weight:700; }
   .acts { display:flex; gap:6px; margin-top:6px; align-items:center; flex-wrap:wrap; }
-  .copy { border:1px solid var(--gray-200); background:var(--white); border-radius:999px; font-size:12px; font-weight:700; padding:3px 10px; cursor:pointer; color:var(--gray-700); text-decoration:none; transition:border-color .15s, color .15s; }
-  .copy:hover { border-color:var(--ink); color:var(--ink); }
-  .nopage { font-size:12px; color:var(--red-600); font-weight:600; }
-  .bad, .wrn, .okb { display:inline-flex; align-items:center; gap:5px; border-radius:999px; font-size:11.5px; font-weight:800; padding:2px 9px; white-space:nowrap; }
-  .bad::before, .wrn::before, .okb::before { content:''; width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .chip-btn { display:inline-flex; align-items:center; gap:5px; border:1px solid var(--gray-200); background:var(--white); border-radius:999px; font-size:12px; font-weight:700; padding:3px 10px; color:var(--gray-700); text-decoration:none; transition:border-color .15s, color .15s; }
+  .chip-btn:hover { border-color:var(--ink); color:var(--ink); }
+  .nopage { font-size:12px; color:var(--red-600); font-weight:700; display:inline-flex; align-items:center; gap:4px; }
+  .bad, .wrn, .okb { display:inline-flex; align-items:center; gap:5px; border-radius:999px; font-size:11.5px; font-weight:800; padding:2px 9px 2px 7px; white-space:nowrap; }
   .bad { background:var(--red-50); color:var(--red-600); } .wrn { background:var(--warn-50); color:var(--warn); } .okb { background:var(--ok-50); color:var(--ok); }
-  .issues { margin:8px 0 0; padding:0; list-style:none; font-size:12px; display:grid; gap:2px; }
-  .issues li { color:var(--red-600); } .issues li b { font-weight:800; } .issues li.warn { color:var(--warn); }
+  .issues { margin:8px 0 0; padding:0; list-style:none; font-size:12px; display:grid; gap:3px; }
+  .issues li { color:var(--red-600); display:flex; gap:6px; align-items:flex-start; } .issues li b { font-weight:800; } .issues li.warn { color:var(--warn); } .issues li.okl { color:var(--ok); }
+  .issues li .ph-fill { margin-top:1px; }
+
+  /* Bento de grupos (reporte y biblioteca) */
+  .gbento { display:grid; grid-template-columns:repeat(12, minmax(0, 1fr)); gap:12px; }
+  .gcard { grid-column:span 3; background:var(--white); border:1px solid var(--gray-200); border-radius:var(--r-md); padding:16px 18px; text-align:left; display:flex; flex-direction:column; gap:10px; min-width:0; transition:border-color .15s, transform .2s var(--ease), box-shadow .2s var(--ease); }
+  button.gcard:hover { border-color:var(--ink); transform:translateY(-2px); box-shadow:var(--shadow); }
+  .gcard.xl { grid-column:span 6; background:var(--black); color:var(--white); border-color:var(--black); }
+  .gcard.lg { grid-column:span 4; }
+  .gcard.xl .tag { background:var(--graphite-2); color:var(--gray-300); }
+  .gcard.xl2 { grid-column:span 6; }
+  .gcard.full { grid-column:1 / -1; } 
+  .gcard .gt { display:flex; justify-content:space-between; gap:10px; align-items:flex-start; }
+  .gcard .gt b { font-weight:800; font-size:16px; overflow-wrap:anywhere; line-height:1.25; }
+  .gcard.xl .gt b { font-size:20px; }
+  .gcard .rank { font-size:12px; font-weight:800; color:var(--gray-500); white-space:nowrap; }
+  .gcard .gm { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; }
+  .gcard .gm div { font-size:11px; font-weight:700; color:var(--gray-500); }
+  .gcard .gm b { display:block; font-size:20px; font-weight:800; color:var(--ink); line-height:1.1; }
+  .gcard.xl .gm b { color:var(--white); font-size:26px; } .gcard.xl .gm div, .gcard.xl .rank { color:var(--gray-300); }
+  .gcard.xl .dl.up { color:#7ee2a8; } .gcard.xl .dl.dn { color:#ff9296; }
+  .gcard .share { height:6px; border-radius:999px; background:var(--gray-100); overflow:hidden; }
+  .gcard .share i { display:block; height:100%; background:var(--red); border-radius:999px; }
+  .gcard.xl .share { background:var(--graphite-2); }
+  .gcard .tops { display:grid; gap:4px; font-size:12px; }
+  .gcard .tops div { display:flex; justify-content:space-between; gap:8px; color:var(--gray-700); }
+  .gcard .tops span:first-child { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--mono); font-size:11.5px; }
+  .gcard.xl .tops div { color:var(--gray-300); }
+  .gcard .foot-row { margin-top:auto; display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+
+  /* ===== Constructor ===== */
+  .b-form { grid-column:span 7; }
+  .b-prev { grid-column:span 5; background:var(--black); color:var(--white); display:flex; flex-direction:column; gap:14px; }
+  .fgrid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px; }
+  .fgrid .full { grid-column:1 / -1; }
+  .field { display:grid; gap:6px; min-width:0; }
+  .field > span { font-size:12px; font-weight:800; color:var(--gray-700); display:flex; gap:6px; align-items:center; }
+  .field > span em { font-style:normal; font-weight:600; color:var(--gray-500); }
+  .field input, .field textarea { width:100%; min-width:0; background:var(--white); border:1px solid var(--gray-200); border-radius:var(--r-sm); padding:10px 12px; font-size:14px; transition:border-color .15s, box-shadow .15s; }
+  .field input:hover, .field textarea:hover { border-color:var(--gray-300); }
+  .field input:focus, .field textarea:focus { outline:0; border-color:var(--ink); box-shadow:0 0 0 3px rgba(13,14,16,.08); }
+  .field .norm { font-family:var(--mono); font-size:11.5px; color:var(--gray-500); min-height:16px; overflow-wrap:anywhere; }
+  .field .norm b { color:var(--red-600); font-weight:600; }
+  .field textarea { resize:vertical; min-height:44px; }
+  .actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:18px; align-items:center; }
+  .editing { display:flex; align-items:center; gap:8px; background:var(--red-50); color:var(--red-600); font-weight:800; font-size:13px; padding:8px 12px; border-radius:var(--r-sm); margin-top:14px; }
+  .params { display:grid; gap:6px; }
+  .param { display:grid; grid-template-columns:110px 1fr; gap:10px; align-items:baseline; font-size:13px; padding:8px 12px; background:var(--graphite); border-radius:var(--r-sm); }
+  .param span { color:var(--gray-300); font-family:var(--mono); font-size:12px; }
+  .param b { font-weight:700; overflow-wrap:anywhere; } .param b.empty-v { color:#8b8f98; font-weight:500; }
+  .out { background:var(--ink); border:1px dashed var(--graphite-2); color:#f3f3f4; border-radius:var(--r-sm); padding:12px; font-family:var(--mono); font-size:12px; overflow-wrap:anywhere; line-height:1.55; }
+  .b-prev .issues li { color:#ffb0b3; } .b-prev .issues li.warn { color:#ffd48a; } .b-prev .issues li.okl { color:#7ee2a8; }
+  .dupe { display:flex; gap:8px; align-items:center; font-size:13px; font-weight:700; color:#ffd48a; }
+  details.rules-t { grid-column:1 / -1; padding:0; }
+  details.rules-t summary { cursor:pointer; list-style:none; padding:16px 22px; display:flex; justify-content:space-between; align-items:center; gap:12px; font-weight:800; }
+  details.rules-t summary::-webkit-details-marker { display:none; }
+  details.rules-t summary .ph-caret-down { transition:transform .2s var(--ease); color:var(--gray-500); } details.rules-t[open] summary .ph-caret-down { transform:rotate(180deg); }
+  .rules { display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; padding:0 22px 20px; }
+  .rule { background:var(--gray-100); border-radius:var(--r-md); padding:14px 16px; }
+  .rule .k { font-size:12px; color:var(--gray-500); font-weight:700; font-family:var(--mono); }
+  .rule h4 { margin:2px 0 6px; font-weight:800; font-size:16px; display:flex; gap:8px; align-items:center; }
+  .rule h4 small { font-size:11px; font-weight:800; padding:1px 8px; border-radius:999px; background:var(--white); color:var(--gray-500); }
+  .rule p { margin:0; font-size:13px; color:var(--gray-700); line-height:1.5; }
+  .rule code { background:var(--white); border-radius:5px; padding:1px 6px; font-size:12px; display:inline-block; margin:4px 3px 0 0; font-family:var(--mono); }
+
+  /* Biblioteca de UTMs */
+  .lib-group { margin-bottom:22px; }
+  .lib-group:last-child { margin-bottom:0; }
+  .lib-gh { display:flex; align-items:center; gap:10px; margin:0 0 10px; }
+  .lib-gh h3 { margin:0; font-size:16px; font-weight:800; display:flex; gap:8px; align-items:center; }
+  .lib-gh h3 .ph { color:var(--red); }
+  .lib-gh span { font-size:12px; font-weight:800; color:var(--gray-500); background:var(--gray-100); padding:2px 9px; border-radius:999px; }
+  .lcard { grid-column:span 4; }
+  .lcard .chips { display:flex; flex-wrap:wrap; gap:4px; }
+  .lcard .chips .tag { margin:0; }
+  .lcard .chips .tag i { font-style:normal; color:var(--gray-500); font-weight:600; }
+  .lcard .url { font-family:var(--mono); font-size:11.5px; color:var(--gray-500); overflow-wrap:anywhere; }
+  .lcard .url b { color:var(--red-600); font-weight:700; }
+  .lcard .note { font-size:12px; color:var(--gray-700); display:flex; gap:6px; align-items:flex-start; }
+  .lcard .ga { display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; background:var(--gray-100); border-radius:var(--r-sm); padding:10px 12px; }
+  .lcard .ga div { font-size:11px; font-weight:700; color:var(--gray-500); } .lcard .ga b { display:block; font-size:17px; font-weight:800; color:var(--ink); }
+  .lcard .ga.none { display:flex; gap:8px; align-items:center; font-size:12px; font-weight:700; color:var(--gray-500); }
+  .lcard .lact { display:flex; justify-content:space-between; align-items:center; gap:6px; margin-top:auto; }
+  .lcard .lact > span:last-child { display:flex; gap:2px; }
+  .lcard .lact .when { font-size:11px; color:var(--gray-500); font-weight:600; }
+  .confirm { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:800; color:var(--red-600); }
+  .lcard.flash { animation:flash 1.2s var(--ease); }
+  @keyframes flash { 0% { box-shadow:0 0 0 3px var(--red); } 100% { box-shadow:0 0 0 0 transparent; } }
+
+  /* Aviso flotante */
+  .toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:var(--black); color:var(--white); padding:11px 16px; border-radius:999px; font-weight:700; font-size:13px; display:flex; align-items:center; gap:8px; box-shadow:var(--shadow-pop); z-index:80; animation:popIn .2s var(--ease); }
+  .toast .ph-fill { color:#7ee2a8; } .toast.err .ph-fill { color:#ff9296; }
 
   /* ===== Footer ===== */
   .foot { background:var(--black); color:var(--gray-300); }
-  .foot-in { max-width:1320px; margin:0 auto; padding:28px 20px; display:grid; grid-template-columns:2fr 1fr 1fr; gap:24px; font-size:13px; }
-  .foot b { color:var(--white); font-family:var(--display); font-weight:800; font-size:15px; display:block; margin-bottom:6px; }
-  .foot a { color:var(--gray-300); text-decoration:none; display:block; margin:3px 0; } .foot a:hover { color:var(--white); }
-  .foot .dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#3ecf7a; margin-right:6px; }
+  .foot-in { max-width:1320px; margin:0 auto; padding:30px 20px; display:grid; grid-template-columns:2fr 1fr 1fr; gap:24px; font-size:13px; line-height:1.6; }
+  .foot b { color:var(--white); font-weight:800; font-size:15px; display:block; margin-bottom:8px; }
+  .foot a { color:var(--gray-300); text-decoration:none; display:flex; align-items:center; gap:6px; } .foot a:hover { color:var(--white); }
+  .foot .live { display:flex; align-items:center; gap:8px; } .foot .live i { width:8px; height:8px; border-radius:50%; background:#3ecf7a; box-shadow:0 0 0 3px rgba(62,207,122,.18); }
   .foot-bar { border-top:1px solid #23252a; }
   .foot-bar div { max-width:1320px; margin:0 auto; padding:14px 20px; font-size:12px; color:var(--gray-500); display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-
-  /* ===== Carga ===== */
-  .skel { background:linear-gradient(90deg, var(--gray-100) 0, var(--gray-200) 50%, var(--gray-100) 100%); background-size:200% 100%; animation:sk 1.2s linear infinite; border-radius:var(--r-lg); min-height:130px; }
-  @keyframes sk { to { background-position:-200% 0; } }
 
   /* ===== Responsive ===== */
   @media (max-width:1100px) {
     .t-hero { grid-column:1 / -1; grid-row:auto; }
     .t-sm, .cn { grid-column:span 6; } .t-md { grid-column:1 / -1; }
-    .filters { grid-template-columns:repeat(4, minmax(0, 1fr)); }
-    .gbody { grid-template-columns:1fr; }
+    .gcard, .lcard { grid-column:span 6; } .gcard.xl { grid-column:1 / -1; } .gcard.lg { grid-column:span 6; }
+    .b-form, .b-prev { grid-column:1 / -1; }
+    .rules { grid-template-columns:1fr 1fr; }
   }
   @media (max-width:720px) {
-    .top-in { height:auto; min-height:60px; flex-wrap:wrap; padding:10px 16px; gap:10px; }
-    .top nav { display:none; } .top .sp { display:none; } .dp { width:100%; } .dp-btn { width:100%; justify-content:center; }
-    .dp-pop { position:fixed; left:12px; right:12px; top:120px; flex-direction:column; max-height:calc(100dvh - 140px); overflow:auto; }
+    .top-in { height:auto; flex-wrap:wrap; padding:10px 14px; gap:10px; }
+    .brand-t span { display:none; }
+    .top .sp { display:none; }
+    .top .seg { order:3; width:100%; } .top .seg button { flex:1; justify-content:center; }
+    .dp { margin-left:auto; } .dp-btn .lbl-long { display:none; }
+    .dp-pop { position:fixed; left:10px; right:10px; top:112px; flex-direction:column; max-height:calc(100dvh - 130px); overflow:auto; }
     .dp-presets { flex-direction:row; flex-wrap:wrap; } .dp-months { flex-direction:column; } .dg { grid-template-columns:repeat(7, 1fr); }
     main { padding:20px 12px 36px; } h1 { font-size:24px; } .intro .cmp { text-align:left; }
-    .bento { gap:10px; } .t-sm, .cn { grid-column:1 / -1; }
-    .t-hero .pair .v { font-size:40px; }
-    .rules { grid-template-columns:1fr; }
-    .filters { grid-template-columns:1fr 1fr; }
+    .bento { gap:10px; } .t-sm, .cn, .gcard, .gcard.lg, .lcard { grid-column:1 / -1; }
+    .t-hero .pair .v { font-size:42px; }
+    .fgrid { grid-template-columns:1fr; } .rules { grid-template-columns:1fr; }
+    .search { max-width:none; min-width:0; width:100%; }
     .table-wrap { margin:0 -16px; padding:0 16px; } table { min-width:760px; }
     .tile { padding:18px 16px; }
     .foot-in { grid-template-columns:1fr; }
+    .dd-pop { left:12px !important; right:12px; width:auto; }
   }
-  @media (prefers-reduced-motion:reduce) { *, *::before { animation:none !important; transition:none !important; } }
-  @media print { .top, .foot, .toolbar, .filters, details.guide { display:none; } body { background:#fff; } tr.det { display:table-row !important; } }
+  @media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } html { scroll-behavior:auto; } }
+  @media print { .top, .foot, .toolbar, .fbar { display:none; } body { background:#fff; } }
 </style>
 </head>
 <body>
 <header class="top">
   <div class="top-in">
-    <div class="brand"><div class="mark">M</div><div class="brand-t">Motomundo <span>Campañas</span></div></div>
-    <nav><a href="#resumen" class="on">Resumen</a><a href="#canales-sec">Canales</a><a href="#utms">UTMs</a><a href="#guide">Constructor</a></nav>
+    <a class="brand" href="#/reporte"><div class="mark">M</div><div class="brand-t">Motomundo <span>Campañas</span></div></a>
+    <div class="seg dark" id="nav" role="tablist" aria-label="Secciones">
+      <span class="pill" aria-hidden="true"></span>
+      <button data-r="reporte" role="tab"><i class="ph ph-chart-bar"></i>Reporte GA4</button>
+      <button data-r="utms" role="tab"><i class="ph ph-link-simple"></i>Constructor de UTMs</button>
+    </div>
     <div class="sp"></div>
     <div class="dp">
-      <button class="dp-btn" id="dp_btn" aria-haspopup="dialog">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-        <span id="dp_label">Cargando…</span><span class="car"></span></button>
+      <button class="dp-btn" id="dp_btn" aria-haspopup="dialog" aria-expanded="false">
+        <i class="ph ph-calendar-blank"></i><span id="dp_label">Cargando…</span><i class="ph ph-caret-down"></i></button>
       <div class="dp-pop" id="dp_pop" role="dialog" aria-label="Elegir periodo" hidden>
         <div class="dp-presets" id="dp_presets"></div>
         <div class="dp-cal">
-          <div class="dp-nav"><button id="dp_prevm" aria-label="Mes anterior">‹</button><button id="dp_nextm" aria-label="Mes siguiente">›</button></div>
+          <div class="dp-nav"><button id="dp_prevm" aria-label="Mes anterior"><i class="ph ph-caret-left"></i></button><button id="dp_nextm" aria-label="Mes siguiente"><i class="ph ph-caret-right"></i></button></div>
           <div class="dp-months" id="dp_months"></div>
-          <div class="dp-foot"><span id="dp_sel"></span><button id="dp_apply" class="dp-apply">Aplicar</button></div>
+          <div class="dp-foot"><span id="dp_sel"></span><button id="dp_apply" class="btn btn-red"><i class="ph ph-check"></i>Aplicar</button></div>
         </div>
       </div>
     </div>
@@ -278,53 +396,105 @@
 </header>
 
 <main>
-  <div class="intro" id="resumen">
-    <div><h1>Seguimiento de campañas</h1><p>Qué UTM se usó, a dónde llevó y cuántas cotizaciones generó.</p></div>
-    <div class="cmp"><b id="prop"></b><br><span id="period"></span></div>
-  </div>
+  <!-- ===================== REPORTE GA4 ===================== -->
+  <section class="view" id="view-reporte">
+    <div class="intro">
+      <div><h1>Seguimiento de campañas</h1><p>Qué UTM se usó, a dónde llevó y cuántas cotizaciones generó.</p></div>
+      <div class="cmp"><b>Motomundo - GA4</b><br><span id="period"></span></div>
+    </div>
 
-  <section class="bento">
-    <div id="kpis"><div class="tile skel t-hero"></div><div class="tile skel t-sm"></div><div class="tile skel t-sm"></div><div class="tile skel t-md"></div></div>
-    <div id="canales" aria-label="Canales"></div>
+    <div class="bento">
+      <div class="contents" id="kpis"><div class="tile skel t-hero"></div><div class="tile skel t-sm"></div><div class="tile skel t-sm"></div><div class="tile skel t-md"></div></div>
+      <div class="contents" id="canales"></div>
 
-    <details class="guide tile" id="guide">
-      <summary><div><h2>Constructor de UTM</h2><p>Arma el link con el estándar de Motomundo y valida cada campo antes de copiarlo.</p></div><span class="tg"></span></summary>
-      <div class="gbody">
+      <div class="tile card" id="report">
+        <div class="card-h">
+          <h2>Detalle por UTM</h2>
+          <div class="toolbar">
+            <div class="seg" id="groupBy" aria-label="Agrupar por"><span class="pill"></span></div>
+            <div class="seg icons" id="viewMode" aria-label="Visualización">
+              <span class="pill"></span>
+              <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button>
+              <button data-v="bento" title="Bento" aria-label="Bento"><i class="ph ph-squares-four"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="fbar" id="fbar">
+          <span class="lab"><i class="ph ph-funnel-simple"></i>Filtros</span>
+          <span id="fpills" style="display:contents"></span>
+          <span class="div"></span>
+          <span id="fstate" style="display:contents"></span>
+          <label class="sw"><input type="checkbox" id="only"><span class="tr"></span>Solo con cotizaciones</label>
+          <span class="grow" style="flex:1"></span>
+          <label class="search"><i class="ph ph-magnifying-glass"></i><input id="q" placeholder="Buscar campaña, término, página…" aria-label="Buscar"></label>
+          <button class="clear" id="clear"><i class="ph ph-x"></i>Limpiar</button>
+        </div>
+        <div class="count" id="count"></div>
+        <div id="out"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONSTRUCTOR DE UTMs ===================== -->
+  <section class="view" id="view-utms" hidden>
+    <div class="intro">
+      <div><h1>Constructor de UTMs</h1><p>Crea links con el estándar de Motomundo, guárdalos y mide lo que generaron en GA4.</p></div>
+      <div class="cmp"><b id="libCount">—</b><br><span>UTMs guardadas</span></div>
+    </div>
+
+    <div class="bento">
+      <div class="tile b-form">
+        <h2 id="formTitle">Nueva UTM</h2>
+        <div id="editing" class="editing" hidden><i class="ph ph-pencil-simple"></i><span>Editando una UTM guardada</span></div>
+        <div class="fgrid">
+          <label class="field full"><span><i class="ph ph-globe-simple"></i>URL de destino</span><input id="b_url" placeholder="https://www.motomundohn.com/cotizar-en-linea" value="https://www.motomundohn.com/cotizar-en-linea"></label>
+          <label class="field"><span>Fuente <em>utm_source</em></span><input id="b_s" list="dl_s" placeholder="Meta, Google, Base Clientes Claro"><div class="norm" id="n_s"></div></label>
+          <div class="field"><span>Medio <em>utm_medium</em></span><div id="b_m"></div></div>
+          <label class="field full"><span>Campaña <em>utm_campaign</em></span><input id="b_c" list="dl_c" placeholder="Genesis Tactica Comercial Leads Centro"><div class="norm" id="n_c"></div></label>
+          <label class="field"><span>Término <em>utm_term · opcional</em></span><input id="b_t" placeholder="Centro Tegucigalpa"><div class="norm" id="n_t"></div></label>
+          <label class="field"><span>Contenido <em>utm_content · opcional</em></span><input id="b_x" placeholder="TTPremium Zx-200l"><div class="norm" id="n_x"></div></label>
+          <label class="field full"><span><i class="ph ph-note-pencil"></i>Nota interna <em>opcional</em></span><textarea id="b_note" rows="2" placeholder="Para qué es, dónde se publicó…"></textarea></label>
+        </div>
+        <datalist id="dl_s"></datalist><datalist id="dl_c"></datalist>
+        <div class="actions">
+          <button class="btn btn-red" id="b_save"><i class="ph ph-floppy-disk"></i><span>Guardar UTM</span></button>
+          <button class="btn btn-ghost" id="b_cancel" hidden><i class="ph ph-x"></i>Cancelar edición</button>
+          <button class="btn btn-ghost" id="b_reset"><i class="ph ph-eraser"></i>Limpiar</button>
+        </div>
+      </div>
+
+      <div class="tile b-prev">
+        <div class="l"><i class="ph ph-eye"></i>Vista previa</div>
+        <div class="params" id="b_params"></div>
+        <div class="out" id="b_out"></div>
+        <ul class="issues" id="b_issues"></ul>
+        <div class="dupe" id="b_dupe" hidden><i class="ph-fill ph-warning"></i><span>Ya existe una UTM guardada idéntica.</span></div>
+        <div class="actions" style="margin-top:auto">
+          <button class="btn btn-ghost-dark" id="b_copy"><i class="ph ph-copy"></i>Copiar link</button>
+          <a class="btn btn-ghost-dark" id="b_open" target="_blank" rel="noopener"><i class="ph ph-arrow-square-out"></i>Probar link</a>
+        </div>
+      </div>
+
+      <details class="tile rules-t">
+        <summary><span style="display:flex;gap:8px;align-items:center"><i class="ph ph-book-open-text"></i>Estándar de UTMs de Motomundo</span><i class="ph ph-caret-down"></i></summary>
         <div class="rules" id="rules"></div>
-        <div class="builder">
-          <label>URL de destino<input id="b_url" value="https://www.motomundohn.com/cotizar-en-linea"></label>
-          <label>Fuente (utm_source)<input id="b_s" placeholder="Meta, Google, Base Clientes Claro…" value="Meta"></label>
-          <label>Medio (utm_medium)<select id="b_m"></select></label>
-          <label>Campaña (utm_campaign)<input id="b_c" placeholder="Genesis TacticaComercial Leads Centro"></label>
-          <label>Término (utm_term, opcional)<input id="b_t" placeholder="Centro Tegucigalpa"></label>
-          <label>Contenido (utm_content, opcional)<input id="b_x" placeholder="TTPremium Zx-200l"></label>
-          <div class="muted">Los espacios se convierten en "_", se quitan tildes y cada palabra empieza en mayúscula.</div>
-          <div class="out" id="b_out"></div>
-          <ul class="issues" id="b_issues"></ul>
-          <div><button class="copy" id="b_copy">Copiar link</button></div>
-        </div>
-      </div>
-    </details>
+      </details>
 
-    <div class="tile card" id="utms">
-      <div class="toolbar">
-        <div class="tabs" id="tabs">
-          <span class="pill" aria-hidden="true"></span>
-          <button data-v="g">Canal</button>
-          <button data-v="c" class="on">Campaña</button>
-          <button data-v="s">Fuente</button>
-          <button data-v="m">Medio</button>
-          <button data-v="t">Término</button>
-          <button data-v="x">Contenido</button>
-          <button data-v="p">Página de destino</button>
+      <div class="tile card">
+        <div class="card-h">
+          <h2>UTMs guardadas</h2>
+          <div class="toolbar">
+            <label class="search"><i class="ph ph-magnifying-glass"></i><input id="lq" placeholder="Buscar UTM…" aria-label="Buscar UTM"></label>
+            <div class="seg" id="libGroup" aria-label="Agrupar por"><span class="pill"></span></div>
+            <div class="seg icons" id="libView" aria-label="Visualización">
+              <span class="pill"></span>
+              <button data-v="bento" title="Bento" aria-label="Bento"><i class="ph ph-squares-four"></i></button>
+              <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button>
+            </div>
+          </div>
         </div>
-        <input id="q" placeholder="Buscar campaña, término, página…" aria-label="Buscar">
-        <label class="chk"><input type="checkbox" id="only"> Solo con cotizaciones</label>
-        <select id="onlyBad" aria-label="Estado de la UTM"><option value="">Estado UTM: todas</option><option value="err">Mal construidas</option><option value="warn">Con advertencias</option><option value="ok">Correctas</option></select>
+        <div id="lib"></div>
       </div>
-      <div class="filters" id="filters"></div>
-      <div class="count" id="count"></div>
-      <div class="table-wrap"><table id="tbl"></table></div>
     </div>
   </section>
 </main>
@@ -332,32 +502,114 @@
 <footer class="foot">
   <div class="foot-in">
     <div><b>Motomundo · Seguimiento de campañas</b>Datos de Google Analytics 4 (propiedad Motomundo - GA4), guardados en Supabase. Solo cuenta tráfico que llegó con utm_campaign.</div>
-    <div><b>Datos</b><span><i class="dot"></i><span id="gen">Sincronización diaria 8:00 a.m.</span></span><a href="#guide">Estándar de UTM</a></div>
+    <div><b>Datos</b><span class="live"><i></i><span id="gen">Sincronización diaria 8:00 a.m.</span></span><a href="#/utms"><i class="ph ph-link-simple"></i>Constructor de UTMs</a></div>
     <div><b>Eventos medidos</b>Cotiza_Producto<br>Cotización_Crédito</div>
   </div>
   <div class="foot-bar"><div><span>© Motomundo</span><span>Los usuarios de un rango son la suma de cada día; las cotizaciones son exactas.</span></div></div>
 </footer>
 
 <script>
-// ===== DATOS: se leen de Supabase vía /api/data (se sincronizan desde GA4 cada día a las 8:00 a.m.) =====
-const REPORT = { property: 'Motomundo - GA4', minDate: '', maxDate: '' };
-let D = { s: [], r: [] }, CARGADO = { from: '', to: '' };
-async function asegurarDatos(from, to) {
-  if (CARGADO.from && from >= CARGADO.from && to <= CARGADO.to) return;
-  const j = await (await fetch(`/api/data?from=${from}&to=${to}`)).json();
-  if (j.error) throw new Error(j.error);
-  D = j; CARGADO = { from, to };
-}
-
+// ============================================================
+// Utilidades
+// ============================================================
 const $ = id => document.getElementById(id);
 const num = n => Math.round(n).toLocaleString('es-MX');
-const pct = (n, d = 1) => (n * 100).toFixed(d) + '%';
 const date = s => new Date(s + 'T12:00').toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' });
-const rc = r => r >= .6 ? 'hi' : r < .4 ? 'lo' : 'mid';
-const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-// Agrupación de canales (según fuente + medio)
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uniq = (rows, f) => [...new Set(rows.map(f))];
+const iso = d => d.toISOString().slice(0, 10);
+const addD = (s, n) => { const d = new Date(s + 'T12:00Z'); d.setUTCDate(d.getUTCDate() + n); return iso(d); };
+const days = (a, b) => Math.round((new Date(b + 'T12:00Z') - new Date(a + 'T12:00Z')) / 864e5);
+const EV1 = 'Cotiza_Producto', EV2 = 'Cotización_Crédito';
+function toast(msg, err) {
+  document.querySelector('.toast')?.remove();
+  const t = document.createElement('div'); t.className = 'toast' + (err ? ' err' : '');
+  t.innerHTML = `<i class="ph-fill ${err ? 'ph-warning-circle' : 'ph-check-circle'}"></i>${esc(msg)}`;
+  document.body.appendChild(t); setTimeout(() => t.remove(), 2400);
+}
+function copy(txt, msg = 'Link copiado') {
+  const fallback = () => { const t = document.createElement('textarea'); t.value = txt; t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select();
+    const ok = document.execCommand('copy'); t.remove(); ok ? toast(msg) : toast('No se pudo copiar', true); };
+  navigator.clipboard ? navigator.clipboard.writeText(txt).then(() => toast(msg), fallback) : fallback();
+}
+// Cambia el contenido con una transición corta
+function swap(el, html) { el.innerHTML = html; el.classList.remove('swap'); void el.offsetWidth; el.classList.add('swap'); }
+
+// ============================================================
+// Componentes: control segmentado (píldora deslizante) y desplegable con buscador
+// ============================================================
+function Seg(el, items, value, onChange) {
+  if (items) el.insertAdjacentHTML('beforeend', items.map(([v, l, ic]) => `<button data-v="${v}">${ic ? `<i class="ph ${ic}"></i>` : ''}${l}</button>`).join(''));
+  const pill = el.querySelector('.pill'), btns = () => [...el.querySelectorAll('button')];
+  const key = b => b.dataset.v ?? b.dataset.r;
+  const move = () => { const b = el.querySelector('button.on'); if (!b || !b.offsetWidth) return; pill.style.width = b.offsetWidth + 'px'; pill.style.transform = `translateX(${b.offsetLeft}px)`; };
+  const set = v => { btns().forEach(b => b.classList.toggle('on', key(b) === v)); btns().forEach(b => b.setAttribute('aria-selected', key(b) === v)); move(); };
+  el.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || b.classList.contains('on')) return; set(key(b)); onChange(key(b)); });
+  new ResizeObserver(move).observe(el); document.fonts?.ready.then(move);
+  set(value);
+  return { set, move };
+}
+
+let ddOpen = null;
+function Dropdown(host, { label, icon, options, value, onChange, search = true, block = false, dark = false, allLabel }) {
+  let opts = options, val = value;
+  const btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'dd-btn' + (block ? ' block' : '') + (dark ? ' darkin' : '');
+  btn.setAttribute('aria-haspopup', 'listbox'); btn.setAttribute('aria-expanded', 'false');
+  host.appendChild(btn);
+  const render = () => {
+    const o = opts.find(x => x.v === val);
+    btn.classList.toggle('active', !block && !!val);
+    btn.innerHTML = `${icon ? `<i class="ph ${icon}"></i>` : ''}${label ? `<span class="k">${label}</span>` : ''}<span class="dv">${esc(o ? o.l : (allLabel || 'Todas'))}</span><i class="ph ph-caret-down"></i>`;
+  };
+  function open() {
+    close();
+    const pop = document.createElement('div'); pop.className = 'dd-pop pop-in'; pop.setAttribute('role', 'listbox');
+    pop.innerHTML = (search ? `<div class="dd-search"><i class="ph ph-magnifying-glass"></i><input placeholder="Buscar…" aria-label="Buscar opción"></div>` : '') + '<div class="dd-list"></div>';
+    document.body.appendChild(pop);
+    const r = btn.getBoundingClientRect(), w = Math.max(r.width, block ? r.width : 300);
+    pop.style.width = w + 'px';
+    pop.style.left = Math.min(r.left, innerWidth - w - 12) + 'px';
+    const below = innerHeight - r.bottom > 300 || r.top < 320;
+    if (below) pop.style.top = (r.bottom + 6) + 'px'; else pop.style.bottom = (innerHeight - r.top + 6) + 'px';
+    const list = pop.querySelector('.dd-list'), inp = pop.querySelector('input');
+    let hl = 0, shown = [];
+    const draw = () => {
+      const q = (inp?.value || '').toLowerCase();
+      shown = opts.filter(o => !q || o.l.toLowerCase().includes(q));
+      list.innerHTML = shown.length ? shown.map((o, i) => `${o.sep ? '<div class="dd-sep"></div>' : ''}<button type="button" class="dd-opt ${o.v === val ? 'sel' : ''} ${i === hl ? 'hl' : ''}" data-i="${i}" role="option" aria-selected="${o.v === val}">
+          <i class="ph ph-check ck"></i>${o.ic ? `<i class="ph ${o.ic}"></i>` : ''}<span class="lb">${esc(o.l)}</span>${o.m ? `<span class="mt">${o.m}</span>` : ''}</button>`).join('')
+        : '<div class="dd-empty">Sin resultados</div>';
+    };
+    const pick = o => { val = o.v; render(); close(); onChange(val); };
+    list.addEventListener('click', e => { const b = e.target.closest('.dd-opt'); if (b) pick(shown[+b.dataset.i]); });
+    list.addEventListener('mousemove', e => { const b = e.target.closest('.dd-opt'); if (b && +b.dataset.i !== hl) { hl = +b.dataset.i; list.querySelectorAll('.dd-opt').forEach(x => x.classList.toggle('hl', +x.dataset.i === hl)); } });
+    pop.addEventListener('keydown', e => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); hl = Math.max(0, Math.min(shown.length - 1, hl + (e.key === 'ArrowDown' ? 1 : -1))); draw(); list.querySelector('.hl')?.scrollIntoView({ block:'nearest' }); }
+      else if (e.key === 'Enter' && shown[hl]) { e.preventDefault(); pick(shown[hl]); }
+      else if (e.key === 'Escape') { close(); btn.focus(); }
+    });
+    inp?.addEventListener('input', () => { hl = 0; draw(); });
+    hl = Math.max(0, opts.findIndex(o => o.v === val));
+    draw(); list.querySelector('.hl')?.scrollIntoView({ block:'nearest' });
+    (inp || list.querySelector('.dd-opt'))?.focus();
+    btn.setAttribute('aria-expanded', 'true');
+    ddOpen = { pop, btn };
+  }
+  function close() { if (ddOpen) { ddOpen.pop.remove(); ddOpen.btn.setAttribute('aria-expanded', 'false'); ddOpen = null; } }
+  btn.addEventListener('click', e => { e.stopPropagation(); ddOpen?.btn === btn ? close() : open(); });
+  btn.addEventListener('keydown', e => { if (e.key === 'ArrowDown') { e.preventDefault(); open(); } });
+  render();
+  return { set(v) { val = v; render(); }, setOptions(o) { opts = o; render(); }, get value() { return val; } };
+}
+document.addEventListener('mousedown', e => { if (ddOpen && !ddOpen.pop.contains(e.target) && !ddOpen.btn.contains(e.target)) { ddOpen.pop.remove(); ddOpen.btn.setAttribute('aria-expanded', 'false'); ddOpen = null; } });
+addEventListener('scroll', e => { if (ddOpen && !ddOpen.pop.contains(e.target)) { ddOpen.pop.remove(); ddOpen.btn.setAttribute('aria-expanded', 'false'); ddOpen = null; } }, true);
+
+// ============================================================
+// Canales y estándar de UTM
+// ============================================================
 const CANALES = ['Pauta', 'Directos', 'Redes', 'Otros'];
-const CANAL_INFO = { Pauta:'Paid social / search · Meta', Directos:'SMS · WhatsApp · Email · QR', Redes:'Organic social', Otros:'Sin clasificar' };
+const CANAL_INFO = { Pauta:['Paid social / search · Meta', 'ph-megaphone-simple'], Directos:['SMS · WhatsApp · Email · QR', 'ph-paper-plane-tilt'], Redes:['Organic social', 'ph-users-three'], Otros:['Sin clasificar', 'ph-question'] };
 function canal(s, m) {
   const t = `${s} ${m}`.toLowerCase();
   if (/sms|whats|wapp|e-?mail|\bmail\b|\bqr\b/.test(t)) return 'Directos';
@@ -365,21 +617,19 @@ function canal(s, m) {
   if (/organic|social|facebook|instagram|tiktok|\bfb\b|\big\b/.test(t)) return 'Redes';
   return 'Otros';
 }
-
-// ===== ESTÁNDAR DE UTM (editar aquí las reglas) =====
 const STD = {
-  // Medio: siempre de esta lista. "referral" NO es un medio (es un canal que asigna GA4).
-  medios: ['paid_social', 'paid_search', 'paid_video', 'organic_social', 'sms', 'whatsapp', 'email', 'qr'],
+  // Medio: siempre de esta lista. "referral" y "direct" NO son medios (GA4 los asigna solo).
+  medios: [['paid_social', 'Pauta en redes (Meta, TikTok)'], ['paid_search', 'Pauta en buscadores (Google Ads)'], ['paid_video', 'Pauta en video (YouTube)'],
+           ['organic_social', 'Publicación orgánica en redes'], ['sms', 'Mensaje de texto'], ['whatsapp', 'WhatsApp'], ['email', 'Correo'], ['qr', 'Código QR impreso']],
 };
+const MEDIOS = STD.medios.map(m => m[0]);
 const RULES = [
-  { f:'utm_source', n:'Fuente', req:true, d:'Quién envía el tráfico: la plataforma o la base de datos. Palabras unidas con "_" y cada una con la primera letra en mayúscula.', ej:['Meta', 'Google', 'Base_Clientes_Claro'] },
-  { f:'utm_medium', n:'Medio', req:true, d:'Tipo de canal. Siempre uno de la lista.', ej: STD.medios },
-  { f:'utm_campaign', n:'Campaña', req:true, d:'Palabras unidas con "_" (el constructor lo agrega solo) y cada una con la primera letra en mayúscula. Sin tildes.', ej:['Genesis_TacticaComercial_Leads_Centro', 'Mi_Primer_Credito'] },
-  { f:'utm_term', n:'Término', req:false, d:'<b>Opcional</b> (los directos normalmente no lo usan). Si se usa: mismo formato que la campaña.', ej:['Centro_Tegucigalpa', 'Norte_San_Pedro_Sula'] },
+  { f:'utm_source', n:'Fuente', req:true, d:'Quién envía el tráfico: la plataforma, la pieza física o la base de datos. Palabras unidas con "_" y cada una con la primera letra en mayúscula.', ej:['Meta', 'Google', 'Preciador', 'Base_Clientes_Claro'] },
+  { f:'utm_medium', n:'Medio', req:true, d:'Tipo de canal, siempre de la lista. "referral" y "direct" no se usan: GA4 los asigna solo.', ej: MEDIOS },
+  { f:'utm_campaign', n:'Campaña', req:true, d:'Qué se promueve. Palabras unidas con "_" (el constructor lo agrega) y primera letra en mayúscula, sin tildes.', ej:['Genesis_TacticaComercial_Leads_Centro', 'Talleres_Autorizados'] },
+  { f:'utm_term', n:'Término', req:false, d:'Segmento o ubicación exacta. Los directos normalmente no lo usan. Mismo formato que la campaña.', ej:['Centro_Tegucigalpa', 'Pdv_Zona_10'] },
 ];
 const notSet = v => !v || v.startsWith('(');
-// Nivel: 'err' = mal construida (rojo) · 'warn' = advertencia (amarillo)
-// Formato: palabras con "_" y primera letra en mayúscula. Un "_" al final se acepta.
 const fmtIssues = v => [
   / /.test(v) && 'tiene espacios (usar "_")', /[áéíóúÁÉÍÓÚ]/.test(v) && 'tiene tildes',
   /__/.test(v) && 'tiene "__" doble', /^_/.test(v) && 'empieza con "_"',
@@ -391,23 +641,37 @@ function validar({ s, m, c, t }) {
   const fmt = (f, v) => fmtIssues(v).forEach(x => add(f, x, 'warn'));
   if (notSet(s)) add('Fuente', 'falta utm_source', 'err'); else fmt('Fuente', s);
   if (notSet(m)) add('Medio', 'falta utm_medium', 'err');
-  else if (!STD.medios.includes(m)) {
-    const lo = m.toLowerCase(), hit = STD.medios.find(x => lo === x || lo.includes(x));
+  else if (!MEDIOS.includes(m)) {
+    const lo = m.toLowerCase(), hit = MEDIOS.find(x => lo === x || lo.includes(x));
     if (hit) add('Medio', `"${m}" debería escribirse exactamente "${hit}"`, 'warn');
-    else add('Medio', `"${m}" no es un medio válido (${STD.medios.join(', ')})`, 'err');
+    else add('Medio', `"${m}" no es un medio válido`, 'err');
   }
   if (notSet(c)) add('Campaña', 'falta utm_campaign', 'err'); else fmt('Campaña', c);
   if (!notSet(t)) fmt('Término', t);
   return out;
 }
 const nivel = iss => iss.some(i => i.lvl === 'err') ? 'err' : iss.length ? 'warn' : 'ok';
-// Constructor: convierte "base clientes claro" en "Base_Clientes_Claro"
 const normalizar = v => v.trim().normalize('NFD').replace(/[̀-ͯ]/g, '')
   .split(/[\s_]+/).filter(Boolean).map(w => w[0].toUpperCase() + w.slice(1)).join('_');
-const issuesHtml = arr => `<ul class="issues">${arr.map(i => `<li class="${i.lvl}"><b>${i.f}:</b> ${esc(i.m)}</li>`).join('')}</ul>`;
-const BADGE = { err: n => `<span class="bad">Mal construida</span>`, warn: n => `<span class="wrn">Advertencias · ${n}</span>`, ok: () => `<span class="okb">Correcta</span>` };
-// Suma los datos diarios del rango elegido por UTM (campaña+fuente+medio+término+contenido+página)
-// Nota: en la muestra los usuarios se suman por día; en Vercel GA4 los devuelve exactos para el rango.
+const ISS_IC = { err:'ph-x-circle', warn:'ph-warning' };
+const issuesLi = arr => arr.map(i => `<li class="${i.lvl}"><i class="ph-fill ${ISS_IC[i.lvl]}"></i><span><b>${i.f}:</b> ${esc(i.m)}</span></li>`).join('');
+const BADGE = {
+  err: () => `<span class="bad"><i class="ph-fill ph-x-circle"></i>Mal construida</span>`,
+  warn: n => `<span class="wrn"><i class="ph-fill ph-warning"></i>Advertencias · ${n}</span>`,
+  ok: () => `<span class="okb"><i class="ph-fill ph-check-circle"></i>Correcta</span>`,
+};
+
+// ============================================================
+// Datos GA4 (Supabase vía /api/data)
+// ============================================================
+const REPORT = { minDate: '', maxDate: '' };
+let D = { s: [], r: [] }, CARGADO = { from: '', to: '' };
+async function asegurarDatos(from, to) {
+  if (CARGADO.from && from >= CARGADO.from && to <= CARGADO.to) return;
+  const j = await (await fetch(`/api/data?from=${from}&to=${to}`)).json();
+  if (j.error) throw new Error(j.error);
+  D = j; CARGADO = { from, to };
+}
 let R = [], P = null;   // R = periodo elegido · P = periodo anterior (mismo largo, justo antes)
 function agg(from, to) {
   const T = D.s, M = new Map();
@@ -419,23 +683,17 @@ function agg(from, to) {
   }
   return [...M.values()].map(r => { r.g = canal(r.s, r.m); r.iss = validar(r); r.lv = nivel(r.iss); return r; });
 }
-function cargarRango(from, to, pFrom, pTo) {
-  R = agg(from, to).filter(r => r.u >= 5 || r.e1 || r.e2);
-  P = pFrom >= REPORT.minDate ? agg(pFrom, pTo) : null;   // sin datos suficientes → no se compara
-}
-// Variación vs periodo anterior
 function dl(cur, prev) {
   if (!P) return '';
   if (!prev && !cur) return '';
-  if (!prev) return '<span class="dl up">nuevo</span>';
+  if (!prev) return '<span class="dl up"><i class="ph-fill ph-sparkle"></i>nuevo</span>';
   const v = (cur - prev) / prev;
-  if (Math.abs(v) < .005) return '<span class="dl eq">0%</span>';
-  return `<span class="dl ${v > 0 ? 'up' : 'dn'}">${Math.abs(v * 100).toFixed(Math.abs(v) < .1 ? 1 : 0)}%</span>`;
+  if (Math.abs(v) < .005) return '<span class="dl eq"><i class="ph ph-equals"></i>0%</span>';
+  return `<span class="dl ${v > 0 ? 'up' : 'dn'}"><i class="ph-fill ${v > 0 ? 'ph-caret-up' : 'ph-caret-down'}"></i>${Math.abs(v * 100).toFixed(Math.abs(v) < .1 ? 1 : 0)}%</span>`;
 }
 const DIMS = { g:'Canal', c:'Campaña', s:'Fuente', m:'Medio', t:'Término', x:'Contenido', p:'Página de destino' };
+const DIM_IC = { g:'ph-broadcast', c:'ph-flag', s:'ph-plug', m:'ph-shuffle', t:'ph-map-pin', x:'ph-image-square', p:'ph-browser' };
 const ORDER = ['g','c','s','m','t','x','p'];
-const EV1 = 'Cotiza_Producto', EV2 = 'Cotización_Crédito';
-
 function group(rows, key) {
   const g = new Map();
   for (const r of rows) {
@@ -444,95 +702,11 @@ function group(rows, key) {
   }
   return [...g.values()].sort((x, y) => (y.e1 + y.e2) - (x.e1 + x.e2) || y.u - x.u);
 }
-const uniq = (rows, f) => [...new Set(rows.map(f))];
-const fmtDim = (d, v) => d === 'p' ? `<span class="page">${esc(v)}</span>` : d === 't' || d === 'x' ? `<span class="term">${esc(v)}</span>` : esc(v);
-const tags = (d, arr) => arr.length === 1 ? fmtDim(d, arr[0])
-  : arr.slice(0, 2).map(x => `<span class="tag">${esc(x)}</span>`).join('') + (arr.length > 2 ? `<span class="tag">+${arr.length - 2}</span>` : '');
-const ev = (n, p) => `<td class="ev ${n ? '' : 'z'}">${n ? num(n) : '—'}${dl(n, p)}</td>`;
-const metrics = (a, p = { u:0, e1:0, e2:0 }) => `<td>${num(a.u)}${dl(a.u, p.u)}</td>${ev(a.e1, p.e1)}${ev(a.e2, p.e2)}${ev(a.e1 + a.e2, p.e1 + p.e2)}`;
-const MH = `<th>Usuarios</th><th class="ev1">${EV1}</th><th class="ev2">${EV2}</th><th>Total</th>`;
-// Reconstruye el link completo al que apunta cada UTM (dominio + página de destino + parámetros)
-const utmParts = r => [['utm_source', r.s], ['utm_medium', r.m], ['utm_campaign', r.c], ['utm_term', r.t], ['utm_content', r.x]]
-  .filter(([, v]) => v && !v.startsWith('('));
-const qs = r => utmParts(r).map(([k, v]) => k + '=' + encodeURIComponent(v)).join('&');
-const hasPage = r => r.p.startsWith('/');
-const link = r => hasPage(r) ? `https://${r.h}${r.p}${r.p.includes('?') ? '&' : '?'}${qs(r)}` : '';
-const utmHtml = r => {
-  const st = BADGE[r.lv](r.iss.length);
-  return utmLink(r) + st + (r.iss.length ? issuesHtml(r.iss) : '');
-};
-const utmLink = r => {
-  const pretty = utmParts(r).map(([k, v]) => `<i>${k}=</i><b>${esc(v)}</b>`).join('<i>&amp;</i>');
-  return hasPage(r)
-    ? `<a class="utm lnk" href="${esc(link(r))}" target="_blank" rel="noopener"><span class="host">${esc(r.h)}${esc(r.p)}</span><i>?</i>${pretty}</a>
-       <span class="acts"><a class="copy" href="${esc(link(r))}" target="_blank" rel="noopener">Abrir</a><button class="copy" data-utm="${esc(link(r))}">Copiar link</button></span>`
-    : `<span class="utm">${pretty}</span><span class="acts"><span class="nopage">sin página de destino registrada</span><button class="copy" data-utm="${esc(qs(r))}">Copiar UTM</button></span>`;
-};
-
-// ---- Filtros: un desplegable por dimensión; cada uno solo ofrece valores compatibles con los demás ----
-const F = Object.fromEntries(ORDER.map(d => [d, '']));
-$('filters').innerHTML = ORDER.map(d => `<label>${DIMS[d]}<select data-d="${d}"></select></label>`).join('')
-  + '<button class="clear" id="clear">Limpiar filtros</button>';
-const matches = (r, skip) => ORDER.every(d => d === skip || !F[d] || r[d] === F[d]);
-function fillFilters() {
-  for (const sel of $('filters').querySelectorAll('select')) {
-    const d = sel.dataset.d;
-    const opts = group(R.filter(r => matches(r, d)), d);
-    sel.innerHTML = `<option value="">Todas (${opts.length})</option>` +
-      opts.map(a => `<option value="${esc(a.key)}" ${F[d] && a.key === F[d] ? 'selected' : ''}>${esc(a.key)}${a.e1 + a.e2 ? ' · ' + num(a.e1 + a.e2) + ' cot.' : ''}</option>`).join('');
-    sel.classList.toggle('on', !!F[d]);
-  }
-  $('clear').disabled = !ORDER.some(d => F[d]);
-}
-$('filters').onchange = e => { F[e.target.dataset.d] = e.target.value; update(); };
-$('clear').onclick = () => { ORDER.forEach(d => F[d] = ''); $('q').value = ''; $('only').checked = false; $('onlyBad').value = ''; update(); };
-
-// ---- Tabla: agrupa por la dimensión elegida; al desplegar muestra cada UTM usada ----
-let view = 'c';
-function draw() {
-  const q = $('q').value.toLowerCase(), only = $('only').checked, onlyBad = $('onlyBad').value;
-  const ok = r => matches(r) && (!only || r.e1 + r.e2) && (!onlyBad || r.lv === onlyBad) && (!q || ORDER.some(d => r[d].toLowerCase().includes(q)));
-  const rows = R.filter(ok), prows = P ? P.filter(r => matches(r) && (!onlyBad || r.lv === onlyBad) && (!q || ORDER.some(d => r[d].toLowerCase().includes(q)))) : [];
-  const PK = new Map(prows.map(r => [r.k, r]));
-  const side = view === 'p' ? 'c' : 'p';   // segunda columna: página de destino (o campaña si agrupas por página)
-  const G = group(rows, view), PG = new Map(group(prows, view).map(a => [a.key, a]));
-  const t1 = rows.reduce((s, r) => s + r.e1, 0), t2 = rows.reduce((s, r) => s + r.e2, 0);
-  $('count').textContent = `${G.length} resultado${G.length === 1 ? '' : 's'} · ${rows.length} UTMs · ${num(t1)} ${EV1} · ${num(t2)} ${EV2}`;
-  $('tbl').innerHTML = `<thead><tr><th class="l">${DIMS[view]}</th><th class="l">${DIMS[side]}</th>${MH}</tr></thead><tbody>` +
-    (G.length ? G.map((a, i) => `
-      <tr class="grp" data-i="${i}"><td class="l"><div class="nm"><span class="caret"></span><b>${fmtDim(view, a.key)}</b></div>
-          <div class="sub2">${a.rows.length} UTM${a.rows.length === 1 ? '' : 's'}${(e => e ? `<span class="bad">${e} mal construida${e === 1 ? '' : 's'}</span>` : '')(a.rows.filter(r => r.lv === 'err').length)}${(w => w ? `<span class="wrn">${w} con advertencias</span>` : '')(a.rows.filter(r => r.lv === 'warn').length)}${a.rows.every(r => r.lv === 'ok') ? '<span class="okb">todas correctas</span>' : ''}</div></td>
-        <td class="l">${tags(side, uniq(a.rows, r => r[side]))}</td>${metrics(a, PG.get(a.key))}</tr>
-      ${a.rows.map(r => `<tr class="det ${r.lv}" data-p="${i}" hidden><td class="l">${utmHtml(r)}</td><td class="l">${fmtDim(side, r[side])}</td>${metrics(r, PK.get(r.k))}</tr>`).join('')}`).join('')
-    : `<tr><td colspan="6" class="empty">Sin resultados con estos filtros</td></tr>`) + '</tbody>';
-}
-function drawCanales() {
-  $('canales').innerHTML = CANALES.map(g => {
-    const rs = R.filter(r => r.g === g), sm = f => rs.reduce((a, r) => a + f(r), 0);
-    const ps = P ? P.filter(r => r.g === g) : [], pm = f => ps.reduce((a, r) => a + f(r), 0);
-    return `<button class="tile cn ${{Pauta:'', Directos:'', Redes:'', Otros:''}[g]} ${F.g === g ? 'on' : ''}" data-g="${g}" id="${g === 'Pauta' ? 'canales-sec' : ''}"><div class="h"><b>${g}</b><span>${uniq(rs, r => r.c).length} campañas</span></div>
-      <div class="d">${CANAL_INFO[g]}</div>
-      <div class="nums">${[[r => r.e1, 'Cotiza producto', EV1], [r => r.e2, 'Cotiza crédito', EV2], [r => r.u, 'Usuarios', 'Usuarios']].map(([f, l, t]) => `<div title="${t}"><b>${num(sm(f))}</b>${l}<br>${dl(sm(f), pm(f))}</div>`).join('')}</div></button>`;
-  }).join('');
-}
-$('canales').onclick = e => { const b = e.target.closest('.cn'); if (!b) return; F.g = F.g === b.dataset.g ? '' : b.dataset.g; update(); };
-function update() { fillFilters(); drawCanales(); draw(); }
-$('tbl').onclick = e => {
-  const cp = e.target.closest('.copy');
-  if (cp) { navigator.clipboard?.writeText(cp.dataset.utm); cp.textContent = 'Copiado'; setTimeout(() => cp.textContent = 'Copiar', 1200); return; }
-  const tr = e.target.closest('tr.grp'); if (!tr) return;
-  tr.classList.toggle('open');
-  document.querySelectorAll(`tr.det[data-p="${tr.dataset.i}"]`).forEach(d => d.hidden = !tr.classList.contains('open'));
-};
-$('tabs').onclick = e => { const b = e.target.closest('button'); if (!b) return;
-  view = b.dataset.v; [...$('tabs').querySelectorAll('button')].forEach(x => x.classList.toggle('on', x === b)); movePill(); draw(); };
-function movePill() { const b = $('tabs').querySelector('button.on'), p = $('tabs').querySelector('.pill'); p.style.width = b.offsetWidth + 'px'; p.style.transform = `translateX(${b.offsetLeft}px)`; }
-window.addEventListener('resize', movePill); document.fonts?.ready.then(movePill); movePill();
-$('q').oninput = draw; $('only').onchange = draw; $('onlyBad').onchange = draw;
-
-// Cabecera y KPIs
 const sum = f => R.reduce((s, r) => s + f(r), 0);
-$('prop').textContent = REPORT.property;
+
+// ============================================================
+// Reporte: KPIs (bento) y canales
+// ============================================================
 function serieDiaria() {
   const M = new Map();
   for (let d = RANGO.from; d <= RANGO.to; d = addD(d, 1)) M.set(d, [0, 0]);
@@ -541,7 +715,7 @@ function serieDiaria() {
 }
 function chartSvg() {
   const S = serieDiaria(), n = S.length, max = Math.max(1, ...S.map(([, v]) => v[0] + v[1]));
-  const W = 600, H = 110, gap = n > 40 ? 1 : 3, bw = (W - gap * (n - 1)) / n;
+  const W = 600, H = 110, gap = n > 40 ? 1 : 3, bw = Math.max(1, (W - gap * (n - 1)) / n);
   const bars = S.map(([d, [a, b]], i) => {
     const x = i * (bw + gap), ha = a / max * H, hb = b / max * H;
     return `<g><title>${date(d)}: ${a} ${EV1} · ${b} ${EV2}</title>
@@ -558,27 +732,132 @@ function drawKpis() {
   const bad = R.filter(r => r.lv === 'err').length, warn = R.filter(r => r.lv === 'warn').length, ok = R.filter(r => r.lv === 'ok').length, tot = R.length || 1;
   $('kpis').innerHTML = `
     <div class="tile t-hero">
-      <div class="l">Cotizaciones desde campañas</div>
+      <div class="l"><i class="ph ph-receipt"></i>Cotizaciones desde campañas</div>
       <div class="pair">
-        <div><div class="v">${num(e1)}</div><div class="n"><i class="sw" style="background:#d71920"></i>${EV1} ${dl(e1, ps(r => r.e1))}</div></div>
-        <div><div class="v">${num(e2)}</div><div class="n"><i class="sw" style="background:#fff"></i>${EV2} ${dl(e2, ps(r => r.e2))}</div></div>
+        <div><div class="v">${num(e1)}</div><div class="n"><i class="swc" style="background:#d71920"></i>${EV1} ${dl(e1, ps(r => r.e1))}</div></div>
+        <div><div class="v">${num(e2)}</div><div class="n"><i class="swc" style="background:#fff"></i>${EV2} ${dl(e2, ps(r => r.e2))}</div></div>
       </div>
       <div class="chart">${chartSvg()}</div>
     </div>
-    <div class="tile t-sm t-red"><div class="l">Usuarios con UTM</div><div class="v">${num(sum(r => r.u))}${dl(sum(r => r.u), ps(r => r.u))}</div><div class="s">llegaron por campañas</div></div>
-    <div class="tile t-sm t-graph"><div class="l">Campañas activas</div><div class="v">${num(nc(R))}${P ? dl(nc(R), nc(P.filter(r => r.u >= 5 || r.e1 || r.e2))) : ''}</div><div class="s">${nc(R.filter(r => r.e1 + r.e2))} generaron cotizaciones</div></div>
-    <div class="tile t-md"><div class="l">Calidad de las UTMs usadas</div>
+    <div class="tile t-sm t-red"><div class="l"><i class="ph ph-users"></i>Usuarios con UTM</div><div class="v">${num(sum(r => r.u))}${dl(sum(r => r.u), ps(r => r.u))}</div><div class="s">llegaron por campañas</div></div>
+    <div class="tile t-sm t-graph"><div class="l"><i class="ph ph-flag"></i>Campañas activas</div><div class="v">${num(nc(R))}${P ? dl(nc(R), nc(P.filter(r => r.u >= 5 || r.e1 || r.e2))) : ''}</div><div class="s">${nc(R.filter(r => r.e1 + r.e2))} generaron cotizaciones</div></div>
+    <div class="tile t-md"><div class="l"><i class="ph ph-seal-check"></i>Calidad de las UTMs usadas</div>
       <div class="v">${num(bad)} <span style="font-size:15px;font-weight:700;color:var(--gray-500)">mal construidas de ${num(R.length)}</span></div>
-      <div class="stack"><i style="width:${bad / tot * 100}%;background:var(--red)"></i><i style="width:${warn / tot * 100}%;background:#e0a030"></i><i style="width:${ok / tot * 100}%;background:var(--ok)"></i></div>
-      <div class="legend"><span><i style="background:var(--red)"></i>${num(bad)} mal construidas</span><span><i style="background:#e0a030"></i>${num(warn)} con advertencias</span><span><i style="background:var(--ok)"></i>${num(ok)} correctas</span></div>
+      <div class="stack"><i style="width:${bad / tot * 100}%;background:var(--red)"></i><i style="width:${warn / tot * 100}%;background:var(--warn-dot)"></i><i style="width:${ok / tot * 100}%;background:var(--ok)"></i></div>
+      <div class="legend"><span><i style="background:var(--red)"></i>${num(bad)} mal construidas</span><span><i style="background:var(--warn-dot)"></i>${num(warn)} con advertencias</span><span><i style="background:var(--ok)"></i>${num(ok)} correctas</span></div>
     </div>`;
 }
+function drawCanales() {
+  $('canales').innerHTML = CANALES.map(g => {
+    const rs = R.filter(r => r.g === g), sm = f => rs.reduce((a, r) => a + f(r), 0);
+    const ps = P ? P.filter(r => r.g === g) : [], pm = f => ps.reduce((a, r) => a + f(r), 0);
+    return `<button class="tile cn ${F.g === g ? 'on' : ''}" data-g="${g}" aria-pressed="${F.g === g}">
+      <div class="h"><b><i class="ph ${CANAL_INFO[g][1]}"></i>${g}</b><span>${uniq(rs, r => r.c).length} campañas</span></div>
+      <div class="d">${CANAL_INFO[g][0]}</div>
+      <div class="nums">${[[r => r.e1, 'Cotiza producto', EV1], [r => r.e2, 'Cotiza crédito', EV2], [r => r.u, 'Usuarios', 'Usuarios']].map(([f, l, t]) => `<div title="${t}"><b>${num(sm(f))}</b>${l}<br>${dl(sm(f), pm(f))}</div>`).join('')}</div></button>`;
+  }).join('');
+}
+$('canales').addEventListener('click', e => { const b = e.target.closest('.cn'); if (!b) return; F.g = F.g === b.dataset.g ? '' : b.dataset.g; update(); });
 
-// ===== Selector de intervalo de tiempo (un solo control) =====
-const iso = d => d.toISOString().slice(0, 10);
-const addD = (s, n) => { const d = new Date(s + 'T12:00Z'); d.setUTCDate(d.getUTCDate() + n); return iso(d); };
-const days = (a, b) => Math.round((new Date(b + 'T12:00Z') - new Date(a + 'T12:00Z')) / 864e5);
-let AYER = '';   // último día sincronizado (normalmente ayer)
+// ============================================================
+// Reporte: filtros (desplegables propios), agrupación y vista Tabla / Bento
+// ============================================================
+const F = Object.fromEntries(ORDER.map(d => [d, '']));
+let view = 'c', mode = 'table', estado = '';
+const matches = (r, skip) => ORDER.every(d => d === skip || !F[d] || r[d] === F[d]);
+const FD = {};
+ORDER.forEach(d => {
+  const host = document.createElement('span'); host.style.display = 'contents'; $('fpills').appendChild(host);
+  FD[d] = Dropdown(host, { label: DIMS[d], options: [], value: '', onChange: v => { F[d] = v; update(); } });
+});
+const ESTADOS = [{ v:'', l:'Todas' }, { v:'err', l:'Mal construidas', ic:'ph-x-circle' }, { v:'warn', l:'Con advertencias', ic:'ph-warning' }, { v:'ok', l:'Correctas', ic:'ph-check-circle' }];
+const FE = Dropdown($('fstate'), { label: 'Estado UTM', options: ESTADOS, value: '', search: false, onChange: v => { estado = v; draw(); } });
+function fillFilters() {
+  ORDER.forEach(d => {
+    const gs = group(R.filter(r => matches(r, d)), d);
+    FD[d].setOptions([{ v:'', l:'Todas', m: gs.length }, ...gs.map((a, i) => ({ v:a.key, l:a.key, m: a.e1 + a.e2 ? `${num(a.e1 + a.e2)} cot.` : `${num(a.u)} usu.`, sep: i === 0 }))]);
+    FD[d].set(F[d]);
+  });
+  $('clear').disabled = !ORDER.some(d => F[d]) && !estado && !$('only').checked && !$('q').value;
+}
+$('clear').onclick = () => { ORDER.forEach(d => F[d] = ''); estado = ''; FE.set(''); $('q').value = ''; $('only').checked = false; update(); };
+$('q').oninput = () => { draw(); $('clear').disabled = false; };
+$('only').onchange = () => { draw(); fillFilters(); };
+
+const GB = Seg($('groupBy'), ORDER.map(d => [d, DIMS[d] === 'Página de destino' ? 'Página' : DIMS[d], DIM_IC[d]]), view, v => { view = v; draw(); });
+Seg($('viewMode'), null, mode, v => { mode = v; draw(); });
+
+const fmtDim = (d, v) => d === 'p' ? `<span class="page">${esc(v)}</span>` : d === 't' || d === 'x' ? `<span class="term">${esc(v)}</span>` : esc(v);
+const tags = (d, arr) => arr.length === 1 ? fmtDim(d, arr[0])
+  : arr.slice(0, 2).map(x => `<span class="tag">${esc(x)}</span>`).join('') + (arr.length > 2 ? `<span class="tag">+${arr.length - 2}</span>` : '');
+const evc = (n, p) => `<td class="ev ${n ? '' : 'z'}">${n ? num(n) : '—'}${dl(n, p)}</td>`;
+const metrics = (a, p = { u:0, e1:0, e2:0 }) => `<td>${num(a.u)}${dl(a.u, p.u)}</td>${evc(a.e1, p.e1)}${evc(a.e2, p.e2)}${evc(a.e1 + a.e2, p.e1 + p.e2)}`;
+const utmParts = r => [['utm_source', r.s], ['utm_medium', r.m], ['utm_campaign', r.c], ['utm_term', r.t], ['utm_content', r.x]].filter(([, v]) => v && !v.startsWith('('));
+const qs = r => utmParts(r).map(([k, v]) => k + '=' + encodeURIComponent(v)).join('&');
+const hasPage = r => r.p.startsWith('/');
+const link = r => hasPage(r) ? `https://${r.h}${r.p}${r.p.includes('?') ? '&' : '?'}${qs(r)}` : '';
+const utmHtml = r => {
+  const pretty = utmParts(r).map(([k, v]) => `<i>${k}=</i><b>${esc(v)}</b>`).join('<i>&amp;</i>');
+  const top = hasPage(r)
+    ? `<a class="utm lnk" href="${esc(link(r))}" target="_blank" rel="noopener"><span class="host">${esc(r.h)}${esc(r.p)}</span><i>?</i>${pretty}</a>
+       <span class="acts"><a class="chip-btn" href="${esc(link(r))}" target="_blank" rel="noopener"><i class="ph ph-arrow-square-out"></i>Abrir</a><button class="chip-btn" data-copy="${esc(link(r))}"><i class="ph ph-copy"></i>Copiar link</button>${BADGE[r.lv](r.iss.length)}</span>`
+    : `<span class="utm">${pretty}</span><span class="acts"><span class="nopage"><i class="ph ph-warning"></i>sin página de destino registrada</span><button class="chip-btn" data-copy="${esc(qs(r))}"><i class="ph ph-copy"></i>Copiar UTM</button>${BADGE[r.lv](r.iss.length)}</span>`;
+  return top + (r.iss.length ? `<ul class="issues">${issuesLi(r.iss)}</ul>` : '');
+};
+const stateBadges = rows => {
+  const e = rows.filter(r => r.lv === 'err').length, w = rows.filter(r => r.lv === 'warn').length;
+  return (e ? `<span class="bad"><i class="ph-fill ph-x-circle"></i>${e} mal construida${e === 1 ? '' : 's'}</span>` : '')
+    + (w ? `<span class="wrn"><i class="ph-fill ph-warning"></i>${w} con advertencias</span>` : '')
+    + (!e && !w ? '<span class="okb"><i class="ph-fill ph-check-circle"></i>todas correctas</span>' : '');
+};
+
+function draw() {
+  const q = $('q').value.toLowerCase(), only = $('only').checked;
+  const ok = r => matches(r) && (!estado || r.lv === estado) && (!q || ORDER.some(d => r[d].toLowerCase().includes(q)));
+  const rows = R.filter(r => ok(r) && (!only || r.e1 + r.e2)), prows = P ? P.filter(ok) : [];
+  const PK = new Map(prows.map(r => [r.k, r]));
+  const G = group(rows, view), PG = new Map(group(prows, view).map(a => [a.key, a]));
+  const t1 = rows.reduce((s, r) => s + r.e1, 0), t2 = rows.reduce((s, r) => s + r.e2, 0), tu = rows.reduce((s, r) => s + r.u, 0) || 1;
+  $('count').innerHTML = `<span><b>${num(G.length)}</b> ${DIMS[view].toLowerCase()}${G.length === 1 ? '' : 's'}</span><span><b>${num(rows.length)}</b> UTMs</span><span><b>${num(t1)}</b> ${EV1}</span><span><b>${num(t2)}</b> ${EV2}</span>`;
+  const empty = `<div class="empty"><i class="ph ph-funnel-x"></i><b>Sin resultados con estos filtros</b><span>Quita algún filtro o cambia el periodo.</span></div>`;
+  if (!G.length) return swap($('out'), empty);
+  if (mode === 'bento') {
+    swap($('out'), `<div class="gbento">${G.map((a, i) => {
+      const p = PG.get(a.key) || { u:0, e1:0, e2:0 }, cls = G.length === 1 ? 'xl full' : i === 0 ? 'xl' : i === 1 ? 'xl2' : i < 5 ? 'lg' : '';
+      const side = view === 'p' ? 'c' : 'p', tops = group(a.rows, side).slice(0, i === 0 ? 4 : 3);
+      return `<button class="gcard ${cls}" data-k="${esc(a.key)}" title="Ver en tabla">
+        <div class="gt"><b>${esc(a.key)}</b><span class="rank">#${i + 1}</span></div>
+        <div class="gm"><div><b>${num(a.e1)}</b>Cotiza producto ${dl(a.e1, p.e1)}</div><div><b>${num(a.e2)}</b>Cotiza crédito ${dl(a.e2, p.e2)}</div><div><b>${num(a.u)}</b>Usuarios ${dl(a.u, p.u)}</div></div>
+        <div class="share" title="${(a.u / tu * 100).toFixed(1)}% de los usuarios"><i style="width:${Math.max(2, a.u / tu * 100)}%"></i></div>
+        <div class="tops">${tops.map(t => `<div><span>${esc(t.key)}</span><b>${num(t.e1 + t.e2) || num(t.u) + ' usu.'}</b></div>`).join('')}</div>
+        <div class="foot-row"><span class="tag">${a.rows.length} UTM${a.rows.length === 1 ? '' : 's'}</span>${stateBadges(a.rows)}</div></button>`;
+    }).join('')}</div>`);
+    return;
+  }
+  const side = view === 'p' ? 'c' : 'p';
+  swap($('out'), `<div class="table-wrap"><table><thead><tr><th class="l">${DIMS[view]}</th><th class="l">${DIMS[side]}</th><th>Usuarios</th><th>${EV1}</th><th>${EV2}</th><th>Total</th></tr></thead><tbody>` +
+    G.map((a, i) => `
+      <tr class="grp" data-i="${i}" tabindex="0" aria-expanded="false"><td class="l"><div class="nm"><i class="ph ph-caret-right caret"></i><b>${fmtDim(view, a.key)}</b></div>
+          <div class="sub2">${a.rows.length} UTM${a.rows.length === 1 ? '' : 's'} ${stateBadges(a.rows)}</div></td>
+        <td class="l">${tags(side, uniq(a.rows, r => r[side]))}</td>${metrics(a, PG.get(a.key))}</tr>
+      ${a.rows.map(r => `<tr class="det ${r.lv}" data-p="${i}" hidden><td class="l">${utmHtml(r)}</td><td class="l">${fmtDim(side, r[side])}</td>${metrics(r, PK.get(r.k))}</tr>`).join('')}`).join('')
+    + '</tbody></table></div>');
+}
+$('out').addEventListener('click', e => {
+  const cp = e.target.closest('[data-copy]'); if (cp) return copy(cp.dataset.copy);
+  const card = e.target.closest('.gcard[data-k]');
+  if (card) { F[view] = card.dataset.k; mode = 'table'; document.querySelector('#viewMode [data-v="table"]').click(); update(); return; }
+  const tr = e.target.closest('tr.grp'); if (!tr) return;
+  const open = tr.classList.toggle('open'); tr.setAttribute('aria-expanded', open);
+  document.querySelectorAll(`#out tr.det[data-p="${tr.dataset.i}"]`).forEach(d => d.hidden = !open);
+});
+$('out').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('tr.grp')) { e.preventDefault(); e.target.click(); } });
+function update() { fillFilters(); drawCanales(); draw(); if (LINKS) drawLib(); }
+
+// ============================================================
+// Selector de periodo (un solo control)
+// ============================================================
+let AYER = '';
 const PRESETS = [
   ['ayer', 'Ayer', () => [AYER, AYER]],
   ['d7', 'Últimos 7 días', () => [addD(AYER, -6), AYER]],
@@ -588,82 +867,212 @@ const PRESETS = [
   ['mesant', 'Mes pasado', () => { const f = addD(AYER.slice(0, 8) + '01', -1); return [f.slice(0, 8) + '01', f]; }],
 ];
 const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-let RANGO = { from:'', to:'', preset:'mes' }, sel = { a:'', b:'' }, calMonth = '';
-
+let RANGO = { from:'', to:'', preset:'mes' }, sel = { a:'', b:'' }, hover = '', calMonth = '';
 async function aplicarRango(from, to, preset) {
   if (from > to) [from, to] = [to, from];
   RANGO = { from, to, preset };
   const n = days(from, to) + 1, pTo = addD(from, -1), pFrom = addD(pTo, -(n - 1));
   const name = PRESETS.find(p => p[0] === preset)?.[1];
-  $('dp_label').innerHTML = `${name ? `<b>${name}</b> · ` : ''}${date(from)} – ${date(to)}`;
+  const label = `${name ? `<b>${name}</b><span class="lbl-long"> · ${date(from)} – ${date(to)}</span>` : `<b>${date(from)} – ${date(to)}</b>`}`;
+  $('dp_label').innerHTML = label + ' <span class="muted">· cargando…</span>';
   $('period').textContent = pFrom >= REPORT.minDate ? `Comparado con ${date(pFrom)} – ${date(pTo)}` : 'Sin periodo anterior para comparar';
-  $('dp_label').insertAdjacentHTML('beforeend', ' · cargando…');
   try { await asegurarDatos(pFrom < REPORT.minDate ? from : pFrom, to); }
-  catch (e) { $('kpis').innerHTML = `<div class="tile" style="grid-column:1/-1"><b class="err">Error al cargar datos:</b> ${esc(e.message)}</div>`; return; }
-  $('dp_label').innerHTML = `${name ? `<b>${name}</b> · ` : ''}${date(from)} – ${date(to)}`;
-  cargarRango(from, to, pFrom, pTo); drawKpis(); update();
+  catch (e) { $('kpis').innerHTML = `<div class="tile t-full"><b style="color:var(--red)">No se pudieron cargar los datos.</b> ${esc(e.message)}</div>`; $('dp_label').innerHTML = label; return; }
+  $('dp_label').innerHTML = label;
+  R = agg(from, to).filter(r => r.u >= 5 || r.e1 || r.e2);
+  P = pFrom >= REPORT.minDate ? agg(pFrom, pTo) : null;
+  drawKpis(); update();
 }
 function drawCal() {
-  $('dp_presets').innerHTML = PRESETS.map(([k, l]) => `<button data-k="${k}" class="${RANGO.preset === k ? 'on' : ''}">${l}</button>`).join('');
+  $('dp_presets').innerHTML = PRESETS.map(([k, l]) => `<button data-k="${k}" class="${RANGO.preset === k ? 'on' : ''}">${l}${RANGO.preset === k ? '<i class="ph ph-check"></i>' : ''}</button>`).join('');
+  const b = sel.b || (sel.a && hover) || '', lo = sel.a && b ? (sel.a < b ? sel.a : b) : '', hi = sel.a && b ? (sel.a < b ? b : sel.a) : '';
   const month = ym => {
     const [y, m] = ym.split('-').map(Number), first = new Date(Date.UTC(y, m - 1, 1)), n = new Date(Date.UTC(y, m, 0)).getUTCDate();
-    const pad = (first.getUTCDay() + 6) % 7;   // semana empieza en lunes
     let h = `<div class="mo"><div class="mt">${MESES[m - 1]} ${y}</div><div class="dg">${['L','M','M','J','V','S','D'].map(x => `<span class="wd">${x}</span>`).join('')}`;
-    h += '<span></span>'.repeat(pad);
+    h += '<span></span>'.repeat((first.getUTCDay() + 6) % 7);
     for (let d = 1; d <= n; d++) {
-      const v = `${ym}-${String(d).padStart(2, '0')}`, b = sel.b || sel.a;
-      const off = v < REPORT.minDate || v > REPORT.maxDate;
-      const cls = [off && 'off', (v === sel.a || v === sel.b) && 'edge', sel.a && b && v > (sel.a < b ? sel.a : b) && v < (sel.a < b ? b : sel.a) && 'in'].filter(Boolean).join(' ');
-      h += `<button data-d="${v}" class="${cls}" ${off ? 'disabled' : ''}>${d}</button>`;
+      const v = `${ym}-${String(d).padStart(2, '0')}`, off = v < REPORT.minDate || v > REPORT.maxDate;
+      const cls = [off && 'off', (v === sel.a || v === (sel.b || (sel.a && hover))) && 'edge', lo && v > lo && v < hi && 'in', v === AYER && 'today'].filter(Boolean).join(' ');
+      h += `<button data-d="${v}" class="${cls}" ${off ? 'disabled' : ''} aria-label="${date(v)}">${d}</button>`;
     }
     return h + '</div></div>';
   };
-  const prevM = (() => { const [y, m] = calMonth.split('-').map(Number); return m === 1 ? `${y - 1}-12` : `${y}-${String(m - 1).padStart(2, '0')}`; })();
+  const [y, m] = calMonth.split('-').map(Number), prevM = m === 1 ? `${y - 1}-12` : `${y}-${String(m - 1).padStart(2, '0')}`;
   $('dp_months').innerHTML = month(prevM) + month(calMonth);
-  $('dp_sel').textContent = sel.a ? `${date(sel.a)} – ${sel.b ? date(sel.b) : 'elige el día final'}` : 'Elige el día inicial';
+  $('dp_sel').innerHTML = sel.a ? `<b>${date(sel.a)}</b> – ${sel.b ? `<b>${date(sel.b)}</b> · ${days(lo, hi) + 1} días` : 'elige el día final'}` : 'Elige el día inicial';
   $('dp_apply').disabled = !(sel.a && sel.b);
 }
-$('dp_btn').onclick = e => { e.stopPropagation(); const p = $('dp_pop'); p.hidden = !p.hidden;
-  if (!p.hidden) { sel = { a:RANGO.from, b:RANGO.to }; calMonth = RANGO.to.slice(0, 7); drawCal(); } };
+function toggleDp(force) {
+  const p = $('dp_pop'), show = force ?? p.hidden;
+  p.hidden = !show; $('dp_btn').setAttribute('aria-expanded', show);
+  if (show) { p.classList.remove('pop-in'); void p.offsetWidth; p.classList.add('pop-in'); sel = { a:RANGO.from, b:RANGO.to }; hover = ''; calMonth = RANGO.to.slice(0, 7); drawCal(); }
+}
+$('dp_btn').onclick = e => { e.stopPropagation(); toggleDp(); };
+$('dp_months').addEventListener('mouseover', e => { const d = e.target.closest('[data-d]'); if (d && sel.a && !sel.b && d.dataset.d !== hover) { hover = d.dataset.d; drawCal(); } });
 $('dp_pop').onclick = e => {
   e.stopPropagation();
   const pr = e.target.closest('[data-k]'), dd = e.target.closest('[data-d]');
-  if (pr) { const [k, , f] = PRESETS.find(p => p[0] === pr.dataset.k); aplicarRango(...f(), k); $('dp_pop').hidden = true; }
-  else if (dd) { const v = dd.dataset.d; if (!sel.a || sel.b) sel = { a:v, b:'' }; else sel.b = v; if (sel.b && sel.b < sel.a) sel = { a:sel.b, b:sel.a }; drawCal(); }
-  else if (e.target.id === 'dp_prevm' || e.target.id === 'dp_nextm') {
-    const [y, m] = calMonth.split('-').map(Number), n = new Date(Date.UTC(y, m - 1 + (e.target.id === 'dp_nextm' ? 1 : -1), 1));
+  if (pr) { const [k, , f] = PRESETS.find(p => p[0] === pr.dataset.k); aplicarRango(...f(), k); toggleDp(false); }
+  else if (dd) { const v = dd.dataset.d; if (!sel.a || sel.b) sel = { a:v, b:'' }; else sel.b = v; if (sel.b && sel.b < sel.a) sel = { a:sel.b, b:sel.a }; hover = ''; drawCal(); }
+  else if (e.target.closest('#dp_prevm, #dp_nextm')) {
+    const [y, m] = calMonth.split('-').map(Number), n = new Date(Date.UTC(y, m - 1 + (e.target.closest('#dp_nextm') ? 1 : -1), 1));
     calMonth = iso(n).slice(0, 7); drawCal();
   }
-  else if (e.target.id === 'dp_apply' && sel.a && sel.b) { aplicarRango(sel.a, sel.b, 'custom'); $('dp_pop').hidden = true; }
+  else if (e.target.closest('#dp_apply') && sel.a && sel.b) { aplicarRango(sel.a, sel.b, 'custom'); toggleDp(false); }
 };
-document.addEventListener('click', () => $('dp_pop').hidden = true);
+document.addEventListener('click', () => { if (!$('dp_pop').hidden) toggleDp(false); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('dp_pop').hidden) { toggleDp(false); $('dp_btn').focus(); } });
 
-// ===== Widget: guía + constructor de UTM =====
-$('rules').innerHTML = RULES.map(r => `<div class="rule"><div class="k">${r.f} · ${r.req ? 'obligatorio' : 'opcional'}</div><h4>${r.n}</h4><p>${r.d}</p>
-  <p style="margin-top:6px">${r.ej.map(x => `<code>${esc(x)}</code>`).join(' ')}</p></div>`).join('');
-$('b_m').innerHTML = STD.medios.map(x => `<option>${x}</option>`).join('');
+// ============================================================
+// Constructor de UTMs + biblioteca guardada (Supabase vía /api/links)
+// ============================================================
+let LINKS = null, editId = '', libGroup = 'canal', libView = 'bento', confirmDel = '';
+$('rules').innerHTML = RULES.map(r => `<div class="rule"><div class="k">${r.f}</div><h4>${r.n}<small>${r.req ? 'obligatorio' : 'opcional'}</small></h4><p>${r.d}</p>
+  <p>${r.ej.map(x => `<code>${esc(x)}</code>`).join('')}</p></div>`).join('');
+const BM = Dropdown($('b_m'), { options: STD.medios.map(([v, l]) => ({ v, l: v, m: l })), value: 'paid_social', block: true, search: false, onChange: build });
+const form = () => ({ url: $('b_url').value.trim(), source: normalizar($('b_s').value), medium: BM.value, campaign: normalizar($('b_c').value),
+  term: normalizar($('b_t').value), content: normalizar($('b_x').value), note: $('b_note').value.trim() });
+const fullUrl = f => { const q = [['utm_source', f.source], ['utm_medium', f.medium], ['utm_campaign', f.campaign], ['utm_term', f.term], ['utm_content', f.content]]
+  .filter(([, v]) => v).map(([k, v]) => k + '=' + encodeURIComponent(v)).join('&'); return f.url ? f.url + (f.url.includes('?') ? '&' : '?') + q : q; };
 function build() {
-  const v = id => $(id).value.trim();
-  const r = { s:normalizar(v('b_s')), m:v('b_m'), c:normalizar(v('b_c')), t:normalizar(v('b_t')), x:normalizar(v('b_x')) };
-  const iss = validar(r);
-  const qs = [['utm_source', r.s], ['utm_medium', r.m], ['utm_campaign', r.c], ['utm_term', r.t], ['utm_content', r.x]]
-    .filter(([, x]) => x).map(([k, x]) => k + '=' + encodeURIComponent(x)).join('&');
-  const url = v('b_url'); const full = url ? url + (url.includes('?') ? '&' : '?') + qs : qs;
-  $('b_out').textContent = full;
-  $('b_issues').innerHTML = iss.length ? iss.map(i => `<li class="${i.lvl}"><b>${i.f}:</b> ${esc(i.m)}</li>`).join('') : '<li class="okl">La UTM cumple el estándar</li>';
-  $('b_copy').dataset.utm = full;
+  const f = form();
+  [['s', 'b_s', f.source], ['c', 'b_c', f.campaign], ['t', 'b_t', f.term], ['x', 'b_x', f.content]].forEach(([k, id, v]) => {
+    const raw = $(id).value.trim(); $('n_' + k).innerHTML = raw && raw !== v ? `se guardará como <b>${esc(v)}</b>` : '';
+  });
+  $('b_params').innerHTML = [['utm_source', f.source], ['utm_medium', f.medium], ['utm_campaign', f.campaign], ['utm_term', f.term], ['utm_content', f.content]]
+    .map(([k, v]) => `<div class="param"><span>${k}</span><b class="${v ? '' : 'empty-v'}">${v ? esc(v) : 'sin valor'}</b></div>`).join('');
+  const full = fullUrl(f); $('b_out').textContent = full; $('b_open').href = /^https?:\/\//.test(full) ? full : '#';
+  const iss = validar({ s: f.source, m: f.medium, c: f.campaign, t: f.term });
+  if (!/^https?:\/\/[^\s/]+\.[^\s]+/.test(f.url)) iss.unshift({ f:'URL', m:'debe empezar con https:// y ser una dirección válida', lvl:'err' });
+  $('b_issues').innerHTML = iss.length ? issuesLi(iss) : '<li class="okl"><i class="ph-fill ph-check-circle"></i><span>La UTM cumple el estándar</span></li>';
+  const dupe = LINKS?.find(l => l.id !== editId && fullUrl(l) === full);
+  $('b_dupe').hidden = !dupe;
+  $('b_save').disabled = iss.some(i => i.lvl === 'err') || !!dupe;
 }
-['b_url','b_s','b_m','b_c','b_t','b_x'].forEach(id => $(id).oninput = build);
-$('b_copy').onclick = e => { navigator.clipboard?.writeText(e.target.dataset.utm); e.target.textContent = 'Copiado'; setTimeout(() => e.target.textContent = 'Copiar link', 1200); };
-build();
+['b_url', 'b_s', 'b_c', 'b_t', 'b_x', 'b_note'].forEach(id => $(id).addEventListener('input', build));
+$('b_copy').onclick = () => copy($('b_out').textContent);
+function resetForm() {
+  editId = ''; ['b_s', 'b_c', 'b_t', 'b_x', 'b_note'].forEach(id => $(id).value = ''); BM.set('paid_social');
+  $('b_url').value = 'https://www.motomundohn.com/cotizar-en-linea';
+  $('formTitle').textContent = 'Nueva UTM'; $('editing').hidden = true; $('b_cancel').hidden = true; $('b_save').querySelector('span').textContent = 'Guardar UTM';
+  build();
+}
+$('b_reset').onclick = resetForm; $('b_cancel').onclick = resetForm;
+$('b_save').onclick = async () => {
+  const f = form(), btn = $('b_save'); btn.disabled = true;
+  try {
+    const res = await fetch('/api/links' + (editId ? `?id=${editId}` : ''), { method: editId ? 'PUT' : 'POST', headers: { 'content-type':'application/json' }, body: JSON.stringify(f) });
+    const j = await res.json(); if (j.error) throw new Error(j.error);
+    toast(editId ? 'UTM actualizada' : 'UTM guardada'); copy(fullUrl(j), editId ? 'UTM actualizada y link copiado' : 'UTM guardada y link copiado');
+    const id = j.id; await loadLinks(); resetForm();
+    setTimeout(() => { const c = document.querySelector(`.lcard[data-id="${id}"]`); c?.classList.add('flash'); c?.scrollIntoView({ block:'nearest', behavior:'smooth' }); }, 60);
+  } catch (e) { toast('No se pudo guardar: ' + e.message, true); build(); }
+};
+async function loadLinks() {
+  try { LINKS = await (await fetch('/api/links')).json(); if (LINKS.error) throw new Error(LINKS.error); }
+  catch (e) { LINKS = []; $('lib').innerHTML = `<div class="empty"><i class="ph ph-plugs"></i><b>No se pudieron cargar las UTMs guardadas</b><span>${esc(e.message)}</span></div>`; return; }
+  $('libCount').textContent = num(LINKS.length);
+  $('dl_s').innerHTML = uniq(LINKS, l => l.source).map(v => `<option value="${esc(v)}">`).join('');
+  $('dl_c').innerHTML = uniq(LINKS, l => l.campaign).map(v => `<option value="${esc(v)}">`).join('');
+  drawLib(); build();
+}
+// Resultados GA4 del periodo para una UTM guardada (coincide campaña + fuente + medio + término + contenido)
+function gaFor(l) {
+  const t = l.term || '(not set)', x = l.content || '(not set)';
+  const rs = R.filter(r => r.c === l.campaign && r.s === l.source && r.m === l.medium && r.t === t && r.x === x);
+  return rs.length ? rs.reduce((a, r) => ({ u: a.u + r.u, e1: a.e1 + r.e1, e2: a.e2 + r.e2 }), { u:0, e1:0, e2:0 }) : null;
+}
+const LG_KEY = { canal: l => canal(l.source, l.medium), campaign: l => l.campaign, source: l => l.source, medium: l => l.medium };
+const LG_IC = { canal: g => CANAL_INFO[g]?.[1] || 'ph-broadcast', campaign: () => 'ph-flag', source: () => 'ph-plug', medium: () => 'ph-shuffle' };
+Seg($('libGroup'), [['canal', 'Canal', 'ph-broadcast'], ['campaign', 'Campaña', 'ph-flag'], ['source', 'Fuente', 'ph-plug'], ['medium', 'Medio', 'ph-shuffle']], libGroup, v => { libGroup = v; drawLib(); });
+Seg($('libView'), null, libView, v => { libView = v; drawLib(); });
+$('lq').oninput = () => drawLib();
+const ago = s => { const d = (Date.now() - new Date(s)) / 864e5; return d < 1 ? 'hoy' : d < 2 ? 'ayer' : `hace ${Math.floor(d)} días`; };
+function libCard(l) {
+  const iss = validar({ s: l.source, m: l.medium, c: l.campaign, t: l.term }), lv = nivel(iss), ga = gaFor(l), u = fullUrl(l);
+  let host = ''; try { const x = new URL(l.url); host = x.host + x.pathname; } catch { host = l.url; }
+  const actions = confirmDel === l.id
+    ? `<span class="confirm"><i class="ph ph-trash"></i>¿Eliminar?</span><span><button class="btn btn-red" data-del-yes="${l.id}" style="padding:6px 12px">Eliminar</button> <button class="btn btn-ghost" data-del-no style="padding:6px 12px">No</button></span>`
+    : `<span class="when">${l.updated_at !== l.created_at ? 'editada' : 'creada'} ${ago(l.updated_at)}</span><span>
+        <button class="ibtn" data-copy="${esc(u)}" title="Copiar link" aria-label="Copiar link"><i class="ph ph-copy"></i></button>
+        <a class="ibtn" href="${esc(u)}" target="_blank" rel="noopener" title="Abrir" aria-label="Abrir"><i class="ph ph-arrow-square-out"></i></a>
+        <button class="ibtn" data-edit="${l.id}" title="Editar" aria-label="Editar"><i class="ph ph-pencil-simple"></i></button>
+        <button class="ibtn danger" data-del="${l.id}" title="Eliminar" aria-label="Eliminar"><i class="ph ph-trash"></i></button></span>`;
+  return `<div class="gcard lcard" data-id="${l.id}">
+    <div class="gt"><b>${esc(l.campaign)}</b>${BADGE[lv](iss.length)}</div>
+    <div class="chips"><span class="tag"><i>fuente</i> ${esc(l.source)}</span><span class="tag"><i>medio</i> ${esc(l.medium)}</span>${l.term ? `<span class="tag"><i>término</i> ${esc(l.term)}</span>` : ''}${l.content ? `<span class="tag"><i>contenido</i> ${esc(l.content)}</span>` : ''}</div>
+    <div class="url"><b>${esc(host)}</b></div>
+    ${l.note ? `<div class="note"><i class="ph ph-note-pencil"></i>${esc(l.note)}</div>` : ''}
+    ${ga ? `<div class="ga"><div><b>${num(ga.e1)}</b>Cotiza producto</div><div><b>${num(ga.e2)}</b>Cotiza crédito</div><div><b>${num(ga.u)}</b>Usuarios</div></div>`
+         : `<div class="ga none"><i class="ph ph-clock-countdown"></i>Sin visitas en GA4 en este periodo</div>`}
+    <div class="lact">${actions}</div></div>`;
+}
+function drawLib() {
+  if (!LINKS) return;
+  const q = $('lq').value.toLowerCase();
+  const ls = LINKS.filter(l => !q || [l.campaign, l.source, l.medium, l.term, l.content, l.url, l.note].some(v => (v || '').toLowerCase().includes(q)));
+  if (!LINKS.length) return swap($('lib'), `<div class="empty"><i class="ph ph-link-simple-break"></i><b>Todavía no hay UTMs guardadas</b><span>Arma la primera arriba y pulsa "Guardar UTM".</span></div>`);
+  if (!ls.length) return swap($('lib'), `<div class="empty"><i class="ph ph-magnifying-glass"></i><b>Ninguna UTM coincide con la búsqueda</b></div>`);
+  const kf = LG_KEY[libGroup], M = new Map();
+  ls.forEach(l => { const k = kf(l); (M.get(k) || M.set(k, []).get(k)).push(l); });
+  const keys = libGroup === 'canal' ? CANALES.filter(k => M.has(k)) : [...M.keys()].sort((a, b) => M.get(b).length - M.get(a).length);
+  if (libView === 'table') {
+    swap($('lib'), `<div class="table-wrap"><table><thead><tr><th class="l">Campaña</th><th class="l">Fuente / medio</th><th class="l">Término / contenido</th><th class="l">Estado</th><th>Usuarios</th><th>${EV1}</th><th>${EV2}</th><th></th></tr></thead><tbody>${keys.map(k =>
+      `<tr><td class="l" colspan="8" style="background:var(--gray-100);font-weight:800"><i class="ph ${LG_IC[libGroup](k)}" style="color:var(--red)"></i> ${esc(k)} <span class="muted">· ${M.get(k).length}</span></td></tr>` +
+      M.get(k).map(l => { const iss = validar({ s: l.source, m: l.medium, c: l.campaign, t: l.term }), ga = gaFor(l), u = fullUrl(l);
+        return `<tr><td class="l"><b>${esc(l.campaign)}</b><div class="term">${esc(l.url)}</div></td><td class="l">${esc(l.source)} / ${esc(l.medium)}</td><td class="l"><span class="term">${esc(l.term || '—')} · ${esc(l.content || '—')}</span></td>
+          <td class="l">${BADGE[nivel(iss)](iss.length)}</td><td>${ga ? num(ga.u) : '—'}</td><td class="ev ${ga?.e1 ? '' : 'z'}">${ga?.e1 ? num(ga.e1) : '—'}</td><td class="ev ${ga?.e2 ? '' : 'z'}">${ga?.e2 ? num(ga.e2) : '—'}</td>
+          <td style="white-space:nowrap"><button class="ibtn" data-copy="${esc(u)}" aria-label="Copiar"><i class="ph ph-copy"></i></button><button class="ibtn" data-edit="${l.id}" aria-label="Editar"><i class="ph ph-pencil-simple"></i></button><button class="ibtn danger" data-del="${l.id}" aria-label="Eliminar"><i class="ph ph-trash"></i></button></td></tr>`; }).join('')).join('')}</tbody></table></div>`);
+    return;
+  }
+  swap($('lib'), keys.map(k => `<div class="lib-group"><div class="lib-gh"><h3><i class="ph ${LG_IC[libGroup](k)}"></i>${esc(k)}</h3><span>${M.get(k).length}</span></div>
+    <div class="gbento">${M.get(k).map(libCard).join('')}</div></div>`).join(''));
+}
+$('lib').addEventListener('click', async e => {
+  const t = e.target;
+  const cp = t.closest('[data-copy]'); if (cp) return copy(cp.dataset.copy);
+  const ed = t.closest('[data-edit]');
+  if (ed) {
+    const l = LINKS.find(x => x.id === ed.dataset.edit); editId = l.id;
+    $('b_url').value = l.url; $('b_s').value = l.source; BM.set(MEDIOS.includes(l.medium) ? l.medium : 'paid_social'); $('b_c').value = l.campaign; $('b_t').value = l.term; $('b_x').value = l.content; $('b_note').value = l.note;
+    $('formTitle').textContent = 'Editar UTM'; $('editing').hidden = false; $('b_cancel').hidden = false; $('b_save').querySelector('span').textContent = 'Guardar cambios';
+    build(); document.querySelector('.b-form').scrollIntoView({ behavior:'smooth', block:'start' }); return;
+  }
+  const dd = t.closest('[data-del]'); if (dd) { confirmDel = dd.dataset.del; if (libView === 'table') { libView = 'bento'; document.querySelector('#libView [data-v="bento"]').click(); } drawLib(); return; }
+  if (t.closest('[data-del-no]')) { confirmDel = ''; drawLib(); return; }
+  const yes = t.closest('[data-del-yes]');
+  if (yes) {
+    try { const j = await (await fetch('/api/links?id=' + yes.dataset.delYes, { method:'DELETE' })).json(); if (j.error) throw new Error(j.error); toast('UTM eliminada'); if (editId === yes.dataset.delYes) resetForm(); }
+    catch (err) { toast('No se pudo eliminar: ' + err.message, true); }
+    confirmDel = ''; loadLinks();
+  }
+});
+
+// ============================================================
+// Navegación entre vistas
+// ============================================================
+const NAV = Seg($('nav'), null, 'reporte', r => { location.hash = '#/' + r; });
+function route() {
+  const r = location.hash.startsWith('#/utms') ? 'utms' : 'reporte';
+  NAV.set(r);
+  ['reporte', 'utms'].forEach(v => { const el = $('view-' + v); const show = v === r; if (show && el.hidden) { el.hidden = false; el.classList.remove('view'); void el.offsetWidth; el.classList.add('view'); } else if (!show) el.hidden = true; });
+  scrollTo({ top: 0 });
+}
+addEventListener('hashchange', route);
+
+// ============================================================
+// Inicio
+// ============================================================
 (async () => {
+  route(); build();
+  loadLinks();
   try {
     const m = await (await fetch('/api/data?meta=1')).json();
     if (m.error || !m.maxDate) throw new Error(m.error || 'Todavía no hay datos sincronizados');
     REPORT.minDate = m.minDate; REPORT.maxDate = AYER = m.maxDate; calMonth = AYER.slice(0, 7);
     $('gen').textContent = m.lastSync ? 'Actualizado ' + new Date(m.lastSync).toLocaleString('es-MX', { dateStyle:'medium', timeStyle:'short' }) : 'Sin sincronizar';
-    aplicarRango(...PRESETS[4][2](), 'mes');
-  } catch (e) { $('kpis').innerHTML = `<div class="tile" style="grid-column:1/-1"><b class="err">Error:</b> ${esc(e.message)}</div>`; }
+    await aplicarRango(...PRESETS[4][2](), 'mes');
+  } catch (e) { $('kpis').innerHTML = `<div class="tile t-full"><b style="color:var(--red)">No se pudieron cargar los datos.</b> ${esc(e.message)}</div>`; }
 })();
 </script>
 </body>
