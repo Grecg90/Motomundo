@@ -609,7 +609,14 @@
   .mm-sel { border:1px solid var(--gray-200); background:var(--white); border-radius:8px; font-size:12px; font-weight:500; padding:3px 6px; color:var(--ink); font-family:var(--font); max-width:130px; }
   .mc-h .mm-sel { margin-left:auto; }
   .cb-tab { margin-top:12px; }
-  .acts { display:flex; gap:2px; justify-content:flex-end; align-items:center; white-space:nowrap; }
+  .wc { display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:13px; color:var(--gray-500); margin:6px 0 2px; }
+  .wc b { display:inline-flex; align-items:center; gap:6px; color:var(--ink); font-weight:600; background:var(--gray-100); border-radius:999px; padding:4px 11px 4px 9px; } .wc b .ph { color:var(--red); }
+  .lsel { display:inline-grid; place-items:center; width:22px; height:22px; flex:none; cursor:pointer; margin-right:2px; }
+  .lsel input { width:16px; height:16px; margin:0; accent-color:var(--red); cursor:pointer; }
+  .lcard.sel { border-color:var(--red); box-shadow:0 0 0 1px var(--red); }
+  .lcard .gt { align-items:center; } .lcard .gt > b { flex:1; }
+  .jchip.lock { cursor:default; }
+  .lacts { display:flex; gap:2px; justify-content:flex-end; align-items:center; white-space:nowrap; }
   .lcard .land { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--gray-500); background:var(--gray-100); border-radius:10px; padding:7px 10px; }
   .lcard .land span { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--mono); font-size:11.5px; } .lcard .land b { color:var(--ink); font-weight:600; white-space:nowrap; }
   .jchips { display:flex; gap:8px; flex-wrap:wrap; margin:-4px 0 14px; }
@@ -636,7 +643,7 @@
   .cbn { background:var(--white); border-radius:var(--r-md); padding:12px 14px; display:flex; gap:10px; align-items:center; min-width:0; }
   .cbn .ic { width:34px; height:34px; border-radius:10px; display:grid; place-items:center; background:var(--red); color:#fff; font-size:18px; flex:none; }
   .cbn:nth-child(2) .ic { background:var(--graphite); } .cbn:nth-child(3) .ic { background:#3a3d44; } .cbn:nth-child(4) .ic { background:var(--gray-200); color:var(--ink); }
-  .cbn > div { min-width:0; flex:1; } .cbn small { display:block; font-size:11.5px; color:var(--gray-500); padding-left:0; }
+  .cbn > div { min-width:0; flex:1; } .cbn-t { display:block; font-size:16px; font-weight:600; } .cbn small { display:block; font-size:11.5px; color:var(--gray-500); padding-left:0; }
   .ga-hd { display:grid; grid-template-columns:minmax(0, 1fr) 64px 14px minmax(0, 1.1fr); gap:10px; font-size:11.5px; color:var(--gray-500); font-weight:500; padding:8px 0 4px; }
   .ga-hd span:nth-child(2) { text-align:right; }
   .ga-row.moved .nm::after { content:''; display:inline-block; width:6px; height:6px; border-radius:50%; background:#f5b800; margin-left:6px; vertical-align:middle; }
@@ -1076,6 +1083,7 @@
     <div class="bento">
       <div class="tile b-form">
         <h2 id="formTitle">Nueva UTM</h2>
+        <div class="wc" id="b_wc"></div>
         <div id="editing" class="editing" hidden><i class="ph ph-pencil-simple"></i><span>Editando una UTM guardada</span></div>
         <div class="fgrid">
           <label class="field full"><span><i class="ph ph-globe-simple"></i>URL de destino</span><input id="b_url" placeholder="https://www.motomundohn.com/cotizar-en-linea" value="https://www.motomundohn.com/cotizar-en-linea"></label>
@@ -1117,12 +1125,14 @@
         <div class="card-h">
           <h2>UTMs guardadas</h2>
           <div class="toolbar">
-            <button class="btn btn-ghost" id="lib_xls"><i class="ph ph-microsoft-excel-logo"></i>Exportar a Excel</button>
+            <button class="btn btn-ghost" id="lib_sel"><i class="ph ph-check-square"></i><span>Seleccionar visibles</span></button>
+            <button class="btn btn-ghost" id="lib_xls"><i class="ph ph-microsoft-excel-logo"></i><span>Exportar a Excel</span></button>
           </div>
         </div>
         <div class="jchips" id="lcanal" role="group" aria-label="Ver por jefatura"></div>
         <div class="fstrip">
           <span class="fs-slot" id="lgdd"></span>
+          <span class="fs-slot" id="lsort"></span>
           <button class="fs-btn fbtn" data-sheet="lfilters" aria-controls="lfilters" aria-expanded="false"><i class="ph ph-funnel-simple"></i>Filtros<span class="fc" id="lfc"></span><i class="ph ph-caret-down cr"></i></button>
           <span class="fchips" id="lfchips"></span>
           <button class="fs-clear" id="lf_clear_all" hidden>Limpiar todo</button>
@@ -1452,7 +1462,7 @@ const CANAL_INFO = { Pauta:['Paid social / search · Meta', 'ph-megaphone-simple
 let CMAP = {};
 // Nombre visible de cada canal de Campañas (la clave interna no cambia; el admin puede renombrarlo)
 const CN_DEF = { Pauta:'Adquisición', Directos:'Directo', Redes:'Redes', Otros:'Otros' };
-const cn = (k, map = CMAP) => map['n:' + k] || CN_DEF[k] || k;
+const cn = k => CN_DEF[k] || k;   // nombres fijos: los canales de las jefaturas + Otros
 // Audiencia: agrupación de los canales de GA4 ("g:<canal GA4>" -> grupo) si el admin la activó ("ga:mode" = custom)
 const gaGroup = (ch, map = CMAP) => map['ga:mode'] === 'custom' ? (map['g:' + ch] || ch) : ch;
 const ruleCount = (map = CMAP) => Object.keys(map).filter(k => /^[msp]:/.test(k)).length;
@@ -1750,7 +1760,7 @@ function drawBoard() {
   (LINKS || []).forEach(l => { const k = l.source + '|' + l.medium; if (!pairs.has(k)) pairs.set(k, { s:l.source, m:l.medium, u:0, cot:0 }); });
   const list = [...pairs.values()].sort((a, b) => b.u - a.u || b.cot - a.cot), tot = new Map(CANALES.map(c => [c, { u:0, n:0 }]));
   list.forEach(x => { x.c = canal(x.s, x.m, map); const t = tot.get(x.c); t.u += x.u; t.n++; });
-  $('board').innerHTML = `<div class="cb-names">${CANALES.map(c => `<label class="cbn"><span class="ic"><i class="ph ${CAN_IC(c)}"></i></span><div><input class="bcol-n" data-cn="${c}" value="${esc(cn(c, map))}" maxlength="40" aria-label="Nombre del canal" title="Clic para renombrar"><small>${tot.get(c).n} combinaci${tot.get(c).n === 1 ? 'ón' : 'ones'} · ${num(tot.get(c).u)} usuarios</small></div></label>`).join('')}</div>
+  $('board').innerHTML = `<div class="cb-names">${CANALES.map(c => `<label class="cbn"><span class="ic"><i class="ph ${CAN_IC(c)}"></i></span><div><b class="cbn-t">${esc(cn(c))}</b><small>${tot.get(c).n} combinaci${tot.get(c).n === 1 ? 'ón' : 'ones'} · ${num(tot.get(c).u)} usuarios</small></div></label>`).join('')}</div>
     ${list.length ? `<div class="ga-rows cb-rows"><div class="ga-hd"><span>Fuente / medio</span><span>Usuarios</span><span></span><span>Canal</span></div><div class="ga-hd"><span>Fuente / medio</span><span>Usuarios</span><span></span><span>Canal</span></div>${list.map((x, i) => `<div class="ga-row ${map['p:' + x.s + '|' + x.m] ? 'moved' : ''}"><span class="nm" title="${esc(x.s)} / ${esc(x.m)}"><b>${esc(x.s)}</b> / ${esc(x.m)}</span><em>${num(x.u)}</em><i class="ph ph-arrow-right"></i><span class="cb-dd" data-i="${i}"></span></div>`).join('')}</div>`
       : '<div class="none">No hay campañas ni UTMs guardadas en el periodo elegido.</div>'}`;
   list.forEach((x, i) => Dropdown($('board').querySelector(`.cb-dd[data-i="${i}"]`), { options: CANALES.map(c => ({ v:c, l:cn(c, map), ic:CAN_IC(c) })), value:x.c, search:false, block:true, onChange: v => pairSet(x.s, x.m, v) }));
@@ -1788,7 +1798,7 @@ $('board_ga').addEventListener('change', e => {
   if (t.name === 'gam') { if (t.value === 'custom') MM_EDIT['ga:mode'] = 'custom'; else delete MM_EDIT['ga:mode']; return drawBoardGa(); }
 });
 let CB_TAB = 'camp';
-const CB_DESC = { camp:'Cada combinación de fuente y medio de tus campañas va a uno de los 4 canales. Haz clic en el nombre de un canal para renombrarlo.',
+const CB_DESC = { camp:'Cada combinación de fuente y medio de tus campañas va a uno de los canales de las jefaturas (Adquisición, Directo, Redes) o a Otros.',
   ga:'Elige si GA4 Audience usa los canales predeterminados de Google Analytics o tu propia agrupación con nombres.' };
 const CBT = Seg($('cb_tab'), null, CB_TAB, v => cbTab(v));
 function cbTab(v) { CB_TAB = v; CBT.set(v); $('board').hidden = v !== 'camp'; $('board_ga').hidden = v !== 'ga'; $('cb_desc').textContent = CB_DESC[v]; v === 'ga' ? drawBoardGa() : drawBoard(); }
@@ -1799,7 +1809,7 @@ $('board').addEventListener('change', e => {
 $('board').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('.bcol-n')) e.target.blur(); });
 function cbOpen() {
   if (!can.admin()) return;
-  MM_EDIT = { ...CMAP }; cbTab(location.hash.startsWith('#/ga4') ? 'ga' : 'camp');
+  MM_EDIT = { ...CMAP }; Object.keys(MM_EDIT).forEach(k => { if (k.startsWith('n:')) delete MM_EDIT[k]; }); cbTab(location.hash.startsWith('#/ga4') ? 'ga' : 'camp');
   $('cb_modal').hidden = false; requestAnimationFrame(() => $('cb_modal').classList.add('on'));
   document.body.style.overflow = 'hidden'; $('cb_x').focus();
 }
@@ -2198,7 +2208,7 @@ function resetForm() {
 $('b_reset').onclick = resetForm; $('b_cancel').onclick = resetForm;
 $('b_save').onclick = async () => {
   const f = form(); $('b_save').disabled = true;
-  const row = { url: f.url, source: f.source, medium: f.medium, campaign: f.campaign, term: f.term, content: f.content, note: f.note, zone: f.zone, canal: canal(f.source, f.medium) };
+  const row = { url: f.url, source: f.source, medium: f.medium, campaign: f.campaign, term: f.term, content: f.content, note: f.note, zone: f.zone, canal: LF.g || fixedCanal() || canal(f.source, f.medium) };
   // Edición: solo se guarda si nadie más la cambió desde que la abriste (updated_at funciona como versión)
   const q = editId ? sb.from('utm_links').update(row).eq('id', editId).eq('updated_at', editVer).select().single() : sb.from('utm_links').insert(row).select().single();
   const { data, error } = await q;
@@ -2247,6 +2257,10 @@ const LV = {   // valor de cada dimensión para una UTM guardada
   t: l => l.term || 'Sin término', x: l => l.content || 'Sin contenido', p: l => pathOf(l.url), a: l => l.created_by_name || 'Sin nombre',
 };
 const LF = Object.fromEntries([...ORDER, 'estado'].map(d => [d, '']));
+// Canal de trabajo: jefes y especialistas quedan en su canal; admin y subgerente eligen (o "Todas")
+const fixedCanal = () => ME && ['jefe', 'especialista'].includes(ME.role) && CANALES.includes(ME.canal) ? ME.canal : '';
+let LSORT_V = 'new', LIB_ALL = false; const SEL = new Set();
+const LIB_PAGE = 12;
 const lvOf = l => nivel(validar({ s: l.source, m: l.medium, c: l.campaign, t: l.term }));
 const LFD = Object.fromEntries(ORDER.map(d => [d, Dropdown($('lf_pills'), { label: DIMS[d], options: [], value: '', onChange: v => { LF[d] = v; drawLib(); } })]));
 LFD.estado = Dropdown($('lf_pills'), { label:'Estado UTM', options:ESTADOS, value:'', search:false, onChange: v => { LF.estado = v; drawLib(); } });
@@ -2288,8 +2302,8 @@ function libCard(l) {
   const actions = confirmDel === l.id
     ? `<span class="confirm"><i class="ph ph-trash"></i>¿Eliminar?</span><span><button class="btn btn-red" data-del-yes="${l.id}" style="padding:6px 12px">Eliminar</button> <button class="btn btn-ghost" data-del-no style="padding:6px 12px">No</button></span>`
     : `<span class="when">${esc(l.created_by_name || '-')} · ${l.updated_at !== l.created_at ? 'editada' : 'creada'} ${ago(l.updated_at)}</span><span>${libActions(l, u)}</span>`;
-  return `<div class="gcard lcard" data-id="${l.id}">
-    <div class="gt"><b style="font-weight:500">${esc(l.campaign)}</b>${BADGE[lv](iss.length)}</div>
+  return `<div class="gcard lcard ${SEL.has(l.id) ? 'sel' : ''}" data-id="${l.id}">
+    <div class="gt"><label class="lsel" title="Seleccionar para exportar"><input type="checkbox" data-sel="${l.id}" ${SEL.has(l.id) ? 'checked' : ''} aria-label="Seleccionar ${esc(l.campaign)}"></label><b style="font-weight:500">${esc(l.campaign)}</b>${BADGE[lv](iss.length)}</div>
     <div class="chips"><span class="tag"><i>fuente</i> ${esc(l.source)}</span><span class="tag"><i>medio</i> ${esc(l.medium)}</span>${l.zone ? `<span class="tag"><i>zona</i> ${esc(l.zone)}</span>` : ''}${l.term ? `<span class="tag"><i>término</i> ${esc(l.term)}</span>` : ''}${l.content ? `<span class="tag"><i>contenido</i> ${esc(l.content)}</span>` : ''}</div>
     <div class="url"><b>${esc(host)}</b></div>
     ${l.note ? `<div class="note"><i class="ph ph-note-pencil"></i>${esc(l.note)}</div>` : ''}
@@ -2299,7 +2313,7 @@ function libCard(l) {
     <div class="lact">${actions}</div></div>`;
 }
 let LIB_ROWS = [];
-$('lcanal').addEventListener('click', e => { const b = e.target.closest('[data-jc]'); if (!b) return; LF.g = LF.g === b.dataset.jc ? '' : b.dataset.jc; LFD.g?.set(LF.g); drawLib(); });
+$('lcanal').addEventListener('click', e => { const b = e.target.closest('[data-jc]'); if (!b || fixedCanal()) return; LF.g = LF.g === b.dataset.jc ? '' : b.dataset.jc; LFD.g?.set(LF.g); LIB_ALL = false; drawLib(); });
 // Exportar a Excel (SheetJS se carga solo al usarlo)
 const loadXlsx = () => window.XLSX ? Promise.resolve(window.XLSX) : new Promise((ok, ko) => {
   const sc = document.createElement('script'); sc.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
@@ -2307,7 +2321,7 @@ const loadXlsx = () => window.XLSX ? Promise.resolve(window.XLSX) : new Promise(
   sc.onload = () => ok(window.XLSX); sc.onerror = () => ko(new Error('No se pudo cargar el exportador')); document.head.appendChild(sc);
 });
 $('lib_xls').onclick = async () => {
-  const rows = LIB_ROWS; if (!rows.length) return toast('No hay UTMs para exportar con estos filtros', true);
+  const picked = LINKS.filter(l => SEL.has(l.id)), rows = picked.length ? picked : LIB_ROWS; if (!rows.length) return toast('No hay UTMs para exportar con estos filtros', true);
   const b = $('lib_xls'); b.disabled = true;
   try {
     const X = await loadXlsx();
@@ -2325,14 +2339,17 @@ $('lib_xls').onclick = async () => {
 };
 function drawLib() {
   if (!LINKS) return;
+  if (fixedCanal()) { LF.g = fixedCanal(); LFD.g?.set(LF.g); }
   const q = $('lq').value.toLowerCase(), mine = $('lf_mine').checked;
   const ls = LINKS.filter(l => (!q || [l.campaign, l.source, l.medium, l.term, l.content, l.url, l.note, l.zone, l.created_by_name].some(v => (v || '').toLowerCase().includes(q)))
     && libMatch(l) && (!LF.estado || lvOf(l) === LF.estado) && (!mine || l.created_by === ME.id));
   fillLibFilters();
   const base = LINKS.filter(l => (!q || [l.campaign, l.source, l.medium, l.term, l.content, l.url, l.note, l.zone, l.created_by_name].some(v => (v || '').toLowerCase().includes(q)))
     && libMatch(l, 'g') && (!LF.estado || lvOf(l) === LF.estado) && (!mine || l.created_by === ME.id));
-  $('lcanal').innerHTML = [['', 'Todas', 'ph-squares-four'], ...CANALES.map(c => [c, cn(c), CANAL_INFO[c][1]])].map(([v, l, ic]) =>
-    `<button class="jchip ${LF.g === v ? 'on' : ''}" data-jc="${esc(v)}" aria-pressed="${LF.g === v}"><i class="ph ${ic}"></i>${esc(l)}<em>${num(v ? base.filter(x => LV.g(x) === v).length : base.length)}</em></button>`).join('');
+  const fx = fixedCanal();
+  $('lcanal').innerHTML = (fx ? [[fx, cn(fx), CANAL_INFO[fx][1]]] : [['', 'Todas', 'ph-squares-four'], ...CANALES.map(c => [c, cn(c), CANAL_INFO[c][1]])]).map(([v, l, ic]) =>
+    `<button class="jchip ${LF.g === v ? 'on' : ''} ${fx ? 'lock' : ''}" data-jc="${esc(v)}" aria-pressed="${LF.g === v}" ${fx ? 'title="Tu canal de trabajo"' : ''}><i class="ph ${fx ? 'ph-lock-simple' : ic}"></i>${esc(l)}<em>${num(v ? base.filter(x => LV.g(x) === v).length : base.length)}</em></button>`).join('');
+  $('b_wc').innerHTML = LF.g ? `Creando UTMs para <b><i class="ph ${CANAL_INFO[LF.g][1]}"></i>${esc(cn(LF.g))}</b>` : 'El canal se asigna según la fuente y el medio. Elige un canal abajo para trabajar en él.';
   LIB_ROWS = ls;
   $('lf_clear').disabled = !Object.values(LF).some(Boolean) && !q && !mine;
   $('lf_clear_all').hidden = $('lf_clear').disabled;
@@ -2340,23 +2357,39 @@ function drawLib() {
   $('lfchips').innerHTML = Object.entries(LF).filter(([, v]) => v).map(([d, v]) => `<button class="fchip" data-lfx="${d}" title="Quitar filtro"><span>${d === 'estado' ? 'Estado' : DIMS[d]}</span><b>${esc(d === 'estado' ? ESTADOS.find(e => e.v === v)?.l || v : d === 'g' ? cn(v) : v)}</b><i class="ph ph-x"></i></button>`).join('');
   if (!LINKS.length) return swap($('lib'), `<div class="empty"><i class="ph ph-link-simple-break"></i><b>Todavía no hay UTMs guardadas</b><span>Arma la primera arriba y pulsa "Guardar UTM".</span></div>`);
   if (!ls.length) return swap($('lib'), `<div class="empty"><i class="ph ph-funnel-x"></i><b>Ninguna UTM coincide con los filtros</b></div>`);
+  const tr = l => gaFor(l)?.u || 0, ts = l => Date.parse(l.created_at) || 0;
+  ls.sort(LSORT_V === 'old' ? (a, b) => ts(a) - ts(b) : LSORT_V === 'traffic' ? (a, b) => tr(b) - tr(a) || ts(b) - ts(a) : (a, b) => ts(b) - ts(a));
+  const vis = LIB_ALL ? ls : ls.slice(0, LIB_PAGE), more = ls.length > LIB_PAGE ? `<button class="btn btn-ghost more-btn" id="lib_more">${LIB_ALL ? 'Ver menos' : `Ver ${num(ls.length - LIB_PAGE)} más`}</button>` : '';
   const kf = LG_KEY[libGroup], M = new Map();
-  ls.forEach(l => { const k = kf(l); (M.get(k) || M.set(k, []).get(k)).push(l); });
-  const keys = libGroup === 'g' ? [...CANALES.filter(k => M.has(k)), ...[...M.keys()].filter(k => !CANALES.includes(k))] : [...M.keys()].sort((a, b) => M.get(b).length - M.get(a).length);
+  vis.forEach(l => { const k = kf(l); (M.get(k) || M.set(k, []).get(k)).push(l); });
+  const keys = libGroup === 'g' ? [...CANALES.filter(k => M.has(k)), ...[...M.keys()].filter(k => !CANALES.includes(k))] : [...M.keys()];
   if (libView === 'table') {
-    swap($('lib'), `<div class="table-wrap"><table><thead><tr><th class="l">Campaña</th><th class="l">Fuente / medio</th><th class="l">Zona · término · contenido</th><th class="l">Creada por</th><th class="l">Estado</th><th>Usuarios</th><th>${EV1}</th><th>${EV2}</th><th></th></tr></thead><tbody>${keys.map(k =>
-      `<tr><td class="l" colspan="9" style="background:var(--gray-100);font-weight:500"><i class="ph ${LG_IC[libGroup](k)}" style="color:var(--red)"></i> ${esc(libGroup === 'g' ? cn(k) : k)} <span class="muted">· ${M.get(k).length}</span></td></tr>` +
+    swap($('lib'), `<div class="table-wrap"><table><thead><tr><th class="rk-h"></th><th class="l">Campaña</th><th class="l">Fuente / medio</th><th class="l">Zona · término · contenido</th><th class="l">Creada por</th><th class="l">Estado</th><th>Usuarios</th><th>${EV1}</th><th>${EV2}</th><th></th></tr></thead><tbody>${keys.map(k =>
+      `<tr><td class="l" colspan="10" style="background:var(--gray-100);font-weight:500"><i class="ph ${LG_IC[libGroup](k)}" style="color:var(--red)"></i> ${esc(libGroup === 'g' ? cn(k) : k)} <span class="muted">· ${M.get(k).length}</span></td></tr>` +
       M.get(k).map(l => { const iss = validar({ s: l.source, m: l.medium, c: l.campaign, t: l.term }), ga = gaFor(l), u = fullUrl(l);
-        return `<tr><td class="l">${esc(l.campaign)}<div class="term">${esc(l.url)}</div></td><td class="l">${esc(l.source)} / ${esc(l.medium)}</td><td class="l"><span class="term">${esc(l.zone || '-')} · ${esc(l.term || '-')} · ${esc(l.content || '-')}</span></td>
+        return `<tr><td class="rk-c"><label class="lsel"><input type="checkbox" data-sel="${l.id}" ${SEL.has(l.id) ? 'checked' : ''} aria-label="Seleccionar ${esc(l.campaign)}"></label></td><td class="l">${esc(l.campaign)}<div class="term">${esc(l.url)}</div></td><td class="l">${esc(l.source)} / ${esc(l.medium)}</td><td class="l"><span class="term">${esc(l.zone || '-')} · ${esc(l.term || '-')} · ${esc(l.content || '-')}</span></td>
           <td class="l"><span class="term">${esc(l.created_by_name || '-')}</span></td><td class="l">${BADGE[nivel(iss)](iss.length)}</td><td>${ga ? num(ga.u) : '-'}</td><td class="ev ${ga?.e1 ? '' : 'z'}">${ga?.e1 ? num(ga.e1) : '-'}</td><td class="ev ${ga?.e2 ? '' : 'z'}">${ga?.e2 ? num(ga.e2) : '-'}</td>
-          <td><div class="acts">${libActions(l, u)}</div></td></tr>`; }).join('')).join('')}</tbody></table></div>`);
+          <td><div class="lacts">${libActions(l, u)}</div></td></tr>`; }).join('')).join('')}</tbody></table></div>${more}`);
+    selUi();
     return;
   }
   swap($('lib'), keys.map(k => `<div class="lib-group"><div class="lib-gh"><h3 style="font-weight:500"><i class="ph ${LG_IC[libGroup](k)}"></i>${esc(libGroup === 'g' ? cn(k) : k)}</h3><span>${M.get(k).length}</span></div>
-    <div class="gbento">${M.get(k).map(libCard).join('')}</div></div>`).join(''));
+    <div class="gbento">${M.get(k).map(libCard).join('')}</div></div>`).join('') + more);
+  selUi();
 }
+function selUi() {
+  const n = [...SEL].filter(id => LINKS.some(l => l.id === id)).length;
+  $('lib_xls').querySelector('span').textContent = n ? `Exportar ${num(n)} a Excel` : 'Exportar a Excel';
+  $('lib_sel').querySelector('span').textContent = n ? `Quitar selección (${num(n)})` : 'Seleccionar visibles';
+  document.querySelectorAll('.lcard[data-id]').forEach(c => c.classList.toggle('sel', SEL.has(c.dataset.id)));
+}
+$('lib_sel').onclick = () => { if (SEL.size) SEL.clear(); else document.querySelectorAll('#lib [data-sel]').forEach(x => SEL.add(x.dataset.sel)); drawLib(); };
+const LSD2 = Dropdown($('lsort'), { label:'Ordenar', icon:'ph-sort-descending', search:false, value:LSORT_V,
+  options:[{ v:'new', l:'Más recientes' }, { v:'old', l:'Más antiguas' }, { v:'traffic', l:'Más tráfico', m:'usuarios en el periodo' }], onChange: v => { LSORT_V = v; drawLib(); } });
+$('lib').addEventListener('change', e => { const c = e.target.closest('[data-sel]'); if (!c) return; c.checked ? SEL.add(c.dataset.sel) : SEL.delete(c.dataset.sel); selUi(); });
 $('lib').addEventListener('click', async e => {
   const t = e.target;
+  if (t.closest('#lib_more')) { LIB_ALL = !LIB_ALL; drawLib(); return; }
   const cp = t.closest('[data-copy]'); if (cp) return copy(cp.dataset.copy);
   const ed = t.closest('[data-edit]');
   if (ed) {
@@ -2386,9 +2419,9 @@ let USERS = null, uView = 'bento';
 const U_LINK_DEFAULT = $('u_link').innerHTML;
 const ROLE_OPTS = [{ v:'especialista', l:'Especialista', m:'crea UTMs' }, { v:'jefe', l:'Jefe de canal', m:'crea y edita su canal' }, { v:'subgerente', l:'Subgerente', m:'solo reportes' }, { v:'admin', l:'Jefe Web (admin)', m:'controla todo' }];
 const CANAL_OPTS = [{ v:'', l:'Sin canal' }, ...['Pauta', 'Directos', 'Redes'].map(c => ({ v:c, l:cn(c), ic: CANAL_INFO[c][1] }))];
-const UR = Dropdown($('u_role'), { options: ROLE_OPTS, value:'especialista', block:true, search:false, onChange: () => { $('u_canal_hint').textContent = UR.value === 'jefe' ? 'obligatorio para jefes' : 'opcional'; } });
+const UR = Dropdown($('u_role'), { options: ROLE_OPTS, value:'especialista', block:true, search:false, onChange: () => { $('u_canal_hint').textContent = ['jefe', 'especialista'].includes(UR.value) ? 'obligatorio: define qué UTMs ve y crea' : 'opcional'; } });
 const UC = Dropdown($('u_canal'), { options: CANAL_OPTS, value:'', block:true, search:false, onChange: () => {} });
-$('u_canal_hint').textContent = 'opcional';
+$('u_canal_hint').textContent = 'obligatorio: define qué UTMs ve y crea';
 function inviteText(name, link, type = 'invite') {
   return type === 'invite'
     ? `Hola ${name || ''}, te creé un usuario en Motomundo Campañas. Entra a este enlace para crear tu contraseña: ${link}\n\nImportante: el enlace vence en 24 horas y es de un solo uso. La contraseña debe tener mínimo 8 caracteres, con mayúsculas, minúsculas y números.`
@@ -2419,7 +2452,7 @@ $('u_link').addEventListener('click', async e => {
 $('u_create').onclick = async () => {
   const name = $('u_name').value.trim(), email = $('u_mail').value.trim().toLowerCase();
   if (!name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { $('u_msg').innerHTML = msg('err', 'Escribe el nombre y un correo válido.'); return; }
-  if (UR.value === 'jefe' && !UC.value) { $('u_msg').innerHTML = msg('err', 'Elige el canal del jefe.'); return; }
+  if (['jefe', 'especialista'].includes(UR.value) && !UC.value) { $('u_msg').innerHTML = msg('err', 'Elige el canal (jefatura) de esta persona.'); return; }
   $('u_create').disabled = true; $('u_msg').innerHTML = '';
   try {
     const r = await adminCall({ action:'invite', email, full_name: name, role: UR.value, canal: UC.value || null });
