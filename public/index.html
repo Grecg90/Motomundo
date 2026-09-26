@@ -1770,7 +1770,7 @@ const form = () => ({ url: $('b_url').value.trim(), source: normalizar($('b_s').
 const fullUrl = f => { const q = [['utm_source', f.source], ['utm_medium', f.medium], ['utm_campaign', f.campaign], ['utm_term', f.term], ['utm_content', f.content]]
   .filter(([, v]) => v).map(([k, v]) => k + '=' + encodeURIComponent(v)).join('&'); return f.url ? f.url + (f.url.includes('?') ? '&' : '?') + q : q; };
 
-// Salud de la UTM: se exige 90+ para guardar. Resta por errores, advertencias, campos vacíos y valores genéricos.
+// Salud de la UTM: se exige 90+ para guardar. Resta por errores, advertencias y valores genéricos; término y contenido son opcionales.
 const GENERIC = /^(test|tests|testing|prueba|pruebas|demo|ejemplo|asdf|qwerty|abc|xxx+|aaa+|na|n\/a|none|null|campa[nñ]a|fuente|nuevo|nueva|temp|tmp|\d+)$/i;
 const SALUD_MIN = 90;
 function salud(f, iss) {
@@ -1780,11 +1780,7 @@ function salud(f, iss) {
     .filter(([, v]) => v && v.split('_').some(p => GENERIC.test(p)));
   gen.forEach(([n]) => { s -= 30; falta.push(`${n.toLowerCase()} con un valor genérico ("Test", "Prueba"…)`); });
   if (f.source && f.source.replace(/_/g, '').length < 3) { s -= 10; falta.push('una fuente más descriptiva'); }
-  if (!f.zone) { s -= 10; falta.push('la zona'); }
-  const base = (f.campaign || '').split('_').filter(Boolean);
-  if (f.campaign && base.length < (f.zone ? 4 : 3)) { s -= 12; falta.push('una campaña con Marca_Táctica_Objetivo'); }
-  if (!f.term) { s -= 6; falta.push('el término (subcategoría)'); }
-  if (!f.content) { s -= 6; falta.push('el contenido (modelo)'); }
+  if (!f.zone) { s -= 5; falta.push('la zona'); }
   s = Math.max(0, Math.min(100, s));
   const [lbl, col] = s >= SALUD_MIN ? ['Excelente', '#1c9a57'] : s >= 65 ? ['Buena', '#7cc242'] : s >= 40 ? ['Regular', '#e0a030'] : ['Crítica', '#d71920'];
   const hint = iss.some(i => i.lvl === 'err') ? 'Tiene errores: GA4 la va a clasificar mal.'
