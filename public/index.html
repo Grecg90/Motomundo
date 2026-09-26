@@ -310,7 +310,7 @@
   .gbento.rank > .gcard { grid-column:span 6; } .gbento.rank > .gcard.r1 { grid-column:span 9; } .gbento.rank > .gcard.r2 { grid-column:span 8; } .gbento.rank > .gcard.r3 { grid-column:span 7; } .gbento.rank > .gcard.full { grid-column:1 / -1; }
   @media (max-width:1100px) { .gbento.rank > .gcard, .gbento.rank > .gcard.r2, .gbento.rank > .gcard.r3 { grid-column:span 12; } .gbento.rank > .gcard.r1 { grid-column:1 / -1; } }
   .gcard .gt { display:flex; justify-content:space-between; gap:10px; align-items:flex-start; }
-  .gcard .gt b { font-weight:600; font-size:16px; overflow-wrap:anywhere; line-height:1.25; }
+  .gcard .gt b { font-weight:600; font-size:16px; overflow-wrap:anywhere; line-height:1.25; min-width:0; }
   .gcard.xl .gt b { font-size:20px; }
   .gcard .rank { font-size:12px; font-weight:600; color:var(--gray-500); white-space:nowrap; }
   .gcard .gm { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; }
@@ -326,6 +326,8 @@
   .gcard.xl .share { background:var(--graphite-2); }
   .gcard .tops { display:grid; gap:4px; font-size:12px; }
   .gcard .tops div { display:flex; justify-content:space-between; gap:8px; color:var(--gray-700); }
+  th.rk-h, td.rk-c { width:36px; text-align:center !important; color:var(--gray-500); font-weight:600; font-size:12px; font-variant-numeric:tabular-nums; }
+  .gcard .tops div > span:first-child { flex:1; min-width:0; }
   .gcard .tops span:first-child { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--mono); font-size:11.5px; }
   .gcard.xl .tops div { color:var(--gray-300); }
   .gcard .foot-row { margin-top:auto; display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
@@ -479,9 +481,12 @@
   .tlead .tv { text-align:right; display:grid; justify-items:end; gap:3px; } .tlead .tv b { font-size:26px; letter-spacing:-.01em; }
   .tlead .gpill.up { background:rgba(62,207,122,.18); color:#7ee2a8; } .tlead .gpill.dn { background:rgba(255,77,85,.2); color:#ff9296; } .tlead .gpill.eq { background:rgba(255,255,255,.1); color:var(--gray-300); }
   .tgrid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-  .tcell { display:grid; grid-template-columns:auto minmax(0, 1fr) auto; grid-template-areas:"rk nm v" ". sh dl"; gap:2px 8px; align-items:center; background:var(--gray-100); border-radius:12px; padding:10px 12px; }
+  .tcell { display:grid; grid-template-columns:auto minmax(0, 1fr) minmax(44px, 62px) auto; grid-template-areas:"rk nm pc v" "rk nm pc dl"; gap:2px 8px; align-items:center; background:var(--gray-100); border-radius:12px; padding:10px 12px; }
   .tcell .rk { grid-area:rk; font-size:11px; font-weight:600; color:var(--gray-500); } .tcell .nm { grid-area:nm; font-weight:500; font-size:13px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .tcell b { grid-area:v; font-weight:600; font-size:15px; text-align:right; } .tcell .sh { grid-area:sh; font-size:11.5px; color:var(--gray-500); font-weight:500; } .tcell .gpill { grid-area:dl; font-size:11px; padding:2px 7px; justify-self:end; }
+  .tcell .pc { grid-area:pc; display:grid; gap:4px; font-size:12px; font-weight:500; color:var(--gray-700); text-align:center; }
+  .tcell .pc > i { display:block; height:4px; border-radius:999px; background:var(--gray-200); overflow:hidden; } .tcell .pc > i > i { display:block; height:100%; background:var(--red); border-radius:999px; }
+  .tcell .nm { align-self:center; }
   .tcell.other { background:transparent; border:1px dashed var(--gray-200); }
   .gcard .gt b.mono { font-family:var(--mono); font-size:14px; overflow-wrap:anywhere; }
   .bl { width:min(880px, 100%); } .bl-body { padding:16px 22px; overflow:auto; background:var(--gray-100); }
@@ -507,7 +512,7 @@
   .dt-row .bar { grid-column:1 / -1; height:4px; border-radius:999px; background:var(--gray-100); overflow:hidden; } .dt-row .bar i { display:block; height:100%; background:var(--red); border-radius:999px; }
   .dt-row .meta { grid-column:1 / -1; display:flex; gap:6px; flex-wrap:wrap; align-items:center; font-size:11.5px; color:var(--gray-500); }
   .cp { display:inline-flex; align-items:center; gap:5px; border-radius:999px; padding:1px 8px; font-size:11px; font-weight:500; background:var(--gray-100); color:var(--gray-500); }
-  .cp.on { background:var(--ok-50); color:var(--ok); }
+  .cp.on { background:var(--ok-50); color:var(--ok); max-width:100%; } .cp { max-width:260px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .cp .ph-fill { flex:none; }
   .dt-empty { color:var(--gray-500); font-size:13px; padding:8px 0; }
   .tlead[data-dn], .tcell[data-dn] { cursor:pointer; transition:transform .15s var(--ease), box-shadow .15s var(--ease); } .tcell[data-dn]:hover { box-shadow:0 0 0 1px var(--gray-300); } .tlead[data-dn]:hover { transform:translateY(-1px); }
   @media (max-width:760px) { .dt-body { grid-template-columns:1fr; padding:12px; } }
@@ -1716,12 +1721,12 @@ function draw() {
     return;
   }
   const side = view === 'p' ? 'c' : 'p';
-  swap($('out'), `<div class="table-wrap"><table><thead><tr><th class="l">${DIMS[view]}</th><th class="l">${DIMS[side]}</th><th>Usuarios</th><th>${EV1}</th><th>${EV2}</th><th>Total</th></tr></thead><tbody>` +
+  swap($('out'), `<div class="table-wrap"><table><thead><tr><th class="rk-h">#</th><th class="l">${DIMS[view]}</th><th class="l">${DIMS[side]}</th><th>Usuarios</th><th>${EV1}</th><th>${EV2}</th><th>Total</th></tr></thead><tbody>` +
     G.map((a, i) => `
-      <tr class="grp" data-i="${i}" tabindex="0" aria-expanded="false"><td class="l"><div class="nm"><i class="ph ph-caret-right caret"></i><b>${fmtDim(view, a.key)}</b></div>
+      <tr class="grp" data-i="${i}" tabindex="0" aria-expanded="false"><td class="rk-c">${i + 1}</td><td class="l"><div class="nm"><i class="ph ph-caret-right caret"></i><b>${fmtDim(view, a.key)}</b></div>
           <div class="sub2">${a.rows.length} UTM${a.rows.length === 1 ? '' : 's'} ${stateBadges(a.rows)}</div></td>
         <td class="l">${tags(side, uniq(a.rows, r => r[side]))}</td>${metrics(a, PG.get(a.key))}</tr>
-      ${a.rows.map(r => `<tr class="det ${r.lv}" data-p="${i}" hidden><td class="l">${utmHtml(r)}</td><td class="l">${fmtDim(side, r[side])}</td>${metrics(r, PK.get(r.k))}</tr>`).join('')}`).join('')
+      ${a.rows.map(r => `<tr class="det ${r.lv}" data-p="${i}" hidden><td></td><td class="l">${utmHtml(r)}</td><td class="l">${fmtDim(side, r[side])}</td>${metrics(r, PK.get(r.k))}</tr>`).join('')}`).join('')
     + '</tbody></table></div>');
 }
 $('out').addEventListener('click', e => {
@@ -2924,9 +2929,9 @@ function drawGa4() {
     const [lead, ...rest] = rows, kind = id === 'g_chan' ? 'chan' : 'city', at = x => x.other ? '' : ` data-dk="${kind}" data-dn="${esc(x.n)}" role="button" tabindex="0" title="Ver detalle"`;
     $(id).innerHTML = `<div class="card-h" style="margin-bottom:12px"><h2><i class="ph ${icon}" style="color:var(--red)"></i> ${title}</h2><span class="muted" style="font-size:12px">${note}</span></div>
       ${lead ? `<div class="tlead"${at(lead)}><span class="rk">#1</span><div><b>${esc(lead.n)}</b><small>${lead.sub || ''}</small></div><div class="tv"><b>${num(lead.v)}</b><small>${gpct(lead.v, tot)} del total</small>${gdl(lead.v, lead.pv)}</div></div>` : ''}
-      <div class="tgrid">${rest.map((x, i) => `<div class="tcell ${x.other ? 'other' : ''}"${at(x)}><span class="rk">${x.other ? '' : '#' + (i + 2)}</span><span class="nm" title="${esc(x.n)}">${esc(x.n)}</span><b>${num(x.v)}</b><span class="sh">${gpct(x.v, tot)}</span>${gdl(x.v, x.pv)}</div>`).join('')}</div>`;
+      <div class="tgrid">${rest.map((x, i) => `<div class="tcell ${x.other ? 'other' : ''}"${at(x)}><span class="rk">${x.other ? '' : '#' + (i + 2)}</span><span class="nm" title="${esc(x.n)}">${esc(x.n)}</span><span class="pc"><span>${gpct(x.v, tot)}</span><i><i style="width:${Math.max(3, Math.min(100, x.v / tot * 100))}%"></i></i></span><b>${num(x.v)}</b>${gdl(x.v, x.pv)}</div>`).join('')}</div>`;
   };
-  top('g_chan', 'ph-git-branch', 'Canales del primer contacto', GCH.map(x => ({ n: x[0], v: x[1], pv: x[3], sub: `${num(x[2])} usuarios nuevos` })), c.active, 'Usuarios activos');
+  top('g_chan', 'ph-git-branch', 'Canales', GCH.map(x => ({ n: x[0], v: x[1], pv: x[3], sub: `${num(x[2])} usuarios nuevos` })), c.active, 'Usuarios activos');
   // Ciudades: tantas como tarjetas tenga el widget de canales (misma altura); el resto va a "Otras"
   const slots = Math.max(3, 1 + 2 * Math.ceil((GCH.length - 1) / 2)), named = g.cities.filter(x => x[0] !== 'Otras').slice(0, slots - 1);
   const oc = Math.max(0, c.active - named.reduce((a, x) => a + x[1], 0)), op = Math.max(0, p.active - named.reduce((a, x) => a + x[2], 0));
@@ -2945,14 +2950,14 @@ function drawLand() {
   if (!GA) return;
   const tot = GA.totals.cur.active || 1, q = $('g_lq').value.trim().toLowerCase();
   const all = GA.landing.filter(x => !q || pageName(x[0]).toLowerCase().includes(q)).sort((a, b) => lval(b, gLandSort) - lval(a, gLandSort));
-  const L = gLandAll || q ? all : all.slice(0, 12), su = (i) => all.reduce((a, x) => a + x[i], 0);
+  const L = gLandAll || q ? all : all.slice(0, 15), su = (i) => all.reduce((a, x) => a + x[i], 0);
   $('g_lcount').innerHTML = `<span><b>${num(all.length)}</b> páginas</span><span><b>${num(su(1))}</b> usuarios activos</span><span><b>${num(su(2))}</b> nuevos</span><span><b>${num(su(3))}</b> sesiones</span>`;
-  const more = !q && all.length > 12 ? `<button class="btn btn-ghost more-btn" id="g_more">${gLandAll ? 'Ver menos' : `Ver las ${all.length}`}</button>` : '';
+  const more = !q && all.length > 15 ? `<button class="btn btn-ghost more-btn" id="g_more">${gLandAll ? 'Ver menos' : `Ver las ${all.length}`}</button>` : '';
   if (!L.length) return swap($('g_land'), '<div class="empty"><i class="ph ph-magnifying-glass"></i><b>Sin páginas con esa búsqueda</b></div>');
   const er = x => x[3] ? x[4] / x[3] : 0;
   if (gLandView === 'table') {
-    swap($('g_land'), `<div class="table-wrap"><table><thead><tr><th class="l">Página de destino</th><th>Usuarios activos</th><th>Nuevos</th><th>Sesiones</th><th>Interacción</th><th>% del total</th></tr></thead><tbody>${L.map(x => `
-      <tr><td class="l"><span class="page">${esc(pageName(x[0]))}</span></td><td>${num(x[1])}${gdlT(x[1], x[5])}</td><td>${num(x[2])}${gdlT(x[2], x[6])}</td><td>${num(x[3])}${gdlT(x[3], x[7])}</td><td>${pct(er(x))}</td><td>${pct(x[1] / tot)}</td></tr>`).join('')}</tbody></table></div>${more}`);
+    swap($('g_land'), `<div class="table-wrap"><table><thead><tr><th class="rk-h">#</th><th class="l">Página de destino</th><th>Usuarios activos</th><th>Nuevos</th><th>Sesiones</th><th>Interacción</th><th>% del total</th></tr></thead><tbody>${L.map((x, i) => `
+      <tr><td class="rk-c">${i + 1}</td><td class="l"><span class="page">${esc(pageName(x[0]))}</span></td><td>${num(x[1])}${gdlT(x[1], x[5])}</td><td>${num(x[2])}${gdlT(x[2], x[6])}</td><td>${num(x[3])}${gdlT(x[3], x[7])}</td><td>${pct(er(x))}</td><td>${pct(x[1] / tot)}</td></tr>`).join('')}</tbody></table></div>${more}`);
     return;
   }
   swap($('g_land'), `<div class="gbento rank">${L.map((x, i) => {
@@ -2980,10 +2985,14 @@ const urlPath = u => { try { return new URL(u).pathname; } catch { return ''; } 
 // Detalle de una ciudad o un canal agrupado: páginas de destino (con o sin campaña) y de dónde llegan
 function openDetail(kind, name) {
   const g = GA; if (!g) return;
-  const cp = campPages(), camp = p => cp.has(p.toLowerCase()), tot = g.totals.cur.active || 1;
+  const cmap = new Map(); (R || []).filter(r => r.u > 0).forEach(r => { const k = (r.p || '').toLowerCase(), m = cmap.get(k) || new Map(); m.set(r.c, (m.get(r.c) || 0) + r.u); cmap.set(k, m); });
+  const campsOf = p => [...(cmap.get(p.toLowerCase()) || new Map())].sort((a, b) => b[1] - a[1]).map(x => x[0]), camp = p => cmap.has(p.toLowerCase()), tot = g.totals.cur.active || 1;
   const sumBy = (rows, key, val) => { const M = new Map(); rows.forEach(r => M.set(key(r), (M.get(key(r)) || 0) + val(r))); return [...M].sort((a, b) => b[1] - a[1]); };
   const list = (items, max, fmt) => { const mx = items[0]?.[1] || 1; return items.length ? items.slice(0, max).map(([n, v]) => `<div class="dt-row">${fmt(n)}<b>${num(v)}</b><div class="bar"><i style="width:${Math.max(2, v / mx * 100)}%"></i></div></div>`).join('') : '<div class="dt-empty">Sin datos en el periodo</div>'; };
-  const pageRow = n => `<span class="nm ${n === '/' ? '' : 'mono'}" title="${esc(n)}">${esc(pageName(n))}</span><span class="meta" style="grid-row:2">${camp(n) ? '<span class="cp on"><i class="ph-fill ph-megaphone-simple"></i>Con campaña</span>' : '<span class="cp">Sin campaña</span>'}</span>`;
+  const pageRow = n => { const cs = campsOf(n);
+    return `<span class="nm ${n === '/' ? '' : 'mono'}" title="${esc(n)}">${esc(pageName(n))}</span><span class="meta" style="grid-row:2">${cs.length
+      ? cs.slice(0, 3).map(c => `<span class="cp on" title="${esc(c)}"><i class="ph-fill ph-megaphone-simple"></i>${esc(c)}</span>`).join('') + (cs.length > 3 ? `<span class="cp on" title="${esc(cs.slice(3).join(', '))}">+${cs.length - 3}</span>` : '')
+      : '<span class="cp">Sin campaña</span>'}</span>`; };
   const plain = n => `<span class="nm" title="${esc(n)}">${esc(n)}</span>`;
   let users, pages, side, sideTitle, sideIc;
   if (kind === 'city') {
@@ -2995,9 +3004,9 @@ function openDetail(kind, name) {
     pages = sumBy((g.chanPages || []).filter(r => gaGroup(r[0]) === name), r => r[1], r => r[2]);
     side = sumBy((g.cityChan || []).filter(r => gaGroup(r[1]) === name), r => r[0], r => r[2]); sideTitle = 'Ciudades'; sideIc = 'ph-map-pin';
   }
-  const withCamp = pages.filter(([n]) => camp(n)).length;
+  const shown = Math.min(pages.length, 12), withCamp = pages.slice(0, 12).filter(([n]) => camp(n)).length;
   $('dt_t').textContent = name;
-  $('dt_s').textContent = `${num(users)} usuarios activos · ${pct(users / tot)} del total · ${withCamp} de ${Math.min(pages.length, 12)} páginas principales con campaña activa`;
+  $('dt_s').textContent = `${num(users)} usuarios activos · ${pct(users / tot)} del total · ${withCamp} de ${shown} páginas principales con campaña activa`;
   $('dt_b').innerHTML = `<div class="dt-sec"><h3><i class="ph ph-browser"></i>Páginas de destino<span>usuarios</span></h3>${list(pages, 12, pageRow)}</div>
     <div class="dt-sec"><h3><i class="ph ${sideIc}"></i>${sideTitle}<span>usuarios</span></h3>${list(side, 10, plain)}</div>`;
   modalOpen('dt_modal');
