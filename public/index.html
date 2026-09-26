@@ -4,10 +4,11 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Campañas UTM · Motomundo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300..800&display=swap" rel="stylesheet">
 <!-- Íconos: Phosphor (regular + fill) -->
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <style>
   /* ===== Tokens: rojo · blanco · gris oscuro · negro ===== */
   :root {
@@ -34,8 +35,8 @@
   .top { background:var(--black); color:var(--white); position:sticky; top:0; z-index:30; }
   .top-in { max-width:1320px; margin:0 auto; padding:0 20px; height:68px; display:flex; align-items:center; gap:18px; }
   .brand { display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit; }
-  .mark { width:36px; height:36px; border-radius:10px; background:var(--red); display:grid; place-items:center; font-weight:900; font-size:19px; flex:none; }
-  .brand-t { font-weight:800; font-size:17px; letter-spacing:-.01em; white-space:nowrap; }
+  .mark { width:36px; height:36px; border-radius:10px; background:var(--red); display:grid; place-items:center; font-weight:800; font-size:19px; flex:none; }
+  .brand-t { font-weight:700; font-size:17px; letter-spacing:-.01em; white-space:nowrap; }
   .brand-t span { color:var(--gray-300); font-weight:600; }
   .sp { flex:1; }
 
@@ -43,7 +44,7 @@
   .seg { position:relative; display:inline-flex; padding:4px; border-radius:999px; background:var(--gray-100); max-width:100%; overflow-x:auto; scrollbar-width:none; }
   .seg::-webkit-scrollbar { display:none; }
   .seg .pill { position:absolute; top:4px; bottom:4px; left:0; width:0; border-radius:999px; background:var(--black); transition:transform .28s var(--ease), width .28s var(--ease); z-index:0; pointer-events:none; }
-  .seg button { position:relative; z-index:1; border:0; background:none; padding:8px 14px; border-radius:999px; font-weight:700; font-size:13px; color:var(--gray-700); white-space:nowrap; display:flex; align-items:center; gap:7px; transition:color .2s var(--ease); }
+  .seg button { position:relative; z-index:1; border:0; background:none; padding:8px 14px; border-radius:999px; font-weight:600; font-size:13px; color:var(--gray-700); white-space:nowrap; display:flex; align-items:center; gap:7px; transition:color .2s var(--ease); }
   .seg button:hover { color:var(--ink); }
   .seg button.on { color:var(--white); }
   .seg.dark { background:var(--graphite); } .seg.dark button { color:var(--gray-300); } .seg.dark button:hover { color:var(--white); } .seg.dark .pill { background:var(--white); } .seg.dark button.on { color:var(--black); }
@@ -53,7 +54,7 @@
   .dp { position:relative; }
   .dp-btn { display:flex; gap:10px; align-items:center; background:var(--graphite); color:var(--white); border:1px solid var(--graphite-2); border-radius:999px; padding:8px 14px 8px 12px; font-size:13px; white-space:nowrap; transition:border-color .2s var(--ease), background .2s var(--ease); }
   .dp-btn:hover, .dp-btn[aria-expanded="true"] { border-color:#565a63; background:#2d3036; }
-  .dp-btn b { font-weight:800; }
+  .dp-btn b { font-weight:700; }
   .dp-btn .ph-caret-down { transition:transform .2s var(--ease); } .dp-btn[aria-expanded="true"] .ph-caret-down { transform:rotate(180deg); }
   .dp-pop { position:absolute; right:0; top:calc(100% + 10px); z-index:40; background:var(--white); color:var(--ink); border-radius:var(--r-lg); box-shadow:var(--shadow-pop); display:flex; overflow:hidden; transform-origin:top right; }
   .pop-in { animation:popIn .18s var(--ease); }
@@ -67,9 +68,9 @@
   .dp-nav button { pointer-events:auto; width:30px; height:30px; border:0; border-radius:50%; background:none; display:grid; place-items:center; color:var(--gray-700); }
   .dp-nav button:hover { background:var(--gray-100); }
   .dp-months { display:flex; gap:24px; }
-  .mo .mt { text-align:center; font-weight:800; margin:6px 0 10px; text-transform:capitalize; }
+  .mo .mt { text-align:center; font-weight:700; margin:6px 0 10px; text-transform:capitalize; }
   .dg { display:grid; grid-template-columns:repeat(7, 36px); row-gap:2px; }
-  .dg .wd { text-align:center; font-size:11px; color:var(--gray-500); font-weight:700; padding:4px 0; }
+  .dg .wd { text-align:center; font-size:11px; color:var(--gray-500); font-weight:600; padding:4px 0; }
   .dg button { height:34px; border:0; background:none; border-radius:var(--r-sm); font-size:13px; font-weight:600; transition:background .12s; }
   .dg button:hover:not(.off):not(.edge) { background:var(--gray-100); }
   .dg button.in { background:var(--red-50); border-radius:0; color:var(--red-600); }
@@ -80,7 +81,7 @@
   .dp-foot b { color:var(--ink); }
 
   /* ===== Botones ===== */
-  .btn { text-decoration:none; display:inline-flex; align-items:center; gap:8px; border:1px solid transparent; border-radius:999px; padding:9px 16px; font-weight:700; font-size:13px; white-space:nowrap; transition:background .15s var(--ease), border-color .15s var(--ease), color .15s var(--ease), transform .1s; }
+  .btn { text-decoration:none; display:inline-flex; align-items:center; gap:8px; border:1px solid transparent; border-radius:999px; padding:9px 16px; font-weight:600; font-size:13px; white-space:nowrap; transition:background .15s var(--ease), border-color .15s var(--ease), color .15s var(--ease), transform .1s; }
   .btn:active:not(:disabled) { transform:scale(.97); }
   .btn:disabled { opacity:.4; cursor:default; }
   .btn-red { background:var(--red); color:var(--white); } .btn-red:hover:not(:disabled) { background:var(--red-600); }
@@ -95,7 +96,7 @@
   .dd-btn { display:inline-flex; align-items:center; gap:8px; max-width:100%; background:var(--white); border:1px solid var(--gray-200); border-radius:999px; padding:7px 12px 7px 14px; font-size:13px; font-weight:600; color:var(--gray-700); transition:border-color .15s var(--ease), background .15s var(--ease), color .15s; }
   .dd-btn:hover, .dd-btn[aria-expanded="true"] { border-color:var(--gray-300); color:var(--ink); }
   .dd-btn .k { color:var(--gray-500); font-weight:600; }
-  .dd-btn .dv { font-weight:800; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px; }
+  .dd-btn .dv { font-weight:700; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px; }
   .dd-btn .ph-caret-down { color:var(--gray-500); transition:transform .2s var(--ease); } .dd-btn[aria-expanded="true"] .ph-caret-down { transform:rotate(180deg); }
   .dd-btn.active { background:var(--black); border-color:var(--black); color:var(--white); }
   .dd-btn.active .k { color:var(--gray-300); } .dd-btn.active .dv, .dd-btn.active .ph-caret-down { color:var(--white); }
@@ -108,15 +109,15 @@
   .dd-list { overflow-y:auto; padding:6px; overscroll-behavior:contain; }
   .dd-opt { width:100%; display:flex; align-items:center; gap:10px; text-align:left; border:0; background:none; border-radius:var(--r-sm); padding:8px 10px; font-size:13px; }
   .dd-opt .lb { flex:1; min-width:0; overflow-wrap:anywhere; font-weight:600; }
-  .dd-opt .mt { font-size:12px; color:var(--gray-500); white-space:nowrap; font-weight:700; }
+  .dd-opt .mt { font-size:12px; color:var(--gray-500); white-space:nowrap; font-weight:600; }
   .dd-opt .ck { width:16px; color:var(--red); visibility:hidden; }
-  .dd-opt.sel .ck { visibility:visible; } .dd-opt.sel .lb { font-weight:800; }
+  .dd-opt.sel .ck { visibility:visible; } .dd-opt.sel .lb { font-weight:700; }
   .dd-opt.hl { background:var(--gray-100); }
   .dd-empty { padding:18px; text-align:center; color:var(--gray-500); font-size:13px; }
   .dd-sep { height:1px; background:var(--gray-200); margin:4px 6px; }
 
   /* ===== Switch ===== */
-  .sw { display:inline-flex; align-items:center; gap:10px; font-weight:700; font-size:13px; color:var(--gray-700); white-space:nowrap; cursor:pointer; user-select:none; }
+  .sw { display:inline-flex; align-items:center; gap:10px; font-weight:600; font-size:13px; color:var(--gray-700); white-space:nowrap; cursor:pointer; user-select:none; }
   .sw input { position:absolute; opacity:0; pointer-events:none; }
   .sw .tr { width:34px; height:20px; border-radius:999px; background:var(--gray-300); position:relative; transition:background .2s var(--ease); flex:none; }
   .sw .tr::after { content:''; position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:var(--white); box-shadow:0 1px 2px rgba(0,0,0,.25); transition:transform .2s var(--ease); }
@@ -128,8 +129,8 @@
   .view { animation:viewIn .28s var(--ease); }
   @keyframes viewIn { from { opacity:0; transform:translateY(8px); } }
   .intro { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:20px; }
-  h1 { font-weight:800; font-size:30px; letter-spacing:-.02em; line-height:1.1; margin:0; }
-  h2 { font-weight:800; font-size:18px; letter-spacing:-.01em; margin:0; }
+  h1 { font-weight:700; font-size:30px; letter-spacing:-.02em; line-height:1.1; margin:0; }
+  h2 { font-weight:700; font-size:18px; letter-spacing:-.01em; margin:0; }
   .intro p { margin:6px 0 0; color:var(--gray-500); font-size:15px; }
   .intro .cmp { font-size:13px; color:var(--gray-500); text-align:right; }
   .intro .cmp b { color:var(--ink); }
@@ -138,14 +139,14 @@
   .bento { display:grid; grid-template-columns:repeat(12, minmax(0, 1fr)); gap:14px; margin-bottom:14px; }
   .bento > .contents { display:contents; }
   .tile { background:var(--white); border-radius:var(--r-lg); padding:20px 22px; box-shadow:var(--shadow); min-width:0; position:relative; }
-  .tile > .l { font-size:13px; font-weight:700; color:var(--gray-500); display:flex; align-items:center; gap:7px; }
-  .tile > .v { font-weight:800; font-size:34px; letter-spacing:-.02em; line-height:1; margin-top:10px; }
+  .tile > .l { font-size:13px; font-weight:600; color:var(--gray-500); display:flex; align-items:center; gap:7px; }
+  .tile > .v { font-weight:700; font-size:34px; letter-spacing:-.02em; line-height:1; margin-top:10px; }
   .tile > .s { font-size:13px; color:var(--gray-500); margin-top:8px; }
   .t-hero { grid-column:span 6; grid-row:span 2; background:var(--black); color:var(--white); display:flex; flex-direction:column; padding:24px 26px; overflow:hidden; }
   .t-hero .l { color:var(--gray-300); }
   .t-hero .pair { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:14px; }
-  .t-hero .pair .v { font-weight:800; font-size:56px; letter-spacing:-.02em; line-height:1; }
-  .t-hero .pair .n { font-size:13px; font-weight:700; color:var(--gray-300); margin-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .t-hero .pair .v { font-weight:700; font-size:56px; letter-spacing:-.02em; line-height:1; }
+  .t-hero .pair .n { font-size:13px; font-weight:600; color:var(--gray-300); margin-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
   .t-hero .pair .swc { width:10px; height:10px; border-radius:3px; display:inline-block; }
   .chart { margin-top:auto; padding-top:18px; }
   .chart svg { width:100%; height:110px; display:block; overflow:visible; }
@@ -168,16 +169,16 @@
   .cn:active { transform:translateY(0) scale(.99); }
   .cn.on { box-shadow:0 0 0 2px var(--red), var(--shadow); }
   .cn .h { display:flex; justify-content:space-between; align-items:center; gap:8px; }
-  .cn .h b { font-weight:800; font-size:20px; letter-spacing:-.01em; display:flex; align-items:center; gap:8px; }
+  .cn .h b { font-weight:700; font-size:20px; letter-spacing:-.01em; display:flex; align-items:center; gap:8px; }
   .cn .h b .ph { color:var(--red); }
-  .cn .h span { font-size:12px; font-weight:700; color:var(--gray-500); white-space:nowrap; }
+  .cn .h span { font-size:12px; font-weight:600; color:var(--gray-500); white-space:nowrap; }
   .cn .d { font-size:12px; color:var(--gray-500); margin:4px 0 14px; }
   .cn .nums { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; }
-  .cn .nums div { font-size:11px; font-weight:700; color:var(--gray-500); line-height:1.45; }
-  .cn .nums b { display:block; font-weight:800; font-size:21px; color:var(--ink); letter-spacing:-.01em; margin-bottom:2px; }
+  .cn .nums div { font-size:11px; font-weight:600; color:var(--gray-500); line-height:1.45; }
+  .cn .nums b { display:block; font-weight:700; font-size:21px; color:var(--ink); letter-spacing:-.01em; margin-bottom:2px; }
 
   /* Variación vs periodo anterior */
-  .dl { display:inline-flex; align-items:center; gap:2px; font-size:12px; font-weight:800; letter-spacing:0; white-space:nowrap; }
+  .dl { display:inline-flex; align-items:center; gap:2px; font-size:12px; font-weight:700; letter-spacing:0; white-space:nowrap; }
   .dl.up { color:var(--ok); } .dl.dn { color:var(--red); } .dl.eq { color:var(--gray-500); }
   .tile > .v .dl { margin-left:10px; vertical-align:middle; padding:3px 8px 3px 6px; border-radius:999px; font-size:12px; }
   .tile > .v .dl.up { background:var(--ok-50); } .tile > .v .dl.dn { background:var(--red-50); } .tile > .v .dl.eq { background:var(--gray-100); }
@@ -195,9 +196,9 @@
   .search:focus-within { background:var(--white); border-color:var(--gray-300); }
   .search input { border:0; outline:0; background:none; padding:9px 0; flex:1; min-width:0; color:var(--ink); }
   .fbar { display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:12px; margin:0 0 14px; background:var(--gray-100); border-radius:var(--r-md); }
-  .fbar .lab { display:flex; align-items:center; gap:6px; font-weight:800; font-size:13px; color:var(--gray-700); padding:0 6px 0 4px; }
+  .fbar .lab { display:flex; align-items:center; gap:6px; font-weight:700; font-size:13px; color:var(--gray-700); padding:0 6px 0 4px; }
   .fbar .div { width:1px; align-self:stretch; background:var(--gray-200); margin:2px 4px; }
-  .clear { border:0; background:none; color:var(--red); font-weight:800; font-size:13px; padding:7px 8px; display:inline-flex; align-items:center; gap:6px; border-radius:999px; }
+  .clear { border:0; background:none; color:var(--red); font-weight:700; font-size:13px; padding:7px 8px; display:inline-flex; align-items:center; gap:6px; border-radius:999px; }
   .clear:hover:not(:disabled) { background:var(--red-50); }
   .clear:disabled { color:var(--gray-300); cursor:default; }
   .count { color:var(--gray-500); font-size:13px; margin:0 0 10px; font-weight:600; display:flex; gap:14px; flex-wrap:wrap; }
@@ -208,12 +209,12 @@
   /* Tabla */
   .table-wrap { overflow-x:auto; margin:0 -22px; padding:0 22px; }
   table { width:100%; border-collapse:collapse; }
-  th { text-align:right; font-weight:700; color:var(--gray-500); font-size:12px; padding:10px 8px; border-bottom:1px solid var(--gray-200); white-space:nowrap; }
+  th { text-align:right; font-weight:600; color:var(--gray-500); font-size:12px; padding:10px 8px; border-bottom:1px solid var(--gray-200); white-space:nowrap; }
   td { text-align:right; padding:12px 8px; border-bottom:1px solid var(--gray-100); vertical-align:top; }
   th.l, td.l { text-align:left; }
   td:first-child { min-width:260px; }
   tr.grp { cursor:pointer; transition:background .15s; } tr.grp:hover { background:var(--gray-100); }
-  .nm { display:flex; gap:8px; align-items:center; } .nm b { font-weight:700; overflow-wrap:anywhere; }
+  .nm { display:flex; gap:8px; align-items:center; } .nm b { font-weight:600; overflow-wrap:anywhere; }
   .caret { color:var(--gray-500); transition:transform .2s var(--ease); }
   tr.grp.open .caret { transform:rotate(90deg); color:var(--ink); }
   .sub2 { color:var(--gray-500); font-size:12px; margin:5px 0 0 24px; display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
@@ -224,21 +225,21 @@
   .tag { display:inline-block; padding:2px 8px; border-radius:6px; background:var(--gray-100); font-size:12px; margin:1px 3px 1px 0; white-space:nowrap; font-weight:600; }
   .page { display:inline-block; font-family:var(--mono); font-size:12px; color:var(--ink); overflow-wrap:anywhere; }
   .term { color:var(--gray-500); font-size:12px; overflow-wrap:anywhere; }
-  .ev { font-weight:800; } .ev.z { color:var(--gray-300); font-weight:600; }
+  .ev { font-weight:700; } .ev.z { color:var(--gray-300); font-weight:600; }
   .empty { padding:40px 20px; text-align:center; color:var(--gray-500); display:grid; justify-items:center; gap:8px; }
   .empty .ph { font-size:28px; color:var(--gray-300); }
   .utm { display:block; font-family:var(--mono); font-size:11.5px; color:var(--gray-500); line-height:1.6; overflow-wrap:anywhere; }
   .utm i { font-style:normal; color:#9a9ea6; } .utm b { font-weight:600; color:var(--gray-700); }
   .lnk { text-decoration:none; } .lnk:hover b, .lnk:hover .host { text-decoration:underline; }
-  .host { color:var(--red-600); font-weight:700; }
+  .host { color:var(--red-600); font-weight:600; }
   .acts { display:flex; gap:6px; margin-top:6px; align-items:center; flex-wrap:wrap; }
-  .chip-btn { display:inline-flex; align-items:center; gap:5px; border:1px solid var(--gray-200); background:var(--white); border-radius:999px; font-size:12px; font-weight:700; padding:3px 10px; color:var(--gray-700); text-decoration:none; transition:border-color .15s, color .15s; }
+  .chip-btn { display:inline-flex; align-items:center; gap:5px; border:1px solid var(--gray-200); background:var(--white); border-radius:999px; font-size:12px; font-weight:600; padding:3px 10px; color:var(--gray-700); text-decoration:none; transition:border-color .15s, color .15s; }
   .chip-btn:hover { border-color:var(--ink); color:var(--ink); }
-  .nopage { font-size:12px; color:var(--red-600); font-weight:700; display:inline-flex; align-items:center; gap:4px; }
-  .bad, .wrn, .okb { display:inline-flex; align-items:center; gap:5px; border-radius:999px; font-size:11.5px; font-weight:800; padding:2px 9px 2px 7px; white-space:nowrap; }
+  .nopage { font-size:12px; color:var(--red-600); font-weight:600; display:inline-flex; align-items:center; gap:4px; }
+  .bad, .wrn, .okb { display:inline-flex; align-items:center; gap:5px; border-radius:999px; font-size:11.5px; font-weight:700; padding:2px 9px 2px 7px; white-space:nowrap; }
   .bad { background:var(--red-50); color:var(--red-600); } .wrn { background:var(--warn-50); color:var(--warn); } .okb { background:var(--ok-50); color:var(--ok); }
   .issues { margin:8px 0 0; padding:0; list-style:none; font-size:12px; display:grid; gap:3px; }
-  .issues li { color:var(--red-600); display:flex; gap:6px; align-items:flex-start; } .issues li b { font-weight:800; } .issues li.warn { color:var(--warn); } .issues li.okl { color:var(--ok); }
+  .issues li { color:var(--red-600); display:flex; gap:6px; align-items:flex-start; } .issues li b { font-weight:700; } .issues li.warn { color:var(--warn); } .issues li.okl { color:var(--ok); }
   .issues li .ph-fill { margin-top:1px; }
 
   /* Bento de grupos (reporte y biblioteca) */
@@ -251,12 +252,12 @@
   .gcard.xl2 { grid-column:span 6; }
   .gcard.full { grid-column:1 / -1; } 
   .gcard .gt { display:flex; justify-content:space-between; gap:10px; align-items:flex-start; }
-  .gcard .gt b { font-weight:800; font-size:16px; overflow-wrap:anywhere; line-height:1.25; }
+  .gcard .gt b { font-weight:700; font-size:16px; overflow-wrap:anywhere; line-height:1.25; }
   .gcard.xl .gt b { font-size:20px; }
-  .gcard .rank { font-size:12px; font-weight:800; color:var(--gray-500); white-space:nowrap; }
+  .gcard .rank { font-size:12px; font-weight:700; color:var(--gray-500); white-space:nowrap; }
   .gcard .gm { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; }
-  .gcard .gm div { font-size:11px; font-weight:700; color:var(--gray-500); }
-  .gcard .gm b { display:block; font-size:20px; font-weight:800; color:var(--ink); line-height:1.1; }
+  .gcard .gm div { font-size:11px; font-weight:600; color:var(--gray-500); }
+  .gcard .gm b { display:block; font-size:20px; font-weight:700; color:var(--ink); line-height:1.1; }
   .gcard.xl .gm b { color:var(--white); font-size:26px; } .gcard.xl .gm div, .gcard.xl .rank { color:var(--gray-300); }
   .gcard.xl .dl.up { color:#7ee2a8; } .gcard.xl .dl.dn { color:#ff9296; }
   .gcard .share { height:6px; border-radius:999px; background:var(--gray-100); overflow:hidden; }
@@ -274,7 +275,7 @@
   .fgrid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px; }
   .fgrid .full { grid-column:1 / -1; }
   .field { display:grid; gap:6px; min-width:0; }
-  .field > span { font-size:12px; font-weight:800; color:var(--gray-700); display:flex; gap:6px; align-items:center; }
+  .field > span { font-size:12px; font-weight:700; color:var(--gray-700); display:flex; gap:6px; align-items:center; }
   .field > span em { font-style:normal; font-weight:600; color:var(--gray-500); }
   .field input, .field textarea { width:100%; min-width:0; background:var(--white); border:1px solid var(--gray-200); border-radius:var(--r-sm); padding:10px 12px; font-size:14px; transition:border-color .15s, box-shadow .15s; }
   .field input:hover, .field textarea:hover { border-color:var(--gray-300); }
@@ -283,23 +284,23 @@
   .field .norm b { color:var(--red-600); font-weight:600; }
   .field textarea { resize:vertical; min-height:44px; }
   .actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:18px; align-items:center; }
-  .editing { display:flex; align-items:center; gap:8px; background:var(--red-50); color:var(--red-600); font-weight:800; font-size:13px; padding:8px 12px; border-radius:var(--r-sm); margin-top:14px; }
+  .editing { display:flex; align-items:center; gap:8px; background:var(--red-50); color:var(--red-600); font-weight:700; font-size:13px; padding:8px 12px; border-radius:var(--r-sm); margin-top:14px; }
   .params { display:grid; gap:6px; }
   .param { display:grid; grid-template-columns:110px 1fr; gap:10px; align-items:baseline; font-size:13px; padding:8px 12px; background:var(--graphite); border-radius:var(--r-sm); }
   .param span { color:var(--gray-300); font-family:var(--mono); font-size:12px; }
-  .param b { font-weight:700; overflow-wrap:anywhere; } .param b.empty-v { color:#8b8f98; font-weight:500; }
+  .param b { font-weight:600; overflow-wrap:anywhere; } .param b.empty-v { color:#8b8f98; font-weight:500; }
   .out { background:var(--ink); border:1px dashed var(--graphite-2); color:#f3f3f4; border-radius:var(--r-sm); padding:12px; font-family:var(--mono); font-size:12px; overflow-wrap:anywhere; line-height:1.55; }
   .b-prev .issues li { color:#ffb0b3; } .b-prev .issues li.warn { color:#ffd48a; } .b-prev .issues li.okl { color:#7ee2a8; }
-  .dupe { display:flex; gap:8px; align-items:center; font-size:13px; font-weight:700; color:#ffd48a; }
+  .dupe { display:flex; gap:8px; align-items:center; font-size:13px; font-weight:600; color:#ffd48a; }
   details.rules-t { grid-column:1 / -1; padding:0; }
-  details.rules-t summary { cursor:pointer; list-style:none; padding:16px 22px; display:flex; justify-content:space-between; align-items:center; gap:12px; font-weight:800; }
+  details.rules-t summary { cursor:pointer; list-style:none; padding:16px 22px; display:flex; justify-content:space-between; align-items:center; gap:12px; font-weight:700; }
   details.rules-t summary::-webkit-details-marker { display:none; }
   details.rules-t summary .ph-caret-down { transition:transform .2s var(--ease); color:var(--gray-500); } details.rules-t[open] summary .ph-caret-down { transform:rotate(180deg); }
   .rules { display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; padding:0 22px 20px; }
   .rule { background:var(--gray-100); border-radius:var(--r-md); padding:14px 16px; }
-  .rule .k { font-size:12px; color:var(--gray-500); font-weight:700; font-family:var(--mono); }
-  .rule h4 { margin:2px 0 6px; font-weight:800; font-size:16px; display:flex; gap:8px; align-items:center; }
-  .rule h4 small { font-size:11px; font-weight:800; padding:1px 8px; border-radius:999px; background:var(--white); color:var(--gray-500); }
+  .rule .k { font-size:12px; color:var(--gray-500); font-weight:600; font-family:var(--mono); }
+  .rule h4 { margin:2px 0 6px; font-weight:700; font-size:16px; display:flex; gap:8px; align-items:center; }
+  .rule h4 small { font-size:11px; font-weight:700; padding:1px 8px; border-radius:999px; background:var(--white); color:var(--gray-500); }
   .rule p { margin:0; font-size:13px; color:var(--gray-700); line-height:1.5; }
   .rule code { background:var(--white); border-radius:5px; padding:1px 6px; font-size:12px; display:inline-block; margin:4px 3px 0 0; font-family:var(--mono); }
 
@@ -307,34 +308,34 @@
   .lib-group { margin-bottom:22px; }
   .lib-group:last-child { margin-bottom:0; }
   .lib-gh { display:flex; align-items:center; gap:10px; margin:0 0 10px; }
-  .lib-gh h3 { margin:0; font-size:16px; font-weight:800; display:flex; gap:8px; align-items:center; }
+  .lib-gh h3 { margin:0; font-size:16px; font-weight:700; display:flex; gap:8px; align-items:center; }
   .lib-gh h3 .ph { color:var(--red); }
-  .lib-gh span { font-size:12px; font-weight:800; color:var(--gray-500); background:var(--gray-100); padding:2px 9px; border-radius:999px; }
+  .lib-gh span { font-size:12px; font-weight:700; color:var(--gray-500); background:var(--gray-100); padding:2px 9px; border-radius:999px; }
   .lcard { grid-column:span 4; }
   .lcard .chips { display:flex; flex-wrap:wrap; gap:4px; }
   .lcard .chips .tag { margin:0; }
   .lcard .chips .tag i { font-style:normal; color:var(--gray-500); font-weight:600; }
   .lcard .url { font-family:var(--mono); font-size:11.5px; color:var(--gray-500); overflow-wrap:anywhere; }
-  .lcard .url b { color:var(--red-600); font-weight:700; }
+  .lcard .url b { color:var(--red-600); font-weight:600; }
   .lcard .note { font-size:12px; color:var(--gray-700); display:flex; gap:6px; align-items:flex-start; }
   .lcard .ga { display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; background:var(--gray-100); border-radius:var(--r-sm); padding:10px 12px; }
-  .lcard .ga div { font-size:11px; font-weight:700; color:var(--gray-500); } .lcard .ga b { display:block; font-size:17px; font-weight:800; color:var(--ink); }
-  .lcard .ga.none { display:flex; gap:8px; align-items:center; font-size:12px; font-weight:700; color:var(--gray-500); }
+  .lcard .ga div { font-size:11px; font-weight:600; color:var(--gray-500); } .lcard .ga b { display:block; font-size:17px; font-weight:700; color:var(--ink); }
+  .lcard .ga.none { display:flex; gap:8px; align-items:center; font-size:12px; font-weight:600; color:var(--gray-500); }
   .lcard .lact { display:flex; justify-content:space-between; align-items:center; gap:6px; margin-top:auto; }
   .lcard .lact > span:last-child { display:flex; gap:2px; }
   .lcard .lact .when { font-size:11px; color:var(--gray-500); font-weight:600; }
-  .confirm { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:800; color:var(--red-600); }
+  .confirm { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--red-600); }
   .lcard.flash { animation:flash 1.2s var(--ease); }
   @keyframes flash { 0% { box-shadow:0 0 0 3px var(--red); } 100% { box-shadow:0 0 0 0 transparent; } }
 
   /* Aviso flotante */
-  .toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:var(--black); color:var(--white); padding:11px 16px; border-radius:999px; font-weight:700; font-size:13px; display:flex; align-items:center; gap:8px; box-shadow:var(--shadow-pop); z-index:80; animation:popIn .2s var(--ease); }
+  .toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:var(--black); color:var(--white); padding:11px 16px; border-radius:999px; font-weight:600; font-size:13px; display:flex; align-items:center; gap:8px; box-shadow:var(--shadow-pop); z-index:80; animation:popIn .2s var(--ease); }
   .toast .ph-fill { color:#7ee2a8; } .toast.err .ph-fill { color:#ff9296; }
 
   /* ===== Footer ===== */
   .foot { background:var(--black); color:var(--gray-300); }
   .foot-in { max-width:1320px; margin:0 auto; padding:30px 20px; display:grid; grid-template-columns:2fr 1fr 1fr; gap:24px; font-size:13px; line-height:1.6; }
-  .foot b { color:var(--white); font-weight:800; font-size:15px; display:block; margin-bottom:8px; }
+  .foot b { color:var(--white); font-weight:700; font-size:15px; display:block; margin-bottom:8px; }
   .foot a { color:var(--gray-300); text-decoration:none; display:flex; align-items:center; gap:6px; } .foot a:hover { color:var(--white); }
   .foot .live { display:flex; align-items:center; gap:8px; } .foot .live i { width:8px; height:8px; border-radius:50%; background:#3ecf7a; box-shadow:0 0 0 3px rgba(62,207,122,.18); }
   .foot-bar { border-top:1px solid #23252a; }
@@ -368,16 +369,131 @@
   }
   @media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } html { scroll-behavior:auto; } }
   @media print { .top, .foot, .toolbar, .fbar { display:none; } body { background:#fff; } }
+
+  /* ===== v3: autenticación, usuarios, bitácora, notificaciones ===== */
+  body { font-weight:400; }
+  .auth { min-height:100dvh; display:grid; grid-template-columns:1.1fr 1fr; background:var(--black); }
+  .auth-art { position:relative; overflow:hidden; padding:48px; display:flex; flex-direction:column; justify-content:space-between; color:var(--white);
+    background:radial-gradient(120% 90% at 0% 100%, #3a0a0c 0%, transparent 60%), radial-gradient(80% 60% at 100% 0%, #1d1f24 0%, transparent 70%), var(--black); }
+  .auth-art .brand-t { font-size:20px; }
+  .auth-art h2 { font-size:44px; font-weight:700; letter-spacing:-.02em; line-height:1.05; max-width:14ch; margin:0 0 16px; }
+  .auth-art p { color:var(--gray-300); font-size:16px; max-width:42ch; line-height:1.55; margin:0; }
+  .auth-art .grid { position:absolute; inset:0; background-image:linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px); background-size:48px 48px; mask-image:linear-gradient(180deg, transparent, #000 40%, transparent); pointer-events:none; }
+  .auth-art .stats { display:flex; gap:28px; position:relative; }
+  .auth-art .stats b { display:block; font-size:28px; font-weight:700; } .auth-art .stats span { color:var(--gray-500); font-size:13px; }
+  .auth-panel { background:var(--gray-100); display:grid; place-items:center; padding:32px 20px; }
+  .auth-card { width:100%; max-width:400px; background:var(--white); border-radius:var(--r-lg); padding:32px 30px; box-shadow:var(--shadow); animation:viewIn .3s var(--ease); }
+  .auth-card h1 { font-size:26px; margin-bottom:6px; } .auth-card > p { color:var(--gray-500); margin:0 0 22px; line-height:1.5; }
+  .auth-card form { display:grid; gap:14px; }
+  .pw { position:relative; } .pw input { padding-right:42px; }
+  .pw button { position:absolute; right:6px; top:50%; transform:translateY(-50%); }
+  .auth-card .row { display:flex; justify-content:space-between; align-items:center; gap:10px; font-size:13px; }
+  .link { background:none; border:0; padding:0; color:var(--red-600); font-weight:600; text-decoration:none; }
+  .link:hover { text-decoration:underline; }
+  .msg { display:flex; gap:8px; align-items:flex-start; padding:10px 12px; border-radius:var(--r-sm); font-size:13px; line-height:1.45; }
+  .msg.err { background:var(--red-50); color:var(--red-600); } .msg.ok { background:var(--ok-50); color:var(--ok); } .msg.info { background:var(--gray-100); color:var(--gray-700); }
+  .pwrules { display:grid; gap:4px; font-size:12px; color:var(--gray-500); margin:-4px 0 0; padding:0; list-style:none; }
+  .pwrules li { display:flex; gap:6px; align-items:center; } .pwrules li.ok { color:var(--ok); }
+  .btn-block { width:100%; justify-content:center; padding:12px 16px; font-size:14px; }
+
+  /* Menú de usuario */
+  .um { position:relative; }
+  .um-btn { display:flex; align-items:center; gap:10px; background:none; border:0; color:var(--white); padding:4px; border-radius:999px; }
+  .um-btn:hover .av { box-shadow:0 0 0 2px var(--graphite-2); }
+  .av { width:34px; height:34px; border-radius:50%; background:var(--graphite-2); color:var(--white); display:grid; place-items:center; font-weight:600; font-size:13px; flex:none; transition:box-shadow .15s; }
+  .av.red { background:var(--red); }
+  .um-pop { position:absolute; right:0; top:calc(100% + 10px); width:260px; background:var(--white); color:var(--ink); border-radius:var(--r-md); box-shadow:var(--shadow-pop); padding:8px; z-index:50; }
+  .um-head { display:flex; gap:10px; align-items:center; padding:10px; border-bottom:1px solid var(--gray-200); margin-bottom:6px; }
+  .um-head b { display:block; font-weight:600; } .um-head span { font-size:12px; color:var(--gray-500); overflow-wrap:anywhere; }
+  .um-item { width:100%; display:flex; gap:10px; align-items:center; border:0; background:none; padding:9px 10px; border-radius:var(--r-sm); font-size:13px; text-align:left; color:var(--ink); text-decoration:none; }
+  .um-item:hover { background:var(--gray-100); }
+  .role-chip { display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:600; padding:2px 9px; border-radius:999px; background:var(--gray-100); color:var(--gray-700); white-space:nowrap; }
+  .role-chip.admin { background:var(--black); color:var(--white); } .role-chip.jefe { background:var(--red-50); color:var(--red-600); }
+  .role-chip.subgerente { background:#eef0f3; color:var(--graphite); } .role-chip.pending { background:var(--warn-50); color:var(--warn); } .role-chip.off { background:var(--gray-200); color:var(--gray-500); }
+
+  /* Termómetro de salud de la UTM */
+  .health { display:grid; grid-template-columns:auto 1fr; gap:16px; align-items:center; background:var(--graphite); border-radius:var(--r-md); padding:14px 16px; }
+  .thermo { width:26px; height:120px; position:relative; }
+  .thermo .tube { position:absolute; left:7px; top:0; bottom:18px; width:12px; border-radius:999px; background:#3a3d44; overflow:hidden; }
+  .thermo .fill { position:absolute; left:0; right:0; bottom:0; border-radius:999px; transition:height .45s var(--ease), background .3s; }
+  .thermo .bulb { position:absolute; left:0; bottom:0; width:26px; height:26px; border-radius:50%; transition:background .3s; box-shadow:0 0 0 4px #3a3d44; }
+  .health .hs { font-size:34px; font-weight:700; line-height:1; } .health .hs small { font-size:15px; color:var(--gray-300); font-weight:500; }
+  .health .hl { font-weight:600; margin-top:4px; } .health .hd { color:var(--gray-300); font-size:12px; margin-top:4px; line-height:1.45; }
+  .health .ticks { display:flex; gap:4px; margin-top:10px; } .health .ticks i { flex:1; height:4px; border-radius:2px; background:#3a3d44; }
+
+  /* Notificaciones flotantes tipo tarjeta */
+  .ntf-stack { position:fixed; right:18px; bottom:18px; z-index:90; display:flex; flex-direction:column-reverse; gap:10px; width:340px; max-width:calc(100vw - 24px); pointer-events:none; }
+  .ntf { pointer-events:auto; background:var(--white); border-radius:var(--r-md); box-shadow:var(--shadow-pop); padding:14px 14px 14px 16px; display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:start; animation:ntfIn .35s var(--ease); position:relative; overflow:hidden; }
+  .ntf.out { animation:ntfOut .25s var(--ease) forwards; }
+  @keyframes ntfIn { from { opacity:0; transform:translateX(24px) scale(.98); } }
+  @keyframes ntfOut { to { opacity:0; transform:translateX(24px); } }
+  .ntf .ic { width:36px; height:36px; border-radius:10px; display:grid; place-items:center; background:var(--red); color:var(--white); font-size:18px; }
+  .ntf .ic.dark { background:var(--black); } .ntf .ic.warn { background:var(--warn-50); color:var(--warn); }
+  .ntf b { display:block; font-weight:600; font-size:13.5px; } .ntf p { margin:2px 0 0; color:var(--gray-700); font-size:13px; line-height:1.4; overflow-wrap:anywhere; }
+  .ntf time { display:block; font-size:11.5px; color:var(--gray-500); margin-top:6px; }
+  .ntf .bar { position:absolute; left:0; bottom:0; height:3px; background:var(--red); animation:ntfBar linear forwards; }
+  @keyframes ntfBar { from { width:100%; } to { width:0; } }
+  .ntf:hover .bar { animation-play-state:paused; }
+
+  /* Formularios de administración */
+  .inp { width:100%; min-width:0; background:var(--white); border:1px solid var(--gray-200); border-radius:var(--r-sm); padding:10px 12px; font-size:14px; transition:border-color .15s, box-shadow .15s; }
+  .inp:hover { border-color:var(--gray-300); } .inp:focus { outline:0; border-color:var(--ink); box-shadow:0 0 0 3px rgba(13,14,16,.08); }
+  .u-form { grid-column:span 5; } .u-link { grid-column:span 7; background:var(--black); color:var(--white); display:flex; flex-direction:column; gap:12px; }
+  .u-link .out { background:var(--graphite); border-color:var(--graphite-2); }
+  .perm { display:grid; gap:8px; margin-top:4px; }
+  .perm div { display:grid; grid-template-columns:130px 1fr; gap:10px; font-size:13px; padding:8px 12px; background:var(--graphite); border-radius:var(--r-sm); }
+  .perm span { color:var(--gray-300); }
+  .ucard .top-row { display:flex; gap:12px; align-items:center; }
+  .ucard .top-row b { font-weight:600; font-size:15px; overflow-wrap:anywhere; } .ucard .top-row span { font-size:12px; color:var(--gray-500); overflow-wrap:anywhere; }
+  .ucard .ctl { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .ucard .meta { font-size:12px; color:var(--gray-500); display:flex; gap:12px; flex-wrap:wrap; }
+  .ucard .meta span { display:flex; gap:5px; align-items:center; }
+  .ucard.off { opacity:.62; }
+  .lfilters { display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding:12px; background:var(--gray-100); border-radius:var(--r-md); margin-bottom:16px; }
+  .lfilters .lab { display:flex; align-items:center; gap:6px; font-weight:600; font-size:13px; color:var(--gray-700); padding:0 6px 0 4px; }
+
+  /* Bitácora */
+  .act-ic { width:34px; height:34px; border-radius:10px; display:grid; place-items:center; background:var(--gray-100); color:var(--ink); flex:none; }
+  .act-ic.k-utm { background:var(--red-50); color:var(--red-600); } .act-ic.k-usuario { background:#eef0f3; color:var(--graphite); } .act-ic.k-auth { background:var(--warn-50); color:var(--warn); }
+  .acard { grid-column:span 4; }
+  .acard .ah { display:flex; gap:12px; align-items:flex-start; }
+  .acard .ah b { font-weight:600; display:block; } .acard .ah p { margin:2px 0 0; font-size:13px; color:var(--gray-700); overflow-wrap:anywhere; }
+  .acard .af { display:flex; justify-content:space-between; gap:8px; font-size:12px; color:var(--gray-500); margin-top:auto; flex-wrap:wrap; }
+  .day-h { grid-column:1 / -1; font-size:13px; font-weight:600; color:var(--gray-500); margin:6px 0 -2px; text-transform:capitalize; }
+  .kv { font-family:var(--mono); font-size:11.5px; color:var(--gray-500); overflow-wrap:anywhere; }
+
+  @media (max-width:1100px) { .u-form, .u-link { grid-column:1 / -1; } .acard { grid-column:span 6; } }
+  @media (max-width:860px) { .auth { grid-template-columns:1fr; } .auth-art { display:none; } }
+  @media (max-width:720px) { .acard { grid-column:1 / -1; } .um-btn .nm-t { display:none; } .ntf-stack { right:12px; bottom:12px; } }
 </style>
+
 </head>
 <body>
+<!-- ===================== ACCESO ===================== -->
+<div class="auth" id="auth" hidden>
+  <div class="auth-art">
+    <div class="grid"></div>
+    <div class="brand"><div class="mark">M</div><div class="brand-t">Motomundo <span>Campañas</span></div></div>
+    <div style="position:relative">
+      <h2>Cada UTM, cada cotización, en un solo lugar.</h2>
+      <p>Construye links con el estándar de Motomundo y mide lo que generan en Google Analytics 4.</p>
+    </div>
+    <div class="stats"><div><b>GA4</b><span>Actualizado a diario</span></div><div><b>2</b><span>Eventos de cotización</span></div><div><b>4</b><span>Canales</span></div></div>
+  </div>
+  <div class="auth-panel"><div class="auth-card" id="authCard"></div></div>
+</div>
+
+<!-- ===================== APLICACIÓN ===================== -->
+<div id="app" hidden>
 <header class="top">
   <div class="top-in">
     <a class="brand" href="#/reporte"><div class="mark">M</div><div class="brand-t">Motomundo <span>Campañas</span></div></a>
     <div class="seg dark" id="nav" role="tablist" aria-label="Secciones">
       <span class="pill" aria-hidden="true"></span>
-      <button data-r="reporte" role="tab"><i class="ph ph-chart-bar"></i>Reporte GA4</button>
-      <button data-r="utms" role="tab"><i class="ph ph-link-simple"></i>Constructor de UTMs</button>
+      <button data-r="reporte" role="tab"><i class="ph ph-chart-bar"></i>Reporte</button>
+      <button data-r="utms" role="tab" data-need="crear"><i class="ph ph-link-simple"></i>Constructor</button>
+      <button data-r="usuarios" role="tab" data-need="admin"><i class="ph ph-users-three"></i>Usuarios</button>
+      <button data-r="bitacora" role="tab" data-need="admin"><i class="ph ph-clock-counter-clockwise"></i>Bitácora</button>
     </div>
     <div class="sp"></div>
     <div class="dp">
@@ -392,30 +508,35 @@
         </div>
       </div>
     </div>
+    <div class="um">
+      <button class="um-btn" id="um_btn" aria-haspopup="menu" aria-expanded="false"><span class="av red" id="um_av"></span><i class="ph ph-caret-down nm-t"></i></button>
+      <div class="um-pop pop-in" id="um_pop" hidden>
+        <div class="um-head"><span class="av red" id="um_av2"></span><div><b id="um_name"></b><span id="um_mail"></span><div id="um_role" style="margin-top:4px"></div></div></div>
+        <button class="um-item" id="um_pw"><i class="ph ph-key"></i>Cambiar contraseña</button>
+        <button class="um-item" id="um_out"><i class="ph ph-sign-out"></i>Cerrar sesión</button>
+      </div>
+    </div>
   </div>
 </header>
 
 <main>
   <!-- ===================== REPORTE GA4 ===================== -->
-  <section class="view" id="view-reporte">
+  <section class="view" id="view-reporte" hidden>
     <div class="intro">
       <div><h1>Seguimiento de campañas</h1><p>Qué UTM se usó, a dónde llevó y cuántas cotizaciones generó.</p></div>
       <div class="cmp"><b>Motomundo - GA4</b><br><span id="period"></span></div>
     </div>
-
     <div class="bento">
       <div class="contents" id="kpis"><div class="tile skel t-hero"></div><div class="tile skel t-sm"></div><div class="tile skel t-sm"></div><div class="tile skel t-md"></div></div>
       <div class="contents" id="canales"></div>
-
       <div class="tile card" id="report">
         <div class="card-h">
           <h2>Detalle por UTM</h2>
           <div class="toolbar">
             <div class="seg" id="groupBy" aria-label="Agrupar por"><span class="pill"></span></div>
-            <div class="seg icons" id="viewMode" aria-label="Visualización">
-              <span class="pill"></span>
+            <div class="seg icons" id="viewMode" aria-label="Visualización"><span class="pill"></span>
               <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button>
-              <button data-v="bento" title="Bento" aria-label="Bento"><i class="ph ph-squares-four"></i></button>
+              <button data-v="bento" title="Tarjetas" aria-label="Tarjetas"><i class="ph ph-squares-four"></i></button>
             </div>
           </div>
         </div>
@@ -425,7 +546,7 @@
           <span class="div"></span>
           <span id="fstate" style="display:contents"></span>
           <label class="sw"><input type="checkbox" id="only"><span class="tr"></span>Solo con cotizaciones</label>
-          <span class="grow" style="flex:1"></span>
+          <span style="flex:1"></span>
           <label class="search"><i class="ph ph-magnifying-glass"></i><input id="q" placeholder="Buscar campaña, término, página…" aria-label="Buscar"></label>
           <button class="clear" id="clear"><i class="ph ph-x"></i>Limpiar</button>
         </div>
@@ -441,7 +562,6 @@
       <div><h1>Constructor de UTMs</h1><p>Crea links con el estándar de Motomundo, guárdalos y mide lo que generaron en GA4.</p></div>
       <div class="cmp"><b id="libCount">—</b><br><span>UTMs guardadas</span></div>
     </div>
-
     <div class="bento">
       <div class="tile b-form">
         <h2 id="formTitle">Nueva UTM</h2>
@@ -450,8 +570,9 @@
           <label class="field full"><span><i class="ph ph-globe-simple"></i>URL de destino</span><input id="b_url" placeholder="https://www.motomundohn.com/cotizar-en-linea" value="https://www.motomundohn.com/cotizar-en-linea"></label>
           <label class="field"><span>Fuente <em>utm_source</em></span><input id="b_s" list="dl_s" placeholder="Meta, Google, Base Clientes Claro"><div class="norm" id="n_s"></div></label>
           <div class="field"><span>Medio <em>utm_medium</em></span><div id="b_m"></div></div>
-          <label class="field full"><span>Campaña <em>utm_campaign</em></span><input id="b_c" list="dl_c" placeholder="Genesis Tactica Comercial Leads Centro"><div class="norm" id="n_c"></div></label>
-          <label class="field"><span>Término <em>utm_term · opcional</em></span><input id="b_t" placeholder="Centro Tegucigalpa"><div class="norm" id="n_t"></div></label>
+          <label class="field"><span>Campaña <em>utm_campaign</em></span><input id="b_c" list="dl_c" placeholder="Genesis Tactica Comercial Leads"><div class="norm" id="n_c"></div></label>
+          <div class="field"><span><i class="ph ph-map-trifold"></i>Zona <em>se agrega al nombre de la campaña</em></span><div id="b_z"></div></div>
+          <label class="field"><span>Término <em>utm_term · opcional</em></span><input id="b_t" placeholder="Tegucigalpa Comayagua"><div class="norm" id="n_t"></div></label>
           <label class="field"><span>Contenido <em>utm_content · opcional</em></span><input id="b_x" placeholder="TTPremium Zx-200l"><div class="norm" id="n_x"></div></label>
           <label class="field full"><span><i class="ph ph-note-pencil"></i>Nota interna <em>opcional</em></span><textarea id="b_note" rows="2" placeholder="Para qué es, dónde se publicó…"></textarea></label>
         </div>
@@ -465,6 +586,7 @@
 
       <div class="tile b-prev">
         <div class="l"><i class="ph ph-eye"></i>Vista previa</div>
+        <div class="health" id="b_health"></div>
         <div class="params" id="b_params"></div>
         <div class="out" id="b_out"></div>
         <ul class="issues" id="b_issues"></ul>
@@ -484,16 +606,93 @@
         <div class="card-h">
           <h2>UTMs guardadas</h2>
           <div class="toolbar">
-            <label class="search"><i class="ph ph-magnifying-glass"></i><input id="lq" placeholder="Buscar UTM…" aria-label="Buscar UTM"></label>
             <div class="seg" id="libGroup" aria-label="Agrupar por"><span class="pill"></span></div>
-            <div class="seg icons" id="libView" aria-label="Visualización">
-              <span class="pill"></span>
-              <button data-v="bento" title="Bento" aria-label="Bento"><i class="ph ph-squares-four"></i></button>
+            <div class="seg icons" id="libView" aria-label="Visualización"><span class="pill"></span>
+              <button data-v="bento" title="Tarjetas" aria-label="Tarjetas"><i class="ph ph-squares-four"></i></button>
               <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button>
             </div>
           </div>
         </div>
+        <div class="lfilters" id="lfilters">
+          <span class="lab"><i class="ph ph-funnel-simple"></i>Filtros</span>
+          <span id="lf_pills" style="display:contents"></span>
+          <label class="sw"><input type="checkbox" id="lf_mine"><span class="tr"></span>Solo mías</label>
+          <span style="flex:1"></span>
+          <label class="search"><i class="ph ph-magnifying-glass"></i><input id="lq" placeholder="Buscar UTM…" aria-label="Buscar UTM"></label>
+          <button class="clear" id="lf_clear"><i class="ph ph-x"></i>Limpiar</button>
+        </div>
         <div id="lib"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== USUARIOS (admin) ===================== -->
+  <section class="view" id="view-usuarios" hidden>
+    <div class="intro">
+      <div><h1>Usuarios y roles</h1><p>Crea usuarios, asigna su rol y envíales la invitación para que definan su contraseña.</p></div>
+      <div class="cmp"><b id="uCount">—</b><br><span>usuarios</span></div>
+    </div>
+    <div class="bento">
+      <div class="tile u-form">
+        <h2>Nuevo usuario</h2>
+        <div class="fgrid" style="grid-template-columns:1fr">
+          <label class="field"><span>Nombre completo</span><input class="inp" id="u_name" placeholder="Ej. Ana Martínez" autocomplete="off"></label>
+          <label class="field"><span>Correo</span><input class="inp" id="u_mail" type="email" placeholder="ana@motomundohn.com" autocomplete="off"></label>
+          <div class="field"><span>Rol</span><div id="u_role"></div></div>
+          <div class="field" id="u_canal_f"><span>Canal <em id="u_canal_hint">obligatorio para jefes</em></span><div id="u_canal"></div></div>
+        </div>
+        <div class="actions"><button class="btn btn-red" id="u_create"><i class="ph ph-paper-plane-tilt"></i>Crear y generar invitación</button></div>
+        <div id="u_msg" style="margin-top:12px"></div>
+      </div>
+      <div class="tile u-link" id="u_link">
+        <div class="l"><i class="ph ph-shield-check"></i>Qué puede hacer cada rol</div>
+        <div class="perm">
+          <div><span>Jefe Web (admin)</span>Controla todo: reportes, UTMs, usuarios, roles y bitácora.</div>
+          <div><span>Subgerente</span>Solo ve los reportes.</div>
+          <div><span>Jefe de canal</span>Directo, Redes o Pauta. Ve datos, crea UTMs y edita las de su canal.</div>
+          <div><span>Especialista</span>Ve datos, crea UTMs y edita las suyas.</div>
+        </div>
+      </div>
+      <div class="tile card">
+        <div class="card-h">
+          <h2>Equipo</h2>
+          <div class="toolbar">
+            <label class="search"><i class="ph ph-magnifying-glass"></i><input id="uq" placeholder="Buscar usuario…" aria-label="Buscar usuario"></label>
+            <div class="seg icons" id="uView"><span class="pill"></span>
+              <button data-v="bento" title="Tarjetas" aria-label="Tarjetas"><i class="ph ph-squares-four"></i></button>
+              <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button>
+            </div>
+          </div>
+        </div>
+        <div id="users"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== BITÁCORA (admin) ===================== -->
+  <section class="view" id="view-bitacora" hidden>
+    <div class="intro">
+      <div><h1>Bitácora</h1><p>Todo lo que pasa en la plataforma: quién creó, editó o eliminó UTMs y usuarios, y cuándo.</p></div>
+      <div class="cmp"><b id="aCount">—</b><br><span>registros</span></div>
+    </div>
+    <div class="bento">
+      <div class="tile card">
+        <div class="card-h">
+          <h2>Actividad</h2>
+          <div class="toolbar">
+            <div class="seg icons" id="aView"><span class="pill"></span>
+              <button data-v="bento" title="Tarjetas" aria-label="Tarjetas"><i class="ph ph-squares-four"></i></button>
+              <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="lfilters">
+          <span class="lab"><i class="ph ph-funnel-simple"></i>Filtros</span>
+          <span id="af_pills" style="display:contents"></span>
+          <span style="flex:1"></span>
+          <label class="search"><i class="ph ph-magnifying-glass"></i><input id="aq" placeholder="Buscar en la bitácora…" aria-label="Buscar"></label>
+        </div>
+        <div id="acts"></div>
       </div>
     </div>
   </section>
@@ -502,13 +701,17 @@
 <footer class="foot">
   <div class="foot-in">
     <div><b>Motomundo · Seguimiento de campañas</b>Datos de Google Analytics 4 (propiedad Motomundo - GA4), guardados en Supabase. Solo cuenta tráfico que llegó con utm_campaign.</div>
-    <div><b>Datos</b><span class="live"><i></i><span id="gen">Sincronización diaria 8:00 a.m.</span></span><a href="#/utms"><i class="ph ph-link-simple"></i>Constructor de UTMs</a></div>
+    <div><b>Datos</b><span class="live"><i></i><span id="gen">Sincronización diaria 8:00 a.m.</span></span><a href="#/utms" data-need="crear"><i class="ph ph-link-simple"></i>Constructor de UTMs</a></div>
     <div><b>Eventos medidos</b>Cotiza_Producto<br>Cotización_Crédito</div>
   </div>
   <div class="foot-bar"><div><span>© Motomundo</span><span>Los usuarios de un rango son la suma de cada día; las cotizaciones son exactas.</span></div></div>
 </footer>
+</div>
 
+<div class="ntf-stack" id="ntf" aria-live="polite"></div>
 <script>
+// ===== Supabase (clave publicable: los permisos los aplican las reglas RLS de la base de datos) =====
+const sb = supabase.createClient('https://vefpeohaipnkfzbzuepo.supabase.co', 'sb_publishable_P34fx2jbugXIXark85IxpQ_gMKS06e6');
 // ============================================================
 // Utilidades
 // ============================================================
@@ -662,15 +865,24 @@ const BADGE = {
 };
 
 // ============================================================
-// Datos GA4 (Supabase vía /api/data)
+// Datos GA4 (tabla ga4_utm_daily en Supabase)
 // ============================================================
 const REPORT = { minDate: '', maxDate: '' };
 let D = { s: [], r: [] }, CARGADO = { from: '', to: '' };
+// Lee de Supabase (con la sesión del usuario) y compacta: D.s = textos, D.r = [fecha, c, s, m, t, x, h, p, usuarios, ev1, ev2]
 async function asegurarDatos(from, to) {
   if (CARGADO.from && from >= CARGADO.from && to <= CARGADO.to) return;
-  const j = await (await fetch(`/api/data?from=${from}&to=${to}`)).json();
-  if (j.error) throw new Error(j.error);
-  D = j; CARGADO = { from, to };
+  const rows = [];
+  for (let i = 0; ; i += 1000) {
+    const { data, error } = await sb.from('ga4_utm_daily')
+      .select('date,campaign,source,medium,term,content,host,landing_page,users,cotiza_producto,cotizacion_credito')
+      .gte('date', from).lte('date', to).order('date').range(i, i + 999);
+    if (error) throw new Error(error.message);
+    rows.push(...data); if (data.length < 1000) break;
+  }
+  const s = [], idx = new Map(), ix = v => (idx.has(v) ? idx.get(v) : (idx.set(v, s.length), s.push(v), s.length - 1));
+  D = { s, r: rows.map(r => [r.date, ix(r.campaign), ix(r.source), ix(r.medium), ix(r.term), ix(r.content), ix(r.host), ix(r.landing_page), r.users, r.cotiza_producto, r.cotizacion_credito]) };
+  CARGADO = { from, to };
 }
 let R = [], P = null;   // R = periodo elegido · P = periodo anterior (mismo largo, justo antes)
 function agg(from, to) {
@@ -924,16 +1136,218 @@ document.addEventListener('click', () => { if (!$('dp_pop').hidden) toggleDp(fal
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('dp_pop').hidden) { toggleDp(false); $('dp_btn').focus(); } });
 
 // ============================================================
-// Constructor de UTMs + biblioteca guardada (Supabase vía /api/links)
+// Sesión, perfil y permisos por rol
 // ============================================================
+let ME = null;   // { id, email, full_name, role, canal }
+const ROLE_NAME = { admin:'Jefe Web (admin)', subgerente:'Subgerente', jefe:'Jefe de canal', especialista:'Especialista' };
+const can = {
+  crear: () => ['admin', 'jefe', 'especialista'].includes(ME?.role),
+  admin: () => ME?.role === 'admin',
+  // Editar/eliminar una UTM: admin todo, autor las suyas, jefe las de su canal (igual que las reglas de la base de datos)
+  editar: l => ME?.role === 'admin' || l.created_by === ME?.id || (ME?.role === 'jefe' && l.canal === ME?.canal),
+};
+const initials = n => (n || '?').split(/[\s@._-]+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('');
+const roleChip = p => `<span class="role-chip ${p.role}">${ROLE_NAME[p.role] || p.role}${p.role === 'jefe' && p.canal ? ' · ' + p.canal : ''}</span>`;
+const logAct = (action, summary = '', detail = {}) => sb.rpc('log_activity', { p_action: action, p_entity: action.split('.')[0], p_entity_id: '', p_summary: summary, p_detail: detail }).then(() => {});
+
+// ============================================================
+// Notificaciones flotantes tipo tarjeta
+// ============================================================
+function notify({ icon = 'ph-bell-simple', tone = '', title, body = '', ms = 7000 }) {
+  const n = document.createElement('div'); n.className = 'ntf'; n.setAttribute('role', 'status');
+  n.innerHTML = `<div class="ic ${tone}"><i class="ph ${icon}"></i></div><div><b>${esc(title)}</b>${body ? `<p>${body}</p>` : ''}<time>${new Date().toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit' })}</time></div>
+    <button class="ibtn" aria-label="Cerrar"><i class="ph ph-x"></i></button><span class="bar" style="animation-duration:${ms}ms"></span>`;
+  const close = () => { n.classList.add('out'); setTimeout(() => n.remove(), 250); };
+  n.querySelector('button').onclick = close;
+  n.querySelector('.bar').addEventListener('animationend', close);
+  $('ntf').prepend(n);
+  while ($('ntf').children.length > 4) $('ntf').lastElementChild.remove();
+}
+
+// ============================================================
+// Acceso: iniciar sesión, olvidé mi contraseña, crear/restablecer contraseña
+// ============================================================
+const pwField = (id, label, auto) => `<label class="field"><span>${label}</span><div class="pw"><input class="inp" id="${id}" type="password" autocomplete="${auto}" required>
+  <button type="button" class="ibtn" data-eye="${id}" aria-label="Mostrar contraseña"><i class="ph ph-eye"></i></button></div></label>`;
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-eye]'); if (!b) return;
+  const i = $(b.dataset.eye), show = i.type === 'password'; i.type = show ? 'text' : 'password';
+  b.innerHTML = `<i class="ph ${show ? 'ph-eye-slash' : 'ph-eye'}"></i>`;
+});
+const msg = (kind, text) => `<div class="msg ${kind}"><i class="ph-fill ${kind === 'err' ? 'ph-warning-circle' : kind === 'ok' ? 'ph-check-circle' : 'ph-info'}"></i><span>${text}</span></div>`;
+const PW_RULES = [[p => p.length >= 8, 'Mínimo 8 caracteres'], [p => /[A-Z]/.test(p) && /[a-z]/.test(p), 'Mayúsculas y minúsculas'], [p => /\d/.test(p), 'Al menos un número']];
+
+function showAuth(screen, extra = {}) {
+  $('app').hidden = true; $('auth').hidden = false;
+  const c = $('authCard');
+  if (screen === 'login') {
+    c.innerHTML = `<h1>Iniciar sesión</h1><p>Entra con el correo y la contraseña que creaste desde tu invitación.</p>
+      <form id="f_login" novalidate>
+        <label class="field"><span>Correo</span><input class="inp" id="l_mail" type="email" autocomplete="username" required></label>
+        ${pwField('l_pw', 'Contraseña', 'current-password')}
+        <div class="row"><span></span><a class="link" href="#/recuperar">¿Olvidaste tu contraseña?</a></div>
+        <div id="l_msg">${extra.note || ''}</div>
+        <button class="btn btn-red btn-block" id="l_go"><i class="ph ph-sign-in"></i>Entrar</button>
+      </form>`;
+    $('f_login').onsubmit = async e => {
+      e.preventDefault(); $('l_go').disabled = true; $('l_msg').innerHTML = '';
+      const { error } = await sb.auth.signInWithPassword({ email: $('l_mail').value.trim(), password: $('l_pw').value });
+      $('l_go').disabled = false;
+      if (error) $('l_msg').innerHTML = msg('err', error.message.includes('Invalid') ? 'Correo o contraseña incorrectos.' : error.message.includes('banned') ? 'Tu usuario está desactivado. Habla con el administrador.' : esc(error.message));
+      else { await logAct('auth.ingreso'); start(); }
+    };
+    setTimeout(() => $('l_mail')?.focus(), 50);
+  }
+  if (screen === 'recuperar') {
+    c.innerHTML = `<h1>Recuperar contraseña</h1><p>Escribe tu correo. El administrador recibirá tu solicitud al instante y te enviará un enlace para crear una contraseña nueva.</p>
+      <form id="f_rec" novalidate>
+        <label class="field"><span>Correo</span><input class="inp" id="r_mail" type="email" autocomplete="username" required></label>
+        <div id="r_msg"></div>
+        <button class="btn btn-red btn-block" id="r_go"><i class="ph ph-paper-plane-tilt"></i>Enviar solicitud</button>
+        <div class="row"><a class="link" href="#/login"><i class="ph ph-arrow-left"></i> Volver a iniciar sesión</a></div>
+      </form>`;
+    $('f_rec').onsubmit = async e => {
+      e.preventDefault(); const mail = $('r_mail').value.trim();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)) { $('r_msg').innerHTML = msg('err', 'Escribe un correo válido.'); return; }
+      $('r_go').disabled = true;
+      await sb.functions.invoke('admin-users', { body: { action: 'forgot', email: mail } });
+      $('r_msg').innerHTML = msg('ok', 'Listo. Si el correo está registrado, el administrador ya recibió tu solicitud y te hará llegar el enlace.');
+    };
+  }
+  if (screen === 'crear') {
+    const first = extra.type === 'invite';
+    c.innerHTML = `<h1>${first ? 'Crea tu contraseña' : 'Nueva contraseña'}</h1><p>${first ? 'Bienvenido. Define la contraseña con la que vas a entrar.' : 'Escribe tu nueva contraseña dos veces.'}</p>
+      <form id="f_pw" novalidate>
+        ${extra.email ? `<div class="msg info"><i class="ph ph-user"></i><span>${esc(extra.email)}</span></div>` : ''}
+        ${pwField('p1', 'Contraseña', 'new-password')}
+        <ul class="pwrules" id="p_rules"></ul>
+        ${pwField('p2', 'Repetir contraseña', 'new-password')}
+        <div id="p_msg">${extra.note || ''}</div>
+        <button class="btn btn-red btn-block" id="p_go"><i class="ph ph-check"></i>Guardar contraseña</button>
+      </form>`;
+    const chk = () => { const p = $('p1').value; $('p_rules').innerHTML = PW_RULES.map(([f, t]) => `<li class="${f(p) ? 'ok' : ''}"><i class="ph${f(p) ? '-fill ph-check-circle' : ' ph-circle'}"></i>${t}</li>`).join('')
+      + `<li class="${p && p === $('p2').value ? 'ok' : ''}"><i class="ph${p && p === $('p2').value ? '-fill ph-check-circle' : ' ph-circle'}"></i>Las dos contraseñas coinciden</li>`; };
+    $('p1').oninput = chk; $('p2').oninput = chk; chk();
+    $('f_pw').onsubmit = async e => {
+      e.preventDefault(); const p = $('p1').value;
+      if (!PW_RULES.every(([f]) => f(p))) { $('p_msg').innerHTML = msg('err', 'La contraseña no cumple los requisitos.'); return; }
+      if (p !== $('p2').value) { $('p_msg').innerHTML = msg('err', 'Las contraseñas no coinciden.'); return; }
+      $('p_go').disabled = true;
+      const { error } = await sb.auth.updateUser({ password: p });
+      if (error) { $('p_go').disabled = false; $('p_msg').innerHTML = msg('err', esc(error.message)); return; }
+      await logAct(first ? 'auth.contrasena_creada' : 'auth.contrasena_cambiada');
+      location.hash = '#/reporte'; start();
+      setTimeout(() => notify({ icon:'ph-check-circle', tone:'dark', title:'Contraseña guardada', body:'Ya puedes entrar con tu correo y esta contraseña.' }), 400);
+    };
+    setTimeout(() => $('p1')?.focus(), 50);
+  }
+}
+
+// Enlace de invitación o recuperación: #/crear-contrasena?th=<token>&t=invite|recovery
+async function handlePasswordLink() {
+  const q = new URLSearchParams(location.hash.split('?')[1] || '');
+  const th = q.get('th'), type = q.get('t') === 'invite' ? 'invite' : 'recovery';
+  if (!th) return showAuth('login');
+  await sb.auth.signOut({ scope: 'local' });
+  const { data, error } = await sb.auth.verifyOtp({ token_hash: th, type });
+  history.replaceState(null, '', location.pathname + '#/crear-contrasena');
+  if (error) return showAuth('login', { note: msg('err', 'El enlace ya se usó o venció. Pide uno nuevo al administrador.') });
+  showAuth('crear', { type, email: data.user?.email });
+}
+
+// ============================================================
+// Arranque de la aplicación con sesión
+// ============================================================
+let STARTED = false, RT = null;
+async function start() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return showAuth(location.hash.startsWith('#/recuperar') ? 'recuperar' : 'login');
+  const { data: p } = await sb.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
+  if (!p || !p.active) { await sb.auth.signOut(); return showAuth('login', { note: msg('err', 'Tu usuario no está activo. Habla con el administrador.') }); }
+  ME = p;
+  $('auth').hidden = true; $('app').hidden = false;
+  const nm = p.full_name || p.email;
+  $('um_av').textContent = $('um_av2').textContent = initials(nm);
+  $('um_name').textContent = nm; $('um_mail').textContent = p.email; $('um_role').innerHTML = roleChip(p);
+  document.querySelectorAll('[data-need]').forEach(el => el.hidden = !can[el.dataset.need]());
+  NAV.move();
+  if (!location.hash || /^#\/(login|recuperar|crear-contrasena)/.test(location.hash)) location.hash = '#/reporte';
+  route();
+  if (STARTED) return; STARTED = true;
+  if (can.crear()) loadLinks(); else LINKS = [];
+  subscribeRealtime();
+  try {
+    const q1 = await sb.from('ga4_utm_daily').select('date').order('date', { ascending: true }).limit(1);
+    const q2 = await sb.from('ga4_utm_daily').select('date').order('date', { ascending: false }).limit(1);
+    const q3 = await sb.from('ga4_sync_log').select('ran_at').order('ran_at', { ascending: false }).limit(1);
+    const min = q1.data?.[0]?.date, max = q2.data?.[0]?.date;
+    if (!max) throw new Error(q1.error?.message || 'Todavía no hay datos sincronizados');
+    REPORT.minDate = min; REPORT.maxDate = AYER = max; calMonth = AYER.slice(0, 7);
+    const ls = q3.data?.[0]?.ran_at;
+    $('gen').textContent = ls ? 'Actualizado ' + new Date(ls).toLocaleString('es-MX', { dateStyle:'medium', timeStyle:'short' }) : 'Sin sincronizar';
+    await aplicarRango(...PRESETS[4][2](), 'mes');
+  } catch (e) { $('kpis').innerHTML = `<div class="tile t-full"><b style="color:var(--red)">No se pudieron cargar los datos.</b> ${esc(e.message)}</div>`; }
+}
+
+// Menú de usuario
+$('um_btn').onclick = e => { e.stopPropagation(); const p = $('um_pop'); p.hidden = !p.hidden; $('um_btn').setAttribute('aria-expanded', !p.hidden); };
+document.addEventListener('click', e => { if (!$('um_pop').hidden && !$('um_pop').contains(e.target)) { $('um_pop').hidden = true; $('um_btn').setAttribute('aria-expanded', 'false'); } });
+$('um_out').onclick = async () => { await logAct('auth.salida'); await sb.auth.signOut(); location.hash = '#/login'; location.reload(); };
+$('um_pw').onclick = () => { $('um_pop').hidden = true; showAuth('crear', { type: 'recovery', email: ME.email, note: msg('info', 'Estás cambiando la contraseña de tu propio usuario.') }); };
+
+// ============================================================
+// Tiempo real: UTMs nuevas para todos · bitácora y solicitudes para el admin
+// ============================================================
+function subscribeRealtime() {
+  RT = sb.channel('motomundo')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'utm_links' }, ({ eventType, new: n, old: o }) => {
+      if (eventType === 'INSERT' && n.created_by !== ME.id)
+        notify({ icon:'ph-link-simple', title:'Nueva UTM creada', body:`<b style="display:inline;font-weight:600">${esc(n.created_by_name || 'Alguien')}</b> creó <b style="display:inline;font-weight:600">${esc(n.campaign)}</b> · ${esc(n.source)} / ${esc(n.medium)}` });
+      if (eventType === 'DELETE' && ME.role === 'admin') notify({ icon:'ph-trash', tone:'dark', title:'UTM eliminada', body:'Se eliminó una UTM guardada.' });
+      if (LINKS) loadLinks();
+    })
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'activity_log' }, ({ new: a }) => {
+      if (ME.role !== 'admin') return;
+      ACTS?.unshift(a); if (!$('view-bitacora').hidden) drawActs();
+      if (a.action === 'auth.recuperar_solicitud') notify({ icon:'ph-key', tone:'warn', title:'Solicitud de recuperación', body:`${esc(a.summary)} pidió recuperar su contraseña. Genera su enlace en Usuarios.`, ms: 15000 });
+    })
+    .subscribe();
+}
+
+// ============================================================
+// Constructor de UTMs + biblioteca (tabla utm_links)
+// ============================================================
+const ZONAS = ['Centro', 'Norte', 'Litoral', 'Sur', 'Oriente', 'Occidente', 'Nacional'];
+RULES.splice(3, 0, { f:'zona', n:'Zona', req:false, d:'Se agrega al final del nombre de la campaña. Deja "Sin zona" si la campaña es para todo el país sin distinción.', ej: ZONAS });
 let LINKS = null, editId = '', libGroup = 'canal', libView = 'bento', confirmDel = '';
 $('rules').innerHTML = RULES.map(r => `<div class="rule"><div class="k">${r.f}</div><h4>${r.n}<small>${r.req ? 'obligatorio' : 'opcional'}</small></h4><p>${r.d}</p>
   <p>${r.ej.map(x => `<code>${esc(x)}</code>`).join('')}</p></div>`).join('');
+$('rules').style.gridTemplateColumns = 'repeat(auto-fit, minmax(220px, 1fr))';
 const BM = Dropdown($('b_m'), { options: STD.medios.map(([v, l]) => ({ v, l: v, m: l })), value: 'paid_social', block: true, search: false, onChange: build });
-const form = () => ({ url: $('b_url').value.trim(), source: normalizar($('b_s').value), medium: BM.value, campaign: normalizar($('b_c').value),
+const BZ = Dropdown($('b_z'), { options: [{ v:'', l:'Sin zona' }, ...ZONAS.map(z => ({ v:z, l:z, ic:'ph-map-pin' }))], value: '', block: true, search: false, onChange: build });
+// Campaña final = campaña + "_" + zona (sin repetirla si ya termina así)
+const campaignName = (c, z) => { const b = normalizar(c); return !z || !b ? b : b.toLowerCase().endsWith('_' + z.toLowerCase()) ? b : `${b}_${z}`; };
+const form = () => ({ url: $('b_url').value.trim(), source: normalizar($('b_s').value), medium: BM.value, zone: BZ.value, campaign: campaignName($('b_c').value, BZ.value),
   term: normalizar($('b_t').value), content: normalizar($('b_x').value), note: $('b_note').value.trim() });
 const fullUrl = f => { const q = [['utm_source', f.source], ['utm_medium', f.medium], ['utm_campaign', f.campaign], ['utm_term', f.term], ['utm_content', f.content]]
   .filter(([, v]) => v).map(([k, v]) => k + '=' + encodeURIComponent(v)).join('&'); return f.url ? f.url + (f.url.includes('?') ? '&' : '?') + q : q; };
+
+// Termómetro de salud: 100 puntos menos 35 por error y 8 por advertencia, más detalles que suman trazabilidad
+function salud(f, iss) {
+  let s = 100 - iss.filter(i => i.lvl === 'err').length * 35 - iss.filter(i => i.lvl === 'warn').length * 8;
+  if (!f.zone) s -= 6; if (!f.term) s -= 4; if (!f.content) s -= 4;
+  if (f.campaign && f.campaign.split('_').length < 3) s -= 6;
+  s = Math.max(0, Math.min(100, s));
+  const [lbl, col, hint] = s >= 85 ? ['Excelente', '#1c9a57', 'Lista para usar y fácil de medir.'] : s >= 65 ? ['Buena', '#7cc242', 'Funciona; completa zona, término o contenido para medir mejor.']
+    : s >= 40 ? ['Regular', '#e0a030', 'Corrige las advertencias antes de publicarla.'] : ['Crítica', '#d71920', 'Tiene errores: GA4 la va a clasificar mal.'];
+  return { s, lbl, col, hint };
+}
+function drawHealth(h) {
+  $('b_health').innerHTML = `<div class="thermo" aria-hidden="true"><div class="tube"><div class="fill" style="height:${h.s}%;background:${h.col}"></div></div><div class="bulb" style="background:${h.col}"></div></div>
+    <div><div class="hs">${h.s}<small> / 100</small></div><div class="hl" style="color:${h.col}">Salud ${h.lbl.toLowerCase()}</div><div class="hd">${h.hint}</div>
+    <div class="ticks">${[20, 40, 60, 80, 100].map(t => `<i style="${h.s >= t - 10 ? `background:${h.col}` : ''}"></i>`).join('')}</div></div>`;
+  $('b_health').setAttribute('aria-label', `Salud de la UTM ${h.s} de 100, ${h.lbl}`);
+}
 function build() {
   const f = form();
   [['s', 'b_s', f.source], ['c', 'b_c', f.campaign], ['t', 'b_t', f.term], ['x', 'b_x', f.content]].forEach(([k, id, v]) => {
@@ -945,62 +1359,83 @@ function build() {
   const iss = validar({ s: f.source, m: f.medium, c: f.campaign, t: f.term });
   if (!/^https?:\/\/[^\s/]+\.[^\s]+/.test(f.url)) iss.unshift({ f:'URL', m:'debe empezar con https:// y ser una dirección válida', lvl:'err' });
   $('b_issues').innerHTML = iss.length ? issuesLi(iss) : '<li class="okl"><i class="ph-fill ph-check-circle"></i><span>La UTM cumple el estándar</span></li>';
+  drawHealth(salud(f, iss));
   const dupe = LINKS?.find(l => l.id !== editId && fullUrl(l) === full);
   $('b_dupe').hidden = !dupe;
-  $('b_save').disabled = iss.some(i => i.lvl === 'err') || !!dupe;
+  $('b_save').disabled = iss.some(i => i.lvl === 'err') || !!dupe || !can.crear();
 }
 ['b_url', 'b_s', 'b_c', 'b_t', 'b_x', 'b_note'].forEach(id => $(id).addEventListener('input', build));
 $('b_copy').onclick = () => copy($('b_out').textContent);
 function resetForm() {
-  editId = ''; ['b_s', 'b_c', 'b_t', 'b_x', 'b_note'].forEach(id => $(id).value = ''); BM.set('paid_social');
+  editId = ''; ['b_s', 'b_c', 'b_t', 'b_x', 'b_note'].forEach(id => $(id).value = ''); BM.set('paid_social'); BZ.set('');
   $('b_url').value = 'https://www.motomundohn.com/cotizar-en-linea';
   $('formTitle').textContent = 'Nueva UTM'; $('editing').hidden = true; $('b_cancel').hidden = true; $('b_save').querySelector('span').textContent = 'Guardar UTM';
   build();
 }
 $('b_reset').onclick = resetForm; $('b_cancel').onclick = resetForm;
 $('b_save').onclick = async () => {
-  const f = form(), btn = $('b_save'); btn.disabled = true;
-  try {
-    const res = await fetch('/api/links' + (editId ? `?id=${editId}` : ''), { method: editId ? 'PUT' : 'POST', headers: { 'content-type':'application/json' }, body: JSON.stringify(f) });
-    const j = await res.json(); if (j.error) throw new Error(j.error);
-    toast(editId ? 'UTM actualizada' : 'UTM guardada'); copy(fullUrl(j), editId ? 'UTM actualizada y link copiado' : 'UTM guardada y link copiado');
-    const id = j.id; await loadLinks(); resetForm();
-    setTimeout(() => { const c = document.querySelector(`.lcard[data-id="${id}"]`); c?.classList.add('flash'); c?.scrollIntoView({ block:'nearest', behavior:'smooth' }); }, 60);
-  } catch (e) { toast('No se pudo guardar: ' + e.message, true); build(); }
+  const f = form(); $('b_save').disabled = true;
+  const row = { url: f.url, source: f.source, medium: f.medium, campaign: f.campaign, term: f.term, content: f.content, note: f.note, zone: f.zone, canal: canal(f.source, f.medium) };
+  const q = editId ? sb.from('utm_links').update(row).eq('id', editId).select().single() : sb.from('utm_links').insert(row).select().single();
+  const { data, error } = await q;
+  if (error) { toast('No se pudo guardar: ' + (error.message.includes('row-level') ? 'no tienes permiso para esta acción' : error.message), true); build(); return; }
+  copy(fullUrl(data), editId ? 'UTM actualizada y link copiado' : 'UTM guardada y link copiado');
+  await loadLinks(); resetForm();
+  setTimeout(() => { const c = document.querySelector(`.lcard[data-id="${data.id}"]`); c?.classList.add('flash'); c?.scrollIntoView({ block:'nearest', behavior:'smooth' }); }, 60);
 };
 async function loadLinks() {
-  try { LINKS = await (await fetch('/api/links')).json(); if (LINKS.error) throw new Error(LINKS.error); }
-  catch (e) { LINKS = []; $('lib').innerHTML = `<div class="empty"><i class="ph ph-plugs"></i><b>No se pudieron cargar las UTMs guardadas</b><span>${esc(e.message)}</span></div>`; return; }
+  const { data, error } = await sb.from('utm_links').select('*').order('updated_at', { ascending: false });
+  if (error) { LINKS = []; $('lib').innerHTML = `<div class="empty"><i class="ph ph-plugs"></i><b>No se pudieron cargar las UTMs guardadas</b><span>${esc(error.message)}</span></div>`; return; }
+  LINKS = data;
   $('libCount').textContent = num(LINKS.length);
   $('dl_s').innerHTML = uniq(LINKS, l => l.source).map(v => `<option value="${esc(v)}">`).join('');
   $('dl_c').innerHTML = uniq(LINKS, l => l.campaign).map(v => `<option value="${esc(v)}">`).join('');
-  drawLib(); build();
+  fillLibFilters(); drawLib(); build();
 }
-// Resultados GA4 del periodo para una UTM guardada (coincide campaña + fuente + medio + término + contenido)
 function gaFor(l) {
   const t = l.term || '(not set)', x = l.content || '(not set)';
   const rs = R.filter(r => r.c === l.campaign && r.s === l.source && r.m === l.medium && r.t === t && r.x === x);
   return rs.length ? rs.reduce((a, r) => ({ u: a.u + r.u, e1: a.e1 + r.e1, e2: a.e2 + r.e2 }), { u:0, e1:0, e2:0 }) : null;
 }
-const LG_KEY = { canal: l => canal(l.source, l.medium), campaign: l => l.campaign, source: l => l.source, medium: l => l.medium };
-const LG_IC = { canal: g => CANAL_INFO[g]?.[1] || 'ph-broadcast', campaign: () => 'ph-flag', source: () => 'ph-plug', medium: () => 'ph-shuffle' };
-Seg($('libGroup'), [['canal', 'Canal', 'ph-broadcast'], ['campaign', 'Campaña', 'ph-flag'], ['source', 'Fuente', 'ph-plug'], ['medium', 'Medio', 'ph-shuffle']], libGroup, v => { libGroup = v; drawLib(); });
-Seg($('libView'), null, libView, v => { libView = v; drawLib(); });
+// Filtros de la biblioteca
+const LF = { canal:'', medium:'', zone:'', author:'', estado:'' };
+const lvOf = l => nivel(validar({ s: l.source, m: l.medium, c: l.campaign, t: l.term }));
+const LFD = {
+  canal: Dropdown($('lf_pills'), { label:'Canal', options:[], value:'', search:false, onChange: v => { LF.canal = v; drawLib(); } }),
+  medium: Dropdown($('lf_pills'), { label:'Medio', options:[], value:'', search:false, onChange: v => { LF.medium = v; drawLib(); } }),
+  zone: Dropdown($('lf_pills'), { label:'Zona', options:[], value:'', search:false, onChange: v => { LF.zone = v; drawLib(); } }),
+  author: Dropdown($('lf_pills'), { label:'Creada por', options:[], value:'', onChange: v => { LF.author = v; drawLib(); } }),
+  estado: Dropdown($('lf_pills'), { label:'Estado', options:ESTADOS, value:'', search:false, onChange: v => { LF.estado = v; drawLib(); } }),
+};
+function fillLibFilters() {
+  const opt = (arr, f) => [{ v:'', l:'Todas' }, ...uniq(arr, f).filter(v => v !== undefined).sort().map(v => ({ v, l: v || 'Sin zona', m: num(arr.filter(x => f(x) === v).length) }))];
+  LFD.canal.setOptions(opt(LINKS, l => l.canal)); LFD.medium.setOptions(opt(LINKS, l => l.medium));
+  LFD.zone.setOptions(opt(LINKS, l => l.zone)); LFD.author.setOptions(opt(LINKS, l => l.created_by_name || '—'));
+}
+$('lf_mine').onchange = () => drawLib();
 $('lq').oninput = () => drawLib();
+$('lf_clear').onclick = () => { Object.keys(LF).forEach(k => { LF[k] = ''; LFD[k].set(''); }); $('lq').value = ''; $('lf_mine').checked = false; drawLib(); };
+const LG_KEY = { canal: l => l.canal || canal(l.source, l.medium), campaign: l => l.campaign, zone: l => l.zone || 'Sin zona', medium: l => l.medium, author: l => l.created_by_name || '—' };
+const LG_IC = { canal: g => CANAL_INFO[g]?.[1] || 'ph-broadcast', campaign: () => 'ph-flag', zone: () => 'ph-map-trifold', medium: () => 'ph-shuffle', author: () => 'ph-user' };
+Seg($('libGroup'), [['canal', 'Canal', 'ph-broadcast'], ['campaign', 'Campaña', 'ph-flag'], ['zone', 'Zona', 'ph-map-trifold'], ['medium', 'Medio', 'ph-shuffle'], ['author', 'Autor', 'ph-user']], libGroup, v => { libGroup = v; drawLib(); });
+Seg($('libView'), null, libView, v => { libView = v; drawLib(); });
 const ago = s => { const d = (Date.now() - new Date(s)) / 864e5; return d < 1 ? 'hoy' : d < 2 ? 'ayer' : `hace ${Math.floor(d)} días`; };
+function libActions(l, u) {
+  const ed = can.editar(l);
+  return `<button class="ibtn" data-copy="${esc(u)}" title="Copiar link" aria-label="Copiar link"><i class="ph ph-copy"></i></button>
+    <a class="ibtn" href="${esc(u)}" target="_blank" rel="noopener" title="Abrir" aria-label="Abrir"><i class="ph ph-arrow-square-out"></i></a>
+    ${ed ? `<button class="ibtn" data-edit="${l.id}" title="Editar" aria-label="Editar"><i class="ph ph-pencil-simple"></i></button>
+    <button class="ibtn danger" data-del="${l.id}" title="Eliminar" aria-label="Eliminar"><i class="ph ph-trash"></i></button>` : ''}`;
+}
 function libCard(l) {
   const iss = validar({ s: l.source, m: l.medium, c: l.campaign, t: l.term }), lv = nivel(iss), ga = gaFor(l), u = fullUrl(l);
   let host = ''; try { const x = new URL(l.url); host = x.host + x.pathname; } catch { host = l.url; }
   const actions = confirmDel === l.id
     ? `<span class="confirm"><i class="ph ph-trash"></i>¿Eliminar?</span><span><button class="btn btn-red" data-del-yes="${l.id}" style="padding:6px 12px">Eliminar</button> <button class="btn btn-ghost" data-del-no style="padding:6px 12px">No</button></span>`
-    : `<span class="when">${l.updated_at !== l.created_at ? 'editada' : 'creada'} ${ago(l.updated_at)}</span><span>
-        <button class="ibtn" data-copy="${esc(u)}" title="Copiar link" aria-label="Copiar link"><i class="ph ph-copy"></i></button>
-        <a class="ibtn" href="${esc(u)}" target="_blank" rel="noopener" title="Abrir" aria-label="Abrir"><i class="ph ph-arrow-square-out"></i></a>
-        <button class="ibtn" data-edit="${l.id}" title="Editar" aria-label="Editar"><i class="ph ph-pencil-simple"></i></button>
-        <button class="ibtn danger" data-del="${l.id}" title="Eliminar" aria-label="Eliminar"><i class="ph ph-trash"></i></button></span>`;
+    : `<span class="when">${esc(l.created_by_name || '—')} · ${l.updated_at !== l.created_at ? 'editada' : 'creada'} ${ago(l.updated_at)}</span><span>${libActions(l, u)}</span>`;
   return `<div class="gcard lcard" data-id="${l.id}">
-    <div class="gt"><b>${esc(l.campaign)}</b>${BADGE[lv](iss.length)}</div>
-    <div class="chips"><span class="tag"><i>fuente</i> ${esc(l.source)}</span><span class="tag"><i>medio</i> ${esc(l.medium)}</span>${l.term ? `<span class="tag"><i>término</i> ${esc(l.term)}</span>` : ''}${l.content ? `<span class="tag"><i>contenido</i> ${esc(l.content)}</span>` : ''}</div>
+    <div class="gt"><b style="font-weight:600">${esc(l.campaign)}</b>${BADGE[lv](iss.length)}</div>
+    <div class="chips"><span class="tag"><i>fuente</i> ${esc(l.source)}</span><span class="tag"><i>medio</i> ${esc(l.medium)}</span>${l.zone ? `<span class="tag"><i>zona</i> ${esc(l.zone)}</span>` : ''}${l.term ? `<span class="tag"><i>término</i> ${esc(l.term)}</span>` : ''}${l.content ? `<span class="tag"><i>contenido</i> ${esc(l.content)}</span>` : ''}</div>
     <div class="url"><b>${esc(host)}</b></div>
     ${l.note ? `<div class="note"><i class="ph ph-note-pencil"></i>${esc(l.note)}</div>` : ''}
     ${ga ? `<div class="ga"><div><b>${num(ga.e1)}</b>Cotiza producto</div><div><b>${num(ga.e2)}</b>Cotiza crédito</div><div><b>${num(ga.u)}</b>Usuarios</div></div>`
@@ -1009,23 +1444,26 @@ function libCard(l) {
 }
 function drawLib() {
   if (!LINKS) return;
-  const q = $('lq').value.toLowerCase();
-  const ls = LINKS.filter(l => !q || [l.campaign, l.source, l.medium, l.term, l.content, l.url, l.note].some(v => (v || '').toLowerCase().includes(q)));
+  const q = $('lq').value.toLowerCase(), mine = $('lf_mine').checked;
+  const ls = LINKS.filter(l => (!q || [l.campaign, l.source, l.medium, l.term, l.content, l.url, l.note, l.zone, l.created_by_name].some(v => (v || '').toLowerCase().includes(q)))
+    && (!LF.canal || l.canal === LF.canal) && (!LF.medium || l.medium === LF.medium) && (LF.zone === '' || l.zone === LF.zone)
+    && (!LF.author || (l.created_by_name || '—') === LF.author) && (!LF.estado || lvOf(l) === LF.estado) && (!mine || l.created_by === ME.id));
+  $('lf_clear').disabled = !Object.values(LF).some(Boolean) && !q && !mine;
   if (!LINKS.length) return swap($('lib'), `<div class="empty"><i class="ph ph-link-simple-break"></i><b>Todavía no hay UTMs guardadas</b><span>Arma la primera arriba y pulsa "Guardar UTM".</span></div>`);
-  if (!ls.length) return swap($('lib'), `<div class="empty"><i class="ph ph-magnifying-glass"></i><b>Ninguna UTM coincide con la búsqueda</b></div>`);
+  if (!ls.length) return swap($('lib'), `<div class="empty"><i class="ph ph-funnel-x"></i><b>Ninguna UTM coincide con los filtros</b></div>`);
   const kf = LG_KEY[libGroup], M = new Map();
   ls.forEach(l => { const k = kf(l); (M.get(k) || M.set(k, []).get(k)).push(l); });
-  const keys = libGroup === 'canal' ? CANALES.filter(k => M.has(k)) : [...M.keys()].sort((a, b) => M.get(b).length - M.get(a).length);
+  const keys = libGroup === 'canal' ? [...CANALES.filter(k => M.has(k)), ...[...M.keys()].filter(k => !CANALES.includes(k))] : [...M.keys()].sort((a, b) => M.get(b).length - M.get(a).length);
   if (libView === 'table') {
-    swap($('lib'), `<div class="table-wrap"><table><thead><tr><th class="l">Campaña</th><th class="l">Fuente / medio</th><th class="l">Término / contenido</th><th class="l">Estado</th><th>Usuarios</th><th>${EV1}</th><th>${EV2}</th><th></th></tr></thead><tbody>${keys.map(k =>
-      `<tr><td class="l" colspan="8" style="background:var(--gray-100);font-weight:800"><i class="ph ${LG_IC[libGroup](k)}" style="color:var(--red)"></i> ${esc(k)} <span class="muted">· ${M.get(k).length}</span></td></tr>` +
+    swap($('lib'), `<div class="table-wrap"><table><thead><tr><th class="l">Campaña</th><th class="l">Fuente / medio</th><th class="l">Zona · término · contenido</th><th class="l">Creada por</th><th class="l">Estado</th><th>Usuarios</th><th>${EV1}</th><th>${EV2}</th><th></th></tr></thead><tbody>${keys.map(k =>
+      `<tr><td class="l" colspan="9" style="background:var(--gray-100);font-weight:600"><i class="ph ${LG_IC[libGroup](k)}" style="color:var(--red)"></i> ${esc(k)} <span class="muted">· ${M.get(k).length}</span></td></tr>` +
       M.get(k).map(l => { const iss = validar({ s: l.source, m: l.medium, c: l.campaign, t: l.term }), ga = gaFor(l), u = fullUrl(l);
-        return `<tr><td class="l"><b>${esc(l.campaign)}</b><div class="term">${esc(l.url)}</div></td><td class="l">${esc(l.source)} / ${esc(l.medium)}</td><td class="l"><span class="term">${esc(l.term || '—')} · ${esc(l.content || '—')}</span></td>
-          <td class="l">${BADGE[nivel(iss)](iss.length)}</td><td>${ga ? num(ga.u) : '—'}</td><td class="ev ${ga?.e1 ? '' : 'z'}">${ga?.e1 ? num(ga.e1) : '—'}</td><td class="ev ${ga?.e2 ? '' : 'z'}">${ga?.e2 ? num(ga.e2) : '—'}</td>
-          <td style="white-space:nowrap"><button class="ibtn" data-copy="${esc(u)}" aria-label="Copiar"><i class="ph ph-copy"></i></button><button class="ibtn" data-edit="${l.id}" aria-label="Editar"><i class="ph ph-pencil-simple"></i></button><button class="ibtn danger" data-del="${l.id}" aria-label="Eliminar"><i class="ph ph-trash"></i></button></td></tr>`; }).join('')).join('')}</tbody></table></div>`);
+        return `<tr><td class="l">${esc(l.campaign)}<div class="term">${esc(l.url)}</div></td><td class="l">${esc(l.source)} / ${esc(l.medium)}</td><td class="l"><span class="term">${esc(l.zone || '—')} · ${esc(l.term || '—')} · ${esc(l.content || '—')}</span></td>
+          <td class="l"><span class="term">${esc(l.created_by_name || '—')}</span></td><td class="l">${BADGE[nivel(iss)](iss.length)}</td><td>${ga ? num(ga.u) : '—'}</td><td class="ev ${ga?.e1 ? '' : 'z'}">${ga?.e1 ? num(ga.e1) : '—'}</td><td class="ev ${ga?.e2 ? '' : 'z'}">${ga?.e2 ? num(ga.e2) : '—'}</td>
+          <td style="white-space:nowrap">${libActions(l, u)}</td></tr>`; }).join('')).join('')}</tbody></table></div>`);
     return;
   }
-  swap($('lib'), keys.map(k => `<div class="lib-group"><div class="lib-gh"><h3><i class="ph ${LG_IC[libGroup](k)}"></i>${esc(k)}</h3><span>${M.get(k).length}</span></div>
+  swap($('lib'), keys.map(k => `<div class="lib-group"><div class="lib-gh"><h3 style="font-weight:600"><i class="ph ${LG_IC[libGroup](k)}"></i>${esc(k)}</h3><span>${M.get(k).length}</span></div>
     <div class="gbento">${M.get(k).map(libCard).join('')}</div></div>`).join(''));
 }
 $('lib').addEventListener('click', async e => {
@@ -1034,46 +1472,208 @@ $('lib').addEventListener('click', async e => {
   const ed = t.closest('[data-edit]');
   if (ed) {
     const l = LINKS.find(x => x.id === ed.dataset.edit); editId = l.id;
-    $('b_url').value = l.url; $('b_s').value = l.source; BM.set(MEDIOS.includes(l.medium) ? l.medium : 'paid_social'); $('b_c').value = l.campaign; $('b_t').value = l.term; $('b_x').value = l.content; $('b_note').value = l.note;
+    const base = l.zone && l.campaign.endsWith('_' + l.zone) ? l.campaign.slice(0, -(l.zone.length + 1)) : l.campaign;
+    $('b_url').value = l.url; $('b_s').value = l.source; BM.set(MEDIOS.includes(l.medium) ? l.medium : 'paid_social'); BZ.set(l.zone || '');
+    $('b_c').value = base; $('b_t').value = l.term; $('b_x').value = l.content; $('b_note').value = l.note;
     $('formTitle').textContent = 'Editar UTM'; $('editing').hidden = false; $('b_cancel').hidden = false; $('b_save').querySelector('span').textContent = 'Guardar cambios';
     build(); document.querySelector('.b-form').scrollIntoView({ behavior:'smooth', block:'start' }); return;
   }
-  const dd = t.closest('[data-del]'); if (dd) { confirmDel = dd.dataset.del; if (libView === 'table') { libView = 'bento'; document.querySelector('#libView [data-v="bento"]').click(); } drawLib(); return; }
+  const dd = t.closest('[data-del]'); if (dd) { confirmDel = dd.dataset.del; if (libView === 'table') document.querySelector('#libView [data-v="bento"]').click(); else drawLib(); return; }
   if (t.closest('[data-del-no]')) { confirmDel = ''; drawLib(); return; }
   const yes = t.closest('[data-del-yes]');
   if (yes) {
-    try { const j = await (await fetch('/api/links?id=' + yes.dataset.delYes, { method:'DELETE' })).json(); if (j.error) throw new Error(j.error); toast('UTM eliminada'); if (editId === yes.dataset.delYes) resetForm(); }
-    catch (err) { toast('No se pudo eliminar: ' + err.message, true); }
+    const { error } = await sb.from('utm_links').delete().eq('id', yes.dataset.delYes);
+    if (error) toast('No se pudo eliminar: ' + error.message, true); else { toast('UTM eliminada'); if (editId === yes.dataset.delYes) resetForm(); }
     confirmDel = ''; loadLinks();
   }
 });
 
 // ============================================================
-// Navegación entre vistas
+// Usuarios (solo admin) — la función admin-users usa la llave de servicio en el servidor
+// ============================================================
+const adminCall = async body => {
+  const { data, error } = await sb.functions.invoke('admin-users', { body });
+  if (error) { let m = error.message; try { m = (await error.context.json()).error || m; } catch {} throw new Error(m); }
+  if (data?.error) throw new Error(data.error);
+  return data;
+};
+let USERS = null, uView = 'bento';
+const ROLE_OPTS = [{ v:'especialista', l:'Especialista', m:'crea UTMs' }, { v:'jefe', l:'Jefe de canal', m:'crea y edita su canal' }, { v:'subgerente', l:'Subgerente', m:'solo reportes' }, { v:'admin', l:'Jefe Web (admin)', m:'controla todo' }];
+const CANAL_OPTS = [{ v:'', l:'Sin canal' }, ...['Directos', 'Redes', 'Pauta'].map(c => ({ v:c, l:c, ic: CANAL_INFO[c][1] }))];
+const UR = Dropdown($('u_role'), { options: ROLE_OPTS, value:'especialista', block:true, search:false, onChange: () => { $('u_canal_hint').textContent = UR.value === 'jefe' ? 'obligatorio para jefes' : 'opcional'; } });
+const UC = Dropdown($('u_canal'), { options: CANAL_OPTS, value:'', block:true, search:false, onChange: () => {} });
+$('u_canal_hint').textContent = 'opcional';
+function inviteText(name, link, type = 'invite') {
+  return type === 'invite'
+    ? `Hola ${name || ''}, te creé un usuario en Motomundo Campañas. Entra a este enlace para crear tu contraseña: ${link}`
+    : `Hola ${name || ''}, este es tu enlace para crear una contraseña nueva en Motomundo Campañas: ${link}`;
+}
+function showLink({ name, email, link, type = 'invite' }) {
+  const t = inviteText(name, link, type);
+  $('u_link').innerHTML = `<div class="l"><i class="ph ph-envelope-simple-open"></i>${type === 'invite' ? 'Invitación lista' : 'Enlace de recuperación listo'}</div>
+    <h2 style="color:#fff">${esc(name || email)}</h2>
+    <p style="margin:0;color:var(--gray-300);line-height:1.5">Envíale este enlace. Con él ${type === 'invite' ? 'crea' : 'restablece'} su contraseña (escribiéndola dos veces). Es de un solo uso.</p>
+    <div class="out">${esc(link)}</div>
+    <div class="actions" style="margin-top:0">
+      <button class="btn btn-red" data-copy="${esc(link)}"><i class="ph ph-copy"></i>Copiar enlace</button>
+      <a class="btn btn-ghost-dark" href="mailto:${esc(email)}?subject=${encodeURIComponent(type === 'invite' ? 'Tu acceso a Motomundo Campañas' : 'Recupera tu contraseña de Motomundo Campañas')}&body=${encodeURIComponent(t)}"><i class="ph ph-envelope-simple"></i>Enviar por correo</a>
+      <a class="btn btn-ghost-dark" href="https://wa.me/?text=${encodeURIComponent(t)}" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo"></i>WhatsApp</a>
+    </div>`;
+  $('u_link').scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+$('u_link').addEventListener('click', e => { const c = e.target.closest('[data-copy]'); if (c) copy(c.dataset.copy, 'Enlace copiado'); });
+$('u_create').onclick = async () => {
+  const name = $('u_name').value.trim(), email = $('u_mail').value.trim().toLowerCase();
+  if (!name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { $('u_msg').innerHTML = msg('err', 'Escribe el nombre y un correo válido.'); return; }
+  if (UR.value === 'jefe' && !UC.value) { $('u_msg').innerHTML = msg('err', 'Elige el canal del jefe.'); return; }
+  $('u_create').disabled = true; $('u_msg').innerHTML = '';
+  try {
+    const r = await adminCall({ action:'invite', email, full_name: name, role: UR.value, canal: UC.value || null });
+    $('u_msg').innerHTML = msg('ok', `Usuario creado. Envíale la invitación.`);
+    showLink({ name, email, link: r.link }); $('u_name').value = ''; $('u_mail').value = '';
+    loadUsers();
+  } catch (e) { $('u_msg').innerHTML = msg('err', esc(e.message)); }
+  $('u_create').disabled = false;
+};
+async function loadUsers() {
+  try { USERS = await adminCall({ action:'list' }); } catch (e) { $('users').innerHTML = `<div class="empty"><i class="ph ph-plugs"></i><b>No se pudo cargar el equipo</b><span>${esc(e.message)}</span></div>`; return; }
+  $('uCount').textContent = num(USERS.length); drawUsers();
+}
+const dt = s => s ? new Date(s).toLocaleString('es-MX', { dateStyle:'medium', timeStyle:'short' }) : '—';
+const stChip = u => !u.active ? '<span class="role-chip off"><i class="ph ph-prohibit"></i>Desactivado</span>' : u.pending ? '<span class="role-chip pending"><i class="ph ph-hourglass"></i>Invitación pendiente</span>' : '<span class="role-chip" style="background:var(--ok-50);color:var(--ok)"><i class="ph ph-check-circle"></i>Activo</span>';
+function userActions(u) {
+  const self = u.id === ME.id;
+  return `<button class="ibtn" data-ulink="${u.id}" title="${u.pending ? 'Generar invitación' : 'Generar enlace de recuperación'}" aria-label="Generar enlace"><i class="ph ${u.pending ? 'ph-paper-plane-tilt' : 'ph-key'}"></i></button>
+    ${self ? '' : `<button class="ibtn" data-uact="${u.id}" title="${u.active ? 'Desactivar' : 'Activar'}" aria-label="${u.active ? 'Desactivar' : 'Activar'}"><i class="ph ${u.active ? 'ph-prohibit' : 'ph-check-circle'}"></i></button>
+    <button class="ibtn danger" data-udel="${u.id}" title="Eliminar" aria-label="Eliminar"><i class="ph ph-trash"></i></button>`}`;
+}
+const UDD = [];
+function drawUsers() {
+  if (!USERS) return;
+  const q = $('uq').value.toLowerCase();
+  const us = USERS.filter(u => !q || [u.full_name, u.email, ROLE_NAME[u.role], u.canal].some(v => (v || '').toLowerCase().includes(q)));
+  UDD.length = 0;
+  if (uView === 'table') {
+    swap($('users'), `<div class="table-wrap"><table><thead><tr><th class="l">Usuario</th><th class="l">Rol</th><th class="l">Canal</th><th class="l">Estado</th><th class="l">Último ingreso</th><th></th></tr></thead><tbody>${us.map(u => `
+      <tr><td class="l"><div class="nm"><span class="av">${initials(u.full_name || u.email)}</span><div>${esc(u.full_name || '—')}<div class="term">${esc(u.email)}</div></div></div></td>
+      <td class="l"><span data-urole="${u.id}"></span></td><td class="l"><span data-ucanal="${u.id}"></span></td><td class="l">${stChip(u)}</td><td class="l"><span class="term">${dt(u.last_sign_in_at)}</span></td>
+      <td style="white-space:nowrap">${userActions(u)}</td></tr>`).join('')}</tbody></table></div>`);
+  } else {
+    swap($('users'), `<div class="gbento">${us.map(u => `<div class="gcard lcard ucard ${u.active ? '' : 'off'}" data-uid="${u.id}">
+      <div class="top-row"><span class="av ${u.role === 'admin' ? 'red' : ''}">${initials(u.full_name || u.email)}</span><div style="min-width:0"><b>${esc(u.full_name || '—')}</b><br><span>${esc(u.email)}</span></div></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${roleChip(u)}${stChip(u)}</div>
+      <div class="ctl"><span data-urole="${u.id}"></span><span data-ucanal="${u.id}"></span></div>
+      <div class="meta"><span><i class="ph ph-calendar-plus"></i>Creado ${dt(u.created_at)}</span><span><i class="ph ph-sign-in"></i>${u.last_sign_in_at ? 'Entró ' + dt(u.last_sign_in_at) : 'Nunca ha entrado'}</span></div>
+      <div class="lact"><span class="when">${u.id === ME.id ? 'Tu usuario' : ''}</span><span>${userActions(u)}</span></div></div>`).join('')}</div>`);
+  }
+  // Controles de rol y canal por usuario
+  us.forEach(u => {
+    const rh = document.querySelector(`[data-urole="${u.id}"]`), ch = document.querySelector(`[data-ucanal="${u.id}"]`);
+    if (u.id === ME.id) { rh.innerHTML = roleChip(u); ch.innerHTML = `<span class="term">${esc(u.canal || '—')}</span>`; return; }
+    Dropdown(rh, { label:'Rol', options: ROLE_OPTS, value: u.role, search:false, onChange: v => updUser(u, { role: v }) });
+    Dropdown(ch, { label:'Canal', options: CANAL_OPTS, value: u.canal || '', search:false, onChange: v => updUser(u, { canal: v || null }) });
+  });
+}
+async function updUser(u, patch) {
+  try { await adminCall({ action:'update', user_id: u.id, ...patch }); toast('Usuario actualizado'); }
+  catch (e) { toast(e.message, true); }
+  loadUsers();
+}
+$('users').addEventListener('click', async e => {
+  const l = e.target.closest('[data-ulink]'), a = e.target.closest('[data-uact]'), d = e.target.closest('[data-udel]');
+  if (l) { const u = USERS.find(x => x.id === l.dataset.ulink); try { const r = await adminCall({ action:'link', user_id: u.id }); showLink({ name: u.full_name, email: u.email, link: r.link, type: r.pending ? 'invite' : 'recovery' }); } catch (err) { toast(err.message, true); } }
+  if (a) { const u = USERS.find(x => x.id === a.dataset.uact); updUser(u, { active: !u.active }); }
+  if (d) {
+    const u = USERS.find(x => x.id === d.dataset.udel);
+    if (d.dataset.sure) { try { await adminCall({ action:'delete', user_id: u.id }); toast('Usuario eliminado'); loadUsers(); } catch (err) { toast(err.message, true); } }
+    else { d.dataset.sure = '1'; d.innerHTML = '<i class="ph-fill ph-trash"></i>'; d.title = 'Pulsa otra vez para eliminar'; d.style.background = 'var(--red-50)'; d.style.color = 'var(--red)'; toast('Pulsa otra vez para confirmar la eliminación', true); setTimeout(() => { if (d.isConnected) drawUsers(); }, 4000); }
+  }
+});
+$('uq').oninput = () => drawUsers();
+Seg($('uView'), null, uView, v => { uView = v; drawUsers(); });
+
+// ============================================================
+// Bitácora (solo admin)
+// ============================================================
+let ACTS = null, aView = 'bento';
+const ACT_INFO = {
+  'utm.crear': ['Creó una UTM', 'ph-link-simple'], 'utm.editar': ['Editó una UTM', 'ph-pencil-simple'], 'utm.eliminar': ['Eliminó una UTM', 'ph-trash'],
+  'usuario.crear': ['Creó un usuario', 'ph-user-plus'], 'usuario.editar': ['Cambió rol o datos de un usuario', 'ph-user-gear'], 'usuario.desactivar': ['Desactivó un usuario', 'ph-prohibit'],
+  'usuario.activar': ['Activó un usuario', 'ph-check-circle'], 'usuario.eliminar': ['Eliminó un usuario', 'ph-user-minus'], 'usuario.reenviar_invitacion': ['Generó una invitación', 'ph-paper-plane-tilt'],
+  'usuario.enlace_recuperacion': ['Generó un enlace de recuperación', 'ph-key'], 'auth.ingreso': ['Inició sesión', 'ph-sign-in'], 'auth.salida': ['Cerró sesión', 'ph-sign-out'],
+  'auth.contrasena_creada': ['Creó su contraseña', 'ph-key'], 'auth.contrasena_cambiada': ['Cambió su contraseña', 'ph-key'], 'auth.recuperar_solicitud': ['Pidió recuperar su contraseña', 'ph-lifebuoy'],
+};
+const AF = { user:'', type:'' };
+const AFD = {
+  user: Dropdown($('af_pills'), { label:'Usuario', options:[], value:'', onChange: v => { AF.user = v; drawActs(); } }),
+  type: Dropdown($('af_pills'), { label:'Actividad', options:[{ v:'', l:'Todas' }, { v:'utm', l:'UTMs', ic:'ph-link-simple' }, { v:'usuario', l:'Usuarios', ic:'ph-users-three' }, { v:'auth', l:'Accesos', ic:'ph-sign-in' }], value:'', search:false, onChange: v => { AF.type = v; drawActs(); } }),
+};
+async function loadActs() {
+  const { data, error } = await sb.from('activity_log').select('*').order('at', { ascending: false }).limit(500);
+  if (error) { $('acts').innerHTML = `<div class="empty"><i class="ph ph-plugs"></i><b>No se pudo cargar la bitácora</b><span>${esc(error.message)}</span></div>`; return; }
+  ACTS = data; drawActs();
+}
+const actDesc = a => {
+  const d = a.detail || {};
+  if (a.action.startsWith('utm.')) return `<b style="display:inline;font-weight:600">${esc(a.summary)}</b> · ${esc(d.source || '')} / ${esc(d.medium || '')}${d.zone ? ' · ' + esc(d.zone) : ''}`;
+  if (a.action === 'usuario.editar') return `${esc(a.summary)} · ${Object.entries(d).map(([k, v]) => `${k}: ${esc(v ?? '—')}`).join(', ')}`;
+  if (a.action === 'usuario.crear') return `${esc(a.summary)} · ${esc(ROLE_NAME[d.role] || d.role || '')}${d.canal ? ' · ' + esc(d.canal) : ''}`;
+  return esc(a.summary || '');
+};
+function drawActs() {
+  if (!ACTS) return;
+  AFD.user.setOptions([{ v:'', l:'Todos' }, ...uniq(ACTS, a => a.user_name).map(v => ({ v, l: v }))]); AFD.user.set(AF.user);
+  const q = $('aq').value.toLowerCase();
+  const as = ACTS.filter(a => (!AF.user || a.user_name === AF.user) && (!AF.type || a.action.startsWith(AF.type + '.')) && (!q || [a.user_name, a.summary, a.action, JSON.stringify(a.detail)].some(v => (v || '').toLowerCase().includes(q))));
+  $('aCount').textContent = num(ACTS.length);
+  if (!as.length) return swap($('acts'), `<div class="empty"><i class="ph ph-clock-counter-clockwise"></i><b>No hay actividad con estos filtros</b></div>`);
+  const info = a => ACT_INFO[a.action] || [a.action, 'ph-dot-outline'], kind = a => 'k-' + a.action.split('.')[0];
+  const when = a => new Date(a.at).toLocaleString('es-MX', { dateStyle:'medium', timeStyle:'short' });
+  if (aView === 'table') {
+    swap($('acts'), `<div class="table-wrap"><table><thead><tr><th class="l">Fecha</th><th class="l">Usuario</th><th class="l">Actividad</th><th class="l">Detalle</th></tr></thead><tbody>${as.map(a => `
+      <tr><td class="l" style="min-width:160px"><span class="term">${when(a)}</span></td><td class="l">${esc(a.user_name)}<div class="term">${esc(ROLE_NAME[a.user_role] || '')}</div></td>
+      <td class="l"><div class="nm"><span class="act-ic ${kind(a)}"><i class="ph ${info(a)[1]}"></i></span>${info(a)[0]}</div></td><td class="l" style="font-size:13px">${actDesc(a)}</td></tr>`).join('')}</tbody></table></div>`);
+    return;
+  }
+  let day = '', html = '';
+  for (const a of as) {
+    const d = new Date(a.at).toLocaleDateString('es-MX', { weekday:'long', day:'numeric', month:'long' });
+    if (d !== day) { day = d; html += `<div class="day-h">${d}</div>`; }
+    html += `<div class="gcard acard"><div class="ah"><span class="act-ic ${kind(a)}"><i class="ph ${info(a)[1]}"></i></span><div style="min-width:0"><b>${info(a)[0]}</b><p>${actDesc(a)}</p></div></div>
+      <div class="af"><span><i class="ph ph-user"></i> ${esc(a.user_name)}${a.user_role ? ' · ' + esc(ROLE_NAME[a.user_role] || a.user_role) : ''}</span><span>${new Date(a.at).toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit' })}</span></div></div>`;
+  }
+  swap($('acts'), `<div class="gbento">${html}</div>`);
+}
+$('aq').oninput = () => drawActs();
+Seg($('aView'), null, aView, v => { aView = v; drawActs(); });
+
+// ============================================================
+// Navegación entre vistas (según el rol)
 // ============================================================
 const NAV = Seg($('nav'), null, 'reporte', r => { location.hash = '#/' + r; });
+const VIEWS = { reporte: () => true, utms: can.crear, usuarios: can.admin, bitacora: can.admin };
 function route() {
-  const r = location.hash.startsWith('#/utms') ? 'utms' : 'reporte';
+  if (location.hash.startsWith('#/crear-contrasena')) return;
+  if (!ME) return;
+  let r = (location.hash.match(/^#\/(\w+)/) || [])[1] || 'reporte';
+  if (!VIEWS[r] || !VIEWS[r]()) r = 'reporte';
   NAV.set(r);
-  ['reporte', 'utms'].forEach(v => { const el = $('view-' + v); const show = v === r; if (show && el.hidden) { el.hidden = false; el.classList.remove('view'); void el.offsetWidth; el.classList.add('view'); } else if (!show) el.hidden = true; });
+  Object.keys(VIEWS).forEach(v => { const el = $('view-' + v); const show = v === r; if (show && el.hidden) { el.hidden = false; el.classList.remove('view'); void el.offsetWidth; el.classList.add('view'); } else if (!show) el.hidden = true; });
+  if (r === 'usuarios' && !USERS) loadUsers();
+  if (r === 'bitacora' && !ACTS) loadActs();
   scrollTo({ top: 0 });
 }
-addEventListener('hashchange', route);
+addEventListener('hashchange', () => {
+  if (location.hash.startsWith('#/crear-contrasena')) return handlePasswordLink();
+  if (!ME) return showAuth(location.hash.startsWith('#/recuperar') ? 'recuperar' : 'login');
+  route();
+});
 
 // ============================================================
 // Inicio
 // ============================================================
-(async () => {
-  route(); build();
-  loadLinks();
-  try {
-    const m = await (await fetch('/api/data?meta=1')).json();
-    if (m.error || !m.maxDate) throw new Error(m.error || 'Todavía no hay datos sincronizados');
-    REPORT.minDate = m.minDate; REPORT.maxDate = AYER = m.maxDate; calMonth = AYER.slice(0, 7);
-    $('gen').textContent = m.lastSync ? 'Actualizado ' + new Date(m.lastSync).toLocaleString('es-MX', { dateStyle:'medium', timeStyle:'short' }) : 'Sin sincronizar';
-    await aplicarRango(...PRESETS[4][2](), 'mes');
-  } catch (e) { $('kpis').innerHTML = `<div class="tile t-full"><b style="color:var(--red)">No se pudieron cargar los datos.</b> ${esc(e.message)}</div>`; }
-})();
+build();
+if (location.hash.startsWith('#/crear-contrasena')) handlePasswordLink(); else start();
 </script>
 </body>
 </html>
