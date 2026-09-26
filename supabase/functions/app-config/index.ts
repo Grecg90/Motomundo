@@ -63,14 +63,20 @@ Deno.serve(async (req) => {
           if (addr !== curAddr) changes.mail_from = { antes: curAddr || '(predeterminado)', ahora: addr || '(predeterminado)' };
         }
       }
-      // Mapa de canales: { "m:<medio>": canal, "s:<fuente>": canal }
+      // Mapa de canales: { "m:<medio>": canal, "s:<fuente>": canal } (Campañas),
+      // "n:<canal>": nombre visible, "g:<canal GA4>": grupo en Audiencia, "ga:mode": "custom" para usar esa agrupación
       if (body.channel_map !== undefined) {
         const cm = body.channel_map, CAN = ['Pauta', 'Directos', 'Redes', 'Otros'];
         if (!cm || typeof cm !== 'object' || Array.isArray(cm)) return json({ error: 'Mapa de canales inválido' }, 400);
-        const clean: Record<string, string> = {};
-        for (const [k, v] of Object.entries(cm)) {
-          if (!/^[ms]:.{1,80}$/.test(k) || !CAN.includes(String(v))) return json({ error: `Mapa de canales inválido en ${k}` }, 400);
-          clean[k] = String(v);
+        const clean: Record<string, string> = {}, NAME = /^[^<>\r\n]{1,40}$/;
+        for (const [k, raw] of Object.entries(cm)) {
+          const v = String(raw).trim();
+          const ok = /^[ms]:.{1,80}$/.test(k) ? CAN.includes(v)
+            : /^n:/.test(k) ? CAN.includes(k.slice(2)) && NAME.test(v)
+            : /^g:.{1,80}$/.test(k) ? NAME.test(v)
+            : k === 'ga:mode' ? v === 'custom' : false;
+          if (!ok) return json({ error: `Mapa de canales inválido en ${k}` }, 400);
+          clean[k] = v;
         }
         if (Object.keys(clean).length > 400) return json({ error: 'Demasiadas reglas en el mapa' }, 400);
         if (JSON.stringify(clean) !== JSON.stringify(st.channel_map || {})) { patch.channel_map = clean; changes.channel_map = { antes: `${Object.keys(st.channel_map || {}).length} reglas`, ahora: `${Object.keys(clean).length} reglas` }; }

@@ -584,6 +584,32 @@
   .mc-f.exc span { color:var(--warn); }
   .mm-sel { border:1px solid var(--gray-200); background:var(--white); border-radius:8px; font-size:12px; font-weight:500; padding:3px 6px; color:var(--ink); font-family:var(--font); max-width:130px; }
   .mc-h .mm-sel { margin-left:auto; }
+  .cb-tab { margin-top:12px; }
+  .jchips { display:flex; gap:8px; flex-wrap:wrap; margin:-4px 0 14px; }
+  .jchip { border:1px solid var(--gray-200); background:var(--white); border-radius:999px; padding:7px 14px 7px 12px; font-size:13px; font-weight:500; color:var(--gray-700); display:inline-flex; align-items:center; gap:7px; transition:background .15s var(--ease), border-color .15s var(--ease), color .15s; }
+  .jchip:hover { border-color:var(--gray-300); color:var(--ink); }
+  .jchip em { font-style:normal; font-size:11.5px; color:var(--gray-500); background:var(--gray-100); border-radius:999px; padding:1px 7px; }
+  .jchip.on { background:var(--black); border-color:var(--black); color:var(--white); } .jchip.on em { background:rgba(255,255,255,.14); color:var(--gray-300); }
+  .jchip .ph { color:var(--red); } .jchip.on .ph { color:#fff; }
+  @media (max-width:720px) { .jchips { flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; margin-left:-2px; } .jchips::-webkit-scrollbar { display:none; } .jchip { flex:none; } }
+  .bcol-n { font:inherit; font-size:16px; font-weight:600; color:var(--ink); border:1px solid transparent; background:transparent; border-radius:8px; padding:2px 6px; margin-left:-6px; width:100%; min-width:0; }
+  .bcol-n:hover { border-color:var(--gray-200); } .bcol-n:focus { border-color:var(--red); outline:none; background:var(--white); }
+  .bcol-h > div { min-width:0; flex:1; }
+  .ga-board { display:block; }
+  .ga-mode { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+  .gm { background:var(--white); border-radius:var(--r-md); padding:14px 16px 14px 44px; position:relative; cursor:pointer; border:1px solid transparent; display:grid; gap:3px; }
+  .gm input { position:absolute; left:16px; top:16px; accent-color:var(--red); width:16px; height:16px; margin:0; }
+  .gm b { font-size:14px; font-weight:600; } .gm span { font-size:12.5px; color:var(--gray-500); line-height:1.45; }
+  .gm.on { border-color:var(--red); box-shadow:0 0 0 1px var(--red); }
+  .ga-rows { background:var(--white); border-radius:var(--r-md); padding:6px 14px; display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); column-gap:28px; }
+  .ga-rows.off { opacity:.55; }
+  .ga-row { display:grid; grid-template-columns:minmax(0, 1fr) 64px 14px minmax(0, 1.1fr); align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--gray-100); font-size:13px; }
+  .ga-row .nm { font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .ga-row em { font-style:normal; color:var(--gray-500); font-size:12px; text-align:right; } .ga-row .ph { color:var(--gray-300); }
+  .ga-in { border:1px solid var(--gray-200); border-radius:8px; padding:6px 9px; font-size:13px; min-width:0; background:var(--white); } .ga-in:focus { border-color:var(--red); outline:none; }
+  .ga-in.set { border-color:#f5b800; background:#fffbea; }
+  .ga-prev { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-top:12px; font-size:12.5px; color:var(--gray-500); } .ga-prev .tag b { margin-left:4px; }
+  .ga-board .none { background:var(--white); border-radius:var(--r-md); padding:22px; text-align:center; color:var(--gray-500); }
+  @media (max-width:760px) { .ga-mode, .ga-rows { grid-template-columns:1fr; } .ga-row { grid-template-columns:minmax(0, 1fr) 56px minmax(0, 1.2fr); } .ga-row .ph { display:none; } }
   .mc-h b { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   @media (max-width:1100px) { .board { grid-template-columns:repeat(2, minmax(0, 1fr)); } }
   .mc-h { flex-wrap:wrap; } .mc-h b { flex:1 1 90px; }
@@ -599,7 +625,7 @@
 
   /* ===== Footer ===== */
   .foot { background:var(--black); color:var(--gray-300); }
-  .foot-in { max-width:1320px; margin:0 auto; padding:30px 20px; display:grid; grid-template-columns:2fr 1fr 1fr; gap:24px; font-size:13px; line-height:1.6; }
+  .foot-in { max-width:1320px; margin:0 auto; padding:30px 20px; display:grid; grid-template-columns:2fr 1fr; gap:24px; font-size:13px; line-height:1.6; }
   .foot b { color:var(--white); font-weight:600; font-size:15px; display:block; margin-bottom:8px; }
   .foot a { color:var(--gray-300); text-decoration:none; display:flex; align-items:center; gap:6px; } .foot a:hover { color:var(--white); }
   .foot .live { display:flex; align-items:center; gap:8px; } .foot .live i { width:8px; height:8px; border-radius:50%; background:#3ecf7a; box-shadow:0 0 0 3px rgba(62,207,122,.18); }
@@ -833,10 +859,14 @@
 <div class="modal-bg" id="cb_modal" hidden>
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="cb_t">
     <div class="modal-h">
-      <div><h2 id="cb_t">Agrupar canales</h2><p>Arrastra cada medio a su canal (o elige el canal en su selector). Abre un medio para mandar una fuente a otro canal como excepción; la excepción aplica a esa fuente en todas sus campañas. Datos del periodo elegido en el reporte.</p></div>
+      <div><h2 id="cb_t">Agrupar canales</h2><p id="cb_desc"></p>
+        <div class="seg cb-tab" id="cb_tab" role="tablist" aria-label="Módulo"><span class="pill"></span>
+          <button data-v="camp" role="tab"><i class="ph ph-megaphone-simple"></i>Campañas</button>
+          <button data-v="ga" role="tab"><i class="ph ph-chart-bar"></i>Audiencia GA4</button></div></div>
       <span class="sp"></span><button class="ibtn" id="cb_x" aria-label="Cerrar"><i class="ph ph-x"></i></button>
     </div>
     <div class="board" id="board"></div>
+    <div class="board ga-board" id="board_ga" hidden></div>
     <div class="modal-f">
       <span class="chg" id="cb_chg"></span><span class="sp"></span>
       <button class="btn btn-ghost" id="mm_reset"><i class="ph ph-arrow-counter-clockwise"></i>Restaurar automático</button>
@@ -986,7 +1016,7 @@
       </div>
       <div class="tile g-half g-adm g-cb" data-need="admin" hidden>
         <div><h2><i class="ph ph-kanban" style="color:var(--red)"></i> Agrupación de canales de campañas</h2>
-        <p class="desc g-desc">Solo aplica al reporte de Campañas (Pauta, Directos, Redes, Otros). Los canales de este módulo son los de GA4. <span id="cb_rules"></span></p></div>
+        <p class="desc g-desc">Agrupa y renombra los canales de Campañas (Adquisición, Directo, Redes, Otros) y los de este módulo. <span id="cb_rules"></span></p></div>
         <button class="btn btn-dark" id="cb_open"><i class="ph ph-kanban"></i>Agrupar canales</button>
       </div>
     </div>
@@ -1042,8 +1072,10 @@
         <div class="card-h">
           <h2>UTMs guardadas</h2>
           <div class="toolbar">
+            <button class="btn btn-ghost" id="lib_xls"><i class="ph ph-microsoft-excel-logo"></i>Exportar a Excel</button>
           </div>
         </div>
+        <div class="jchips" id="lcanal" role="group" aria-label="Ver por jefatura"></div>
         <div class="fstrip">
           <span class="fs-slot" id="lgdd"></span>
           <button class="fs-btn fbtn" data-sheet="lfilters" aria-controls="lfilters" aria-expanded="false"><i class="ph ph-funnel-simple"></i>Filtros<span class="fc" id="lfc"></span><i class="ph ph-caret-down cr"></i></button>
@@ -1089,7 +1121,7 @@
         <div class="perm">
           <div><span>Jefe Web (admin)</span>Controla todo: reportes, UTMs, usuarios, roles y bitácora.</div>
           <div><span>Subgerente</span>Solo ve los reportes.</div>
-          <div><span>Jefe de canal</span>Directo, Redes o Pauta. Ve datos, crea UTMs y edita las de su canal.</div>
+          <div><span>Jefe de canal</span>Adquisición, Directo o Redes. Ve datos, crea UTMs y edita las de su canal.</div>
           <div><span>Especialista</span>Ve datos, crea UTMs y edita las suyas.</div>
         </div>
       </div>
@@ -1210,11 +1242,10 @@
 
 <footer class="foot">
   <div class="foot-in">
-    <div><b>Motomundo · Seguimiento de campañas</b>Datos de Google Analytics 4 (propiedad Motomundo - GA4), guardados en Supabase. Solo cuenta tráfico que llegó con utm_campaign.</div>
+    <div><b>Motomundo · Seguimiento de campañas</b>Datos de Google Analytics 4 (propiedad Motomundo - GA4). Solo cuenta tráfico que llegó con utm_campaign.</div>
     <div><b>Datos</b><span class="live"><i></i><span id="gen">Sincronización diaria 8:00 a.m. y 2:00 p.m.</span></span><a href="#/utms" data-need="crear"><i class="ph ph-link-simple"></i>Constructor de UTMs</a></div>
-    <div><b>Cotizaciones medidas</b>Producto Web<br>Cotizador Web</div>
   </div>
-  <div class="foot-bar"><div><span class="copy"><img class="logo" src="/logo-motomundo.png" alt="Motomundo"><span>© 2026 Motomundo · ILP Motos · Todos los derechos reservados</span></span><span>Los usuarios de un rango son la suma de cada día; las cotizaciones son exactas.</span></div></div>
+  <div class="foot-bar"><div><span class="copy"><img class="logo" src="/logo-motomundo.png" alt="Motomundo"><span>© 2026 Motomundo · ILP Motos · Todos los derechos reservados</span></span></div></div>
 </footer>
 </div>
 
@@ -1373,6 +1404,12 @@ const CANALES = ['Pauta', 'Directos', 'Redes', 'Otros'];
 const CANAL_INFO = { Pauta:['Paid social / search · Meta', 'ph-megaphone-simple'], Directos:['SMS · WhatsApp · Email · QR', 'ph-paper-plane-tilt'], Redes:['Organic social', 'ph-users-three'], Otros:['Sin clasificar', 'ph-question'] };
 // Agrupación configurable (mapa de canales): primero la regla por fuente, luego por medio y al final la regla automática
 let CMAP = {};
+// Nombre visible de cada canal de Campañas (la clave interna no cambia; el admin puede renombrarlo)
+const CN_DEF = { Pauta:'Adquisición', Directos:'Directo', Redes:'Redes', Otros:'Otros' };
+const cn = (k, map = CMAP) => map['n:' + k] || CN_DEF[k] || k;
+// Audiencia: agrupación de los canales de GA4 ("g:<canal GA4>" -> grupo) si el admin la activó ("ga:mode" = custom)
+const gaGroup = (ch, map = CMAP) => map['ga:mode'] === 'custom' ? (map['g:' + ch] || ch) : ch;
+const ruleCount = (map = CMAP) => Object.keys(map).filter(k => /^[ms]:/.test(k)).length;
 function canal(s, m, map = CMAP) {
   if (map['s:' + s]) return map['s:' + s];
   if (map['m:' + m]) return map['m:' + m];
@@ -1543,7 +1580,7 @@ function drawCanales() {
     const rs = R.filter(r => r.g === g), sm = f => rs.reduce((a, r) => a + f(r), 0);
     const ps = P ? P.filter(r => r.g === g) : [], pm = f => ps.reduce((a, r) => a + f(r), 0);
     return `<button class="tile cn ${F.g === g ? 'on' : ''}" data-g="${g}" aria-pressed="${F.g === g}">
-      <div class="h"><b><i class="ph ${CANAL_INFO[g][1]}"></i>${g}</b><span>${uniq(rs, r => r.c).length} campañas</span></div>
+      <div class="h"><b><i class="ph ${CANAL_INFO[g][1]}"></i>${esc(cn(g))}</b><span>${uniq(rs, r => r.c).length} campañas</span></div>
       <div class="d">${CANAL_INFO[g][0]}</div>
       <div class="nums">${[[r => r.e1, EV1, EV1], [r => r.e2, EV2, EV2], [r => r.u, 'Usuarios', 'Usuarios']].map(([f, l, t]) => `<div title="${t}"><b>${num(sm(f))}</b>${l}<br>${dl(sm(f), pm(f))}</div>`).join('')}</div>
       <div class="share-l"><span>Participación en usuarios</span><b>${pct(sm(r => r.u) / TU)}</b></div><div class="share"><i style="width:${Math.max(sm(r => r.u) ? 2 : 0, sm(r => r.u) / TU * 100)}%"></i></div></button>`;
@@ -1567,14 +1604,14 @@ const FE = Dropdown($('fstate'), { label: 'Estado UTM', options: ESTADOS, value:
 function fillFilters() {
   ORDER.forEach(d => {
     const gs = group(R.filter(r => matches(r, d)), d);
-    FD[d].setOptions([{ v:'', l:'Todas', m: gs.length }, ...gs.map((a, i) => ({ v:a.key, l:a.key, m: a.e1 + a.e2 ? `${num(a.e1 + a.e2)} cot.` : `${num(a.u)} usu.`, sep: i === 0 }))]);
+    FD[d].setOptions([{ v:'', l:'Todas', m: gs.length }, ...gs.map((a, i) => ({ v:a.key, l: d === 'g' ? cn(a.key) : a.key, m: a.e1 + a.e2 ? `${num(a.e1 + a.e2)} cot.` : `${num(a.u)} usu.`, sep: i === 0 }))]);
     FD[d].set(F[d]);
   });
   $('clear').disabled = !ORDER.some(d => F[d]) && !estado && !$('only').checked && !$('q').value;
   $('clear_all').hidden = $('clear').disabled;
   const act = ORDER.filter(d => F[d]);
   $('fc').textContent = (act.length + !!estado) || '';
-  $('fchips').innerHTML = act.map(d => `<button class="fchip" data-fx="${d}" title="Quitar filtro"><span>${DIMS[d]}</span><b>${esc(F[d])}</b><i class="ph ph-x"></i></button>`).join('')
+  $('fchips').innerHTML = act.map(d => `<button class="fchip" data-fx="${d}" title="Quitar filtro"><span>${DIMS[d]}</span><b>${esc(d === 'g' ? cn(F[d]) : F[d])}</b><i class="ph ph-x"></i></button>`).join('')
     + (estado ? `<button class="fchip" data-fx="estado"><span>Estado</span><b>${esc(ESTADOS.find(e => e.v === estado).l)}</b><i class="ph ph-x"></i></button>` : '');
 }
 $('clear_all').onclick = () => $('clear').click();
@@ -1587,7 +1624,7 @@ const GB_OPTS = ORDER.map(d => ({ v: d, l: DIMS[d], ic: DIM_IC[d] }));
 const GBD = Dropdown($('gbdd'), { label: 'Agrupar', icon: 'ph-stack', options: GB_OPTS, value: view, search: false, onChange: v => { view = v; draw(); } });
 Seg($('viewMode'), null, mode, v => { mode = v; draw(); });
 
-const fmtDim = (d, v) => d === 'p' ? `<span class="page">${esc(v)}</span>` : d === 't' || d === 'x' ? `<span class="term">${esc(v)}</span>` : esc(v);
+const fmtDim = (d, v) => d === 'g' ? esc(cn(v)) : d === 'p' ? `<span class="page">${esc(v)}</span>` : d === 't' || d === 'x' ? `<span class="term">${esc(v)}</span>` : esc(v);
 const tags = (d, arr) => arr.length === 1 ? fmtDim(d, arr[0])
   : arr.slice(0, 2).map(x => `<span class="tag">${esc(x)}</span>`).join('') + (arr.length > 2 ? `<span class="tag">+${arr.length - 2}</span>` : '');
 const evc = (n, p) => `<td class="ev ${n ? '' : 'z'}">${n ? num(n) : '-'}${dl(n, p)}</td>`;
@@ -1626,7 +1663,7 @@ function draw() {
       const p = PG.get(a.key) || { u:0, e1:0, e2:0 }, cls = G.length === 1 ? 'xl full' : i === 0 ? 'xl' : i === 1 ? 'xl2' : i < 5 ? 'lg' : '';
       const side = view === 'p' ? 'c' : 'p', tops = group(a.rows, side).slice(0, i === 0 ? 4 : 3);
       return `<button class="gcard ${cls}" data-k="${esc(a.key)}" title="Ver en tabla">
-        <div class="gt"><b>${esc(a.key)}</b><span class="rank">#${i + 1}</span></div>
+        <div class="gt"><b>${esc(view === 'g' ? cn(a.key) : a.key)}</b><span class="rank">#${i + 1}</span></div>
         <div class="gm"><div><b>${num(a.e1)}</b>${EV1} ${dl(a.e1, p.e1)}</div><div><b>${num(a.e2)}</b>${EV2} ${dl(a.e2, p.e2)}</div><div><b>${num(a.u)}</b>Usuarios ${dl(a.u, p.u)}</div></div>
         <div class="share-l"><span>Participación en usuarios</span><b>${pct(a.u / tu)}</b></div><div class="share" title="${pct(a.u / tu)} de los usuarios del periodo"><i style="width:${Math.max(2, a.u / tu * 100)}%"></i></div>
         <div class="tops">${tops.map(t => `<div><span>${esc(t.key)}</span><b>${num(t.e1 + t.e2) || num(t.u) + ' usu.'}</b></div>`).join('')}</div>
@@ -1658,17 +1695,17 @@ function update() { fillFilters(); drawCanales(); draw(); if (LINKS) drawLib(); 
 let MM_EDIT = null, MM_OPEN = new Set(), MM_DRAG = '';
 const CAN_IC = g => CANAL_INFO[g]?.[1] || 'ph-circle';
 function drawBoard() {
-  const map = MM_EDIT, rows = R;
+  const map = MM_EDIT, rows = R || [];
   const cot = rs => rs.reduce((a, r) => a + r.e1 + r.e2, 0), us = rs => rs.reduce((a, r) => a + r.u, 0);
   const medios = new Map(MEDIOS.map(m => [m, []]));
   rows.forEach(r => (medios.get(r.m) || medios.set(r.m, []).get(r.m)).push(r));
   const col = new Map(CANALES.map(c => [c, []]));
   for (const [m, rs] of medios) col.get(canal('', m, map)).push([m, rs]);
-  const sel = (key, cur, extra = '') => `<select class="mm-sel" data-mk="${esc(key)}" aria-label="Canal">${extra}${CANALES.map(c => `<option value="${c}" ${c === cur ? 'selected' : ''}>${c}</option>`).join('')}</select>`;
+  const sel = (key, cur, extra = '') => `<select class="mm-sel" data-mk="${esc(key)}" aria-label="Canal">${extra}${CANALES.map(c => `<option value="${c}" ${c === cur ? 'selected' : ''}>${esc(cn(c, map))}</option>`).join('')}</select>`;
   const changed = k => (map[k] || null) !== (CMAP[k] || null);
   $('board').innerHTML = CANALES.map(c => {
     const items = col.get(c).sort((a, b) => us(b[1]) - us(a[1]));
-    return `<div class="bcol" data-c="${c}"><div class="bcol-h"><span class="ic"><i class="ph ${CAN_IC(c)}"></i></span><div><b>${c}</b><span>${items.length} medio${items.length === 1 ? '' : 's'} · ${num(us(items.flatMap(x => x[1])))} usuarios</span></div></div>
+    return `<div class="bcol" data-c="${c}"><div class="bcol-h"><span class="ic"><i class="ph ${CAN_IC(c)}"></i></span><div><input class="bcol-n" data-cn="${c}" value="${esc(cn(c, map))}" maxlength="40" aria-label="Nombre del canal ${esc(cn(c, map))}" title="Clic para renombrar"><span>${items.length} medio${items.length === 1 ? '' : 's'} · ${num(us(items.flatMap(x => x[1])))} usuarios</span></div></div>
       <div class="bcol-b">${items.length ? items.map(([m, rs]) => {
         const fs = group(rs, 's').sort((a, b) => b.u - a.u), exc = fs.filter(f => map['s:' + f.key] && map['s:' + f.key] !== c).length, open = MM_OPEN.has(m);
         return `<div class="mcard ${changed('m:' + m) ? 'moved' : ''}" draggable="true" data-m="${esc(m)}">
@@ -1679,9 +1716,39 @@ function drawBoard() {
             return `<div class="mc-f ${v && v !== c ? 'exc' : ''}"><span title="${esc(f.key)}">${esc(f.key)}</span><em>${num(f.u)}</em>${sel(k, v || '', `<option value="" ${v ? '' : 'selected'}>Igual al medio</option>`)}</div>`; }).join('')}</div>` : ''}
         </div>`; }).join('') : '<div class="none">Arrastra aquí un medio</div>'}</div></div>`;
   }).join('');
-  const n = new Set([...Object.keys(map), ...Object.keys(CMAP)].filter(changed)).size;
+  mmChg();
+}
+function mmChg() {
+  const map = MM_EDIT, n = new Set([...Object.keys(map), ...Object.keys(CMAP)].filter(k => (map[k] || null) !== (CMAP[k] || null))).size;
   $('cb_chg').textContent = n ? `${n} cambio${n === 1 ? '' : 's'} sin guardar` : '';
 }
+// Audiencia GA4: agrupación predeterminada o personalizada (canal GA4 -> grupo con nombre libre)
+function drawBoardGa() {
+  const map = MM_EDIT, custom = map['ga:mode'] === 'custom', chs = (GA?.channels || []).filter(x => x[1]);
+  const tot = new Map(); chs.forEach(x => { const k = gaGroup(x[0], map); tot.set(k, (tot.get(k) || 0) + x[1]); });
+  $('board_ga').innerHTML = `<div class="ga-mode">
+      <label class="gm ${custom ? '' : 'on'}"><input type="radio" name="gam" value="default" ${custom ? '' : 'checked'}><b>Predeterminada de GA4</b><span>Los canales tal como los entrega Google Analytics.</span></label>
+      <label class="gm ${custom ? 'on' : ''}"><input type="radio" name="gam" value="custom" ${custom ? 'checked' : ''}><b>Personalizada</b><span>Junta canales en un grupo y ponle nombre. Se usa en el gráfico principal y en la tarjeta de canales.</span></label>
+    </div>${!chs.length ? '<div class="none">Abre GA4 Audience para cargar los canales del periodo.</div>' : `
+    <div class="ga-rows ${custom ? '' : 'off'}">${chs.map(x => { const v = map['g:' + x[0]] || '';
+      return `<div class="ga-row"><span class="nm" title="${esc(x[0])}">${esc(x[0])}</span><em>${num(x[1])}</em><i class="ph ph-arrow-right"></i><input class="ga-in ${v ? 'set' : ''}" data-gk="${esc(x[0])}" list="ga_groups" value="${esc(v)}" placeholder="${esc(x[0])}" maxlength="40" ${custom ? '' : 'disabled'} aria-label="Grupo para ${esc(x[0])}"></div>`; }).join('')}</div>
+    <datalist id="ga_groups">${[...tot.keys()].map(n => `<option value="${esc(n)}">`).join('')}</datalist>
+    ${custom ? `<div class="ga-prev">Quedan ${tot.size} canales:${[...tot].sort((a, b) => b[1] - a[1]).map(([n, v]) => `<span class="tag">${esc(n)}<b>${num(v)}</b></span>`).join('')}</div>` : ''}`}`;
+  mmChg();
+}
+$('board_ga').addEventListener('change', e => {
+  const t = e.target;
+  if (t.name === 'gam') { if (t.value === 'custom') MM_EDIT['ga:mode'] = 'custom'; else delete MM_EDIT['ga:mode']; return drawBoardGa(); }
+  const k = t.dataset.gk; if (!k) return;
+  const v = t.value.trim().replace(/[<>]/g, '').slice(0, 40);
+  if (!v || v === k) delete MM_EDIT['g:' + k]; else MM_EDIT['g:' + k] = v;
+  drawBoardGa();
+});
+let CB_TAB = 'camp';
+const CB_DESC = { camp:'Arrastra cada medio a su canal o elige el canal en su selector. Haz clic en el nombre de un canal para renombrarlo. Abre un medio para mandar una fuente a otro canal como excepción.',
+  ga:'Elige si GA4 Audience usa los canales predeterminados de Google Analytics o tu propia agrupación con nombres.' };
+const CBT = Seg($('cb_tab'), null, CB_TAB, v => cbTab(v));
+function cbTab(v) { CB_TAB = v; CBT.set(v); $('board').hidden = v !== 'camp'; $('board_ga').hidden = v !== 'ga'; $('cb_desc').textContent = CB_DESC[v]; v === 'ga' ? drawBoardGa() : drawBoard(); }
 // Asigna un canal a un medio ("m:") o a una fuente ("s:"); si coincide con lo automático no guarda regla
 function mmSet(k, v) {
   if (!v) { delete MM_EDIT[k]; return drawBoard(); }
@@ -1690,7 +1757,12 @@ function mmSet(k, v) {
   if (v === auto) delete MM_EDIT[k]; else MM_EDIT[k] = v;
   drawBoard();
 }
-$('board').addEventListener('change', e => { const s = e.target.closest('[data-mk]'); if (s) mmSet(s.dataset.mk, s.value); });
+$('board').addEventListener('change', e => {
+  const n = e.target.closest('[data-cn]');
+  if (n) { const c = n.dataset.cn, v = n.value.trim().replace(/[<>]/g, '').slice(0, 40); if (!v || v === CN_DEF[c]) delete MM_EDIT['n:' + c]; else MM_EDIT['n:' + c] = v; return drawBoard(); }
+  const s = e.target.closest('[data-mk]'); if (s) mmSet(s.dataset.mk, s.value);
+});
+$('board').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('.bcol-n')) e.target.blur(); });
 $('board').addEventListener('click', e => { const b = e.target.closest('[data-open]'); if (!b) return; const m = b.dataset.open; MM_OPEN.has(m) ? MM_OPEN.delete(m) : MM_OPEN.add(m); drawBoard(); });
 $('board').addEventListener('dragstart', e => { const c = e.target.closest?.('.mcard'); if (!c) return; MM_DRAG = c.dataset.m; c.classList.add('drag'); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', MM_DRAG); });
 $('board').addEventListener('dragend', () => { MM_DRAG = ''; document.querySelectorAll('.bcol.over, .mcard.drag').forEach(x => x.classList.remove('over', 'drag')); });
@@ -1698,7 +1770,7 @@ $('board').addEventListener('dragover', e => { const c = e.target.closest('.bcol
 $('board').addEventListener('drop', e => { const c = e.target.closest('.bcol'); if (!c || !MM_DRAG) return; e.preventDefault(); const m = MM_DRAG; MM_DRAG = ''; mmSet('m:' + m, c.dataset.c); });
 function cbOpen() {
   if (!can.admin()) return;
-  MM_EDIT = { ...CMAP }; MM_OPEN = new Set(); drawBoard();
+  MM_EDIT = { ...CMAP }; MM_OPEN = new Set(); cbTab(location.hash.startsWith('#/ga4') ? 'ga' : 'camp');
   $('cb_modal').hidden = false; requestAnimationFrame(() => $('cb_modal').classList.add('on'));
   document.body.style.overflow = 'hidden'; $('cb_x').focus();
 }
@@ -1706,20 +1778,20 @@ function cbClose() {
   $('cb_modal').classList.remove('on'); document.body.style.overflow = '';
   setTimeout(() => { $('cb_modal').hidden = true; MM_EDIT = null; }, 280);
 }
-const cbRules = () => { const n = Object.keys(CMAP).length; if ($('cb_rules')) $('cb_rules').textContent = n ? `${n} regla${n === 1 ? '' : 's'} personalizada${n === 1 ? '' : 's'}.` : 'Ahora se usa la agrupación automática.'; };
+const cbRules = () => { const n = ruleCount(); if ($('cb_rules')) $('cb_rules').textContent = n ? `${n} regla${n === 1 ? '' : 's'} personalizada${n === 1 ? '' : 's'}.` : 'Ahora se usa la agrupación automática.'; };
 $('cb_open').onclick = cbOpen;
 $('cb_x').onclick = cbClose; $('mm_cancel').onclick = cbClose;
 $('cb_modal').addEventListener('mousedown', e => { if (e.target === $('cb_modal')) cbClose(); });
 addEventListener('keydown', e => { if (e.key === 'Escape' && !$('cb_modal').hidden) cbClose(); });
-$('mm_reset').onclick = () => { MM_EDIT = {}; drawBoard(); };
+$('mm_reset').onclick = () => { const re = CB_TAB === 'ga' ? /^(g|ga):/ : /^[msn]:/; Object.keys(MM_EDIT).forEach(k => { if (re.test(k)) delete MM_EDIT[k]; }); cbTab(CB_TAB); };
 $('mm_save').onclick = async () => {
   $('mm_save').disabled = true;
   try {
     const r = await cfgCall({ action: 'save', channel_map: MM_EDIT, expected_map: CMAP });
     CMAP = r.settings.channel_map || {}; CFG = null;
-    [R, P || []].forEach(rs => rs.forEach(x => { x.g = canal(x.s, x.m); }));
-    cbClose(); update(); cbRules();
-    notify({ icon:'ph-kanban', tone:'ok', title:'Agrupación guardada', body:'El reporte ya usa la nueva agrupación de canales.' });
+    [R || [], P || []].forEach(rs => rs.forEach(x => { x.g = canal(x.s, x.m); }));
+    cbClose(); if (R) update(); cbRules(); if (GA) drawGa4(); if (LINKS) drawLib();
+    notify({ icon:'ph-kanban', tone:'ok', title:'Agrupación guardada', body:'Campañas, Audiencia y el Constructor ya usan la nueva agrupación.' });
   } catch (e) { toast('No se pudo guardar: ' + e.message, true); if (/otro administrador/i.test(e.message)) { const { data } = await sb.rpc('channel_map'); CMAP = data || {}; cbClose(); } }
   $('mm_save').disabled = false;
 };
@@ -1808,7 +1880,7 @@ const can = {
   editar: l => ME?.role === 'admin' || l.created_by === ME?.id || (ME?.role === 'jefe' && l.canal === ME?.canal),
 };
 const initials = n => (n || '?').split(/[\s@._-]+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('');
-const roleChip = p => `<span class="role-chip ${p.role}">${ROLE_NAME[p.role] || p.role}${p.role === 'jefe' && p.canal ? ' · ' + p.canal : ''}</span>`;
+const roleChip = p => `<span class="role-chip ${p.role}">${ROLE_NAME[p.role] || p.role}${p.role === 'jefe' && p.canal ? ' · ' + esc(cn(p.canal)) : ''}</span>`;
 const logAct = (action, summary = '', detail = {}) => sb.rpc('log_activity', { p_action: action, p_entity: action.split('.')[0], p_entity_id: '', p_summary: summary, p_detail: detail }).then(() => {});
 
 // ============================================================
@@ -1946,6 +2018,7 @@ async function start() {
       sb.from('ga4_sync_log').select('ran_at').order('ran_at', { ascending: false }).limit(1),
     ]);
     CMAP = qm.data || {};
+    $('um_role').innerHTML = roleChip(ME); cbRules(); if (GA) drawGa4(); if (LINKS) drawLib();
     const min = q1.data?.[0]?.date, max = q2.data?.[0]?.date;
     if (!max) throw new Error(q1.error?.message || 'Todavía no hay datos sincronizados');
     REPORT.minDate = min; REPORT.maxDate = AYER = max; calMonth = AYER.slice(0, 7);
@@ -2151,7 +2224,7 @@ const libMatch = (l, skip) => ORDER.every(d => d === skip || !LF[d] || LV[d](l) 
 function fillLibFilters() {
   ORDER.forEach(d => {
     const rows = LINKS.filter(l => libMatch(l, d)), vals = uniq(rows, LV[d]).sort((x, y) => x.localeCompare(y, 'es'));
-    LFD[d].setOptions([{ v:'', l:'Todas', m: vals.length }, ...vals.map((v, i) => ({ v, l: v, m: num(rows.filter(l => LV[d](l) === v).length), sep: i === 0 }))]);
+    LFD[d].setOptions([{ v:'', l:'Todas', m: vals.length }, ...vals.map((v, i) => ({ v, l: d === 'g' ? cn(v) : v, m: num(rows.filter(l => LV[d](l) === v).length), sep: i === 0 }))]);
     LFD[d].set(LF[d]);
   });
 }
@@ -2188,16 +2261,46 @@ function libCard(l) {
          : `<div class="ga none"><i class="ph ph-clock-countdown"></i>Sin visitas en GA4 en este periodo</div>`}
     <div class="lact">${actions}</div></div>`;
 }
+let LIB_ROWS = [];
+$('lcanal').addEventListener('click', e => { const b = e.target.closest('[data-jc]'); if (!b) return; LF.g = LF.g === b.dataset.jc ? '' : b.dataset.jc; LFD.g?.set(LF.g); drawLib(); });
+// Exportar a Excel (SheetJS se carga solo al usarlo)
+const loadXlsx = () => window.XLSX ? Promise.resolve(window.XLSX) : new Promise((ok, ko) => {
+  const sc = document.createElement('script'); sc.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+  sc.integrity = 'sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw'; sc.crossOrigin = 'anonymous';
+  sc.onload = () => ok(window.XLSX); sc.onerror = () => ko(new Error('No se pudo cargar el exportador')); document.head.appendChild(sc);
+});
+$('lib_xls').onclick = async () => {
+  const rows = LIB_ROWS; if (!rows.length) return toast('No hay UTMs para exportar con estos filtros', true);
+  const b = $('lib_xls'); b.disabled = true;
+  try {
+    const X = await loadXlsx();
+    const data = rows.map(l => { const iss = validar({ s: l.source, m: l.medium, c: l.campaign, t: l.term }), ga = gaFor(l);
+      return { Canal: cn(LV.g(l)), 'Campaña': l.campaign, Fuente: l.source, Medio: l.medium, Zona: l.zone || '', 'Término': l.term || '', Contenido: l.content || '',
+        'URL de destino': l.url, 'Link con UTM': fullUrl(l), Estado: ESTADOS.find(e => e.v === nivel(iss))?.l || nivel(iss),
+        Usuarios: ga ? ga.u : 0, [EV1]: ga ? ga.e1 : 0, [EV2]: ga ? ga.e2 : 0, 'Creada por': l.created_by_name || '', Creada: (l.created_at || '').slice(0, 10), Nota: l.note || '' }; });
+    const ws = X.utils.json_to_sheet(data), keys = Object.keys(data[0]);
+    ws['!cols'] = keys.map(k => ({ wch: Math.min(60, Math.max(k.length, ...data.map(r => String(r[k]).length)) + 2) }));
+    ws['!autofilter'] = { ref: X.utils.encode_range({ s:{ r:0, c:0 }, e:{ r:data.length, c:keys.length - 1 } }) };
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, ws, 'UTMs');
+    X.writeFile(wb, `UTMs Motomundo${LF.g ? ' - ' + cn(LF.g) : ''} ${new Date().toISOString().slice(0, 10)}.xlsx`);
+  } catch (e) { toast(e.message, true); }
+  b.disabled = false;
+};
 function drawLib() {
   if (!LINKS) return;
   const q = $('lq').value.toLowerCase(), mine = $('lf_mine').checked;
   const ls = LINKS.filter(l => (!q || [l.campaign, l.source, l.medium, l.term, l.content, l.url, l.note, l.zone, l.created_by_name].some(v => (v || '').toLowerCase().includes(q)))
     && libMatch(l) && (!LF.estado || lvOf(l) === LF.estado) && (!mine || l.created_by === ME.id));
   fillLibFilters();
+  const base = LINKS.filter(l => (!q || [l.campaign, l.source, l.medium, l.term, l.content, l.url, l.note, l.zone, l.created_by_name].some(v => (v || '').toLowerCase().includes(q)))
+    && libMatch(l, 'g') && (!LF.estado || lvOf(l) === LF.estado) && (!mine || l.created_by === ME.id));
+  $('lcanal').innerHTML = [['', 'Todas', 'ph-squares-four'], ...CANALES.map(c => [c, cn(c), CANAL_INFO[c][1]])].map(([v, l, ic]) =>
+    `<button class="jchip ${LF.g === v ? 'on' : ''}" data-jc="${esc(v)}" aria-pressed="${LF.g === v}"><i class="ph ${ic}"></i>${esc(l)}<em>${num(v ? base.filter(x => LV.g(x) === v).length : base.length)}</em></button>`).join('');
+  LIB_ROWS = ls;
   $('lf_clear').disabled = !Object.values(LF).some(Boolean) && !q && !mine;
   $('lf_clear_all').hidden = $('lf_clear').disabled;
   $('lfc').textContent = Object.values(LF).filter(Boolean).length || '';
-  $('lfchips').innerHTML = Object.entries(LF).filter(([, v]) => v).map(([d, v]) => `<button class="fchip" data-lfx="${d}" title="Quitar filtro"><span>${d === 'estado' ? 'Estado' : DIMS[d]}</span><b>${esc(d === 'estado' ? ESTADOS.find(e => e.v === v)?.l || v : v)}</b><i class="ph ph-x"></i></button>`).join('');
+  $('lfchips').innerHTML = Object.entries(LF).filter(([, v]) => v).map(([d, v]) => `<button class="fchip" data-lfx="${d}" title="Quitar filtro"><span>${d === 'estado' ? 'Estado' : DIMS[d]}</span><b>${esc(d === 'estado' ? ESTADOS.find(e => e.v === v)?.l || v : d === 'g' ? cn(v) : v)}</b><i class="ph ph-x"></i></button>`).join('');
   if (!LINKS.length) return swap($('lib'), `<div class="empty"><i class="ph ph-link-simple-break"></i><b>Todavía no hay UTMs guardadas</b><span>Arma la primera arriba y pulsa "Guardar UTM".</span></div>`);
   if (!ls.length) return swap($('lib'), `<div class="empty"><i class="ph ph-funnel-x"></i><b>Ninguna UTM coincide con los filtros</b></div>`);
   const kf = LG_KEY[libGroup], M = new Map();
@@ -2205,14 +2308,14 @@ function drawLib() {
   const keys = libGroup === 'g' ? [...CANALES.filter(k => M.has(k)), ...[...M.keys()].filter(k => !CANALES.includes(k))] : [...M.keys()].sort((a, b) => M.get(b).length - M.get(a).length);
   if (libView === 'table') {
     swap($('lib'), `<div class="table-wrap"><table><thead><tr><th class="l">Campaña</th><th class="l">Fuente / medio</th><th class="l">Zona · término · contenido</th><th class="l">Creada por</th><th class="l">Estado</th><th>Usuarios</th><th>${EV1}</th><th>${EV2}</th><th></th></tr></thead><tbody>${keys.map(k =>
-      `<tr><td class="l" colspan="9" style="background:var(--gray-100);font-weight:500"><i class="ph ${LG_IC[libGroup](k)}" style="color:var(--red)"></i> ${esc(k)} <span class="muted">· ${M.get(k).length}</span></td></tr>` +
+      `<tr><td class="l" colspan="9" style="background:var(--gray-100);font-weight:500"><i class="ph ${LG_IC[libGroup](k)}" style="color:var(--red)"></i> ${esc(libGroup === 'g' ? cn(k) : k)} <span class="muted">· ${M.get(k).length}</span></td></tr>` +
       M.get(k).map(l => { const iss = validar({ s: l.source, m: l.medium, c: l.campaign, t: l.term }), ga = gaFor(l), u = fullUrl(l);
         return `<tr><td class="l">${esc(l.campaign)}<div class="term">${esc(l.url)}</div></td><td class="l">${esc(l.source)} / ${esc(l.medium)}</td><td class="l"><span class="term">${esc(l.zone || '-')} · ${esc(l.term || '-')} · ${esc(l.content || '-')}</span></td>
           <td class="l"><span class="term">${esc(l.created_by_name || '-')}</span></td><td class="l">${BADGE[nivel(iss)](iss.length)}</td><td>${ga ? num(ga.u) : '-'}</td><td class="ev ${ga?.e1 ? '' : 'z'}">${ga?.e1 ? num(ga.e1) : '-'}</td><td class="ev ${ga?.e2 ? '' : 'z'}">${ga?.e2 ? num(ga.e2) : '-'}</td>
           <td style="white-space:nowrap">${libActions(l, u)}</td></tr>`; }).join('')).join('')}</tbody></table></div>`);
     return;
   }
-  swap($('lib'), keys.map(k => `<div class="lib-group"><div class="lib-gh"><h3 style="font-weight:500"><i class="ph ${LG_IC[libGroup](k)}"></i>${esc(k)}</h3><span>${M.get(k).length}</span></div>
+  swap($('lib'), keys.map(k => `<div class="lib-group"><div class="lib-gh"><h3 style="font-weight:500"><i class="ph ${LG_IC[libGroup](k)}"></i>${esc(libGroup === 'g' ? cn(k) : k)}</h3><span>${M.get(k).length}</span></div>
     <div class="gbento">${M.get(k).map(libCard).join('')}</div></div>`).join(''));
 }
 $('lib').addEventListener('click', async e => {
@@ -2245,7 +2348,7 @@ const adminCall = body => edgeCall('admin-users', body);
 let USERS = null, uView = 'bento';
 const U_LINK_DEFAULT = $('u_link').innerHTML;
 const ROLE_OPTS = [{ v:'especialista', l:'Especialista', m:'crea UTMs' }, { v:'jefe', l:'Jefe de canal', m:'crea y edita su canal' }, { v:'subgerente', l:'Subgerente', m:'solo reportes' }, { v:'admin', l:'Jefe Web (admin)', m:'controla todo' }];
-const CANAL_OPTS = [{ v:'', l:'Sin canal' }, ...['Directos', 'Redes', 'Pauta'].map(c => ({ v:c, l:c, ic: CANAL_INFO[c][1] }))];
+const CANAL_OPTS = [{ v:'', l:'Sin canal' }, ...['Pauta', 'Directos', 'Redes'].map(c => ({ v:c, l:cn(c), ic: CANAL_INFO[c][1] }))];
 const UR = Dropdown($('u_role'), { options: ROLE_OPTS, value:'especialista', block:true, search:false, onChange: () => { $('u_canal_hint').textContent = UR.value === 'jefe' ? 'obligatorio para jefes' : 'opcional'; } });
 const UC = Dropdown($('u_canal'), { options: CANAL_OPTS, value:'', block:true, search:false, onChange: () => {} });
 $('u_canal_hint').textContent = 'opcional';
@@ -2708,6 +2811,12 @@ async function loadGa4(force = false) {
   GA_LOADING = ''; $('view-ga4').classList.remove('loading');
 }
 let gCh = '';
+// Canales de Audiencia ya agrupados: [nombre, activos, nuevos, activos antes, nuevos antes]
+function gaChannels() {
+  const M = new Map();
+  for (const [ch, a, n, pa, pn] of GA.channels) { const k = gaGroup(ch), e = M.get(k) || [k, 0, 0, 0, 0]; e[1] += a; e[2] += n; e[3] += pa; e[4] += pn; M.set(k, e); }
+  return [...M.values()].sort((a, b) => b[1] - a[1]);
+}
 // Serie diaria del gráfico principal: todo el sitio o un canal del primer contacto
 function gaChart() {
   const g = GA, daily = g.daily;
@@ -2716,14 +2825,14 @@ function gaChart() {
       foot: ss != null ? `${num(ss)} sesiones · ${num(pv)} páginas vistas` : '' }; }),
     { label:'Usuarios por día', axis:'Usuarios por día' });
   const M = new Map(daily.map(([d, a]) => [d, [0, 0, a]]));
-  for (const [d, ch, a, nw] of g.dailyCh || []) if (ch === gCh) { const v = M.get(d); if (v) { v[0] += a; v[1] += nw; } }
+  for (const [d, ch, a, nw] of g.dailyCh || []) if (gaGroup(ch) === gCh) { const v = M.get(d); if (v) { v[0] += a; v[1] += nw; } }
   return barChart([...M].map(([d, [a, nw, all]]) => { const n = Math.min(a, nw);
     return { d, parts:[[n, '#d71920', 'Nuevos'], [a - n, '#ffffff', 'Recurrentes']], total:[gCh, a], foot: all ? `${pct(a / all)} de los usuarios del día` : '' }; }),
     { label:`Usuarios por día, ${gCh}`, axis:`${gCh} por día` });
 }
 function gaNote() {
   if (!gCh) return '';
-  const r = GA.channels.find(x => x[0] === gCh) || [gCh, 0, 0, 0];
+  const r = gaChannels().find(x => x[0] === gCh) || [gCh, 0, 0, 0];
   return `<b>${esc(gCh)}</b>: ${num(r[1])} usuarios (${gpct(r[1], GA.totals.cur.active)} del total) ${gdl(r[1], r[3])}`;
 }
 function drawGaChart() { $('g_chart').innerHTML = gaChart(); $('g_note').innerHTML = gaNote(); }
@@ -2733,7 +2842,8 @@ function drawGa4() {
   const g = GA, c = g.totals.cur, p = g.totals.prev, ret = x => Math.max(0, x.active - x.new);
   $('g_period').textContent = `Comparado con ${date(g.range.pFrom)} al ${date(g.range.pTo)}`;
   const pn = c.active ? c.new / c.active : 0, kk = (sw, l, v, pv, sub) => `<div class="k"><div class="kl">${sw ? `<i class="swc" style="background:${sw}"></i>` : ''}${l}</div><div class="kv">${num(v)}</div><div class="ks">${gdl(v, pv)}${sub}</div></div>`;
-  if (gCh && !g.channels.some(x => x[0] === gCh)) gCh = '';
+  const GCH = gaChannels().filter(x => x[1]);
+  if (gCh && !GCH.some(x => x[0] === gCh)) gCh = '';
   $('g_kpi').innerHTML = `<div class="gh">
     <div class="gh-k">
       <div class="l"><i class="ph ph-users-three"></i>Usuarios totales</div>
@@ -2752,7 +2862,7 @@ function drawGa4() {
     </div>
   </div>`;
   Dropdown($('g_chsel'), { icon:'ph-git-branch', dark:true, allLabel:'Todos los canales', value:gCh, search:false,
-    options:[{ v:'', l:'Todos los canales' }, ...g.channels.filter(x => x[1]).map((x, i) => ({ v:x[0], l:x[0], m:num(x[1]), sep:i === 0 }))],
+    options:[{ v:'', l:'Todos los canales' }, ...GCH.map((x, i) => ({ v:x[0], l:x[0], m:num(x[1]), sep:i === 0 }))],
     onChange: v => { gCh = v; drawGaChart(); } });
   drawGaChart();
   // Marcas: total = landing + tienda
@@ -2773,9 +2883,11 @@ function drawGa4() {
       ${lead ? `<div class="tlead"><span class="rk">#1</span><div><b>${esc(lead.n)}</b><small>${lead.sub || ''}</small></div><div class="tv"><b>${num(lead.v)}</b><small>${gpct(lead.v, tot)} del total</small>${gdl(lead.v, lead.pv)}</div></div>` : ''}
       <div class="tgrid">${rest.map((x, i) => `<div class="tcell ${x.other ? 'other' : ''}"><span class="rk">${x.other ? '' : '#' + (i + 2)}</span><span class="nm" title="${esc(x.n)}">${esc(x.n)}</span><b>${num(x.v)}</b><span class="sh">${gpct(x.v, tot)}</span>${gdl(x.v, x.pv)}</div>`).join('')}</div>`;
   };
-  const ch = g.channels.filter(x => x[1]);
-  top('g_chan', 'ph-git-branch', 'Canales del primer contacto', ch.map(x => ({ n: x[0], v: x[1], pv: x[3], sub: `${num(x[2])} usuarios nuevos` })), c.active, 'Usuarios activos');
-  top('g_city', 'ph-map-pin', 'Usuarios activos por ciudad', g.cities.map(x => ({ n: x[0], v: x[1], pv: x[2], other: x[0] === 'Otras' })), c.active, 'Top 14 + otras');
+  top('g_chan', 'ph-git-branch', 'Canales del primer contacto', GCH.map(x => ({ n: x[0], v: x[1], pv: x[3], sub: `${num(x[2])} usuarios nuevos` })), c.active, 'Usuarios activos');
+  // Ciudades: tantas como tarjetas tenga el widget de canales (misma altura); el resto va a "Otras"
+  const slots = Math.max(3, 1 + 2 * Math.ceil((GCH.length - 1) / 2)), named = g.cities.filter(x => x[0] !== 'Otras').slice(0, slots - 1);
+  const oc = Math.max(0, c.active - named.reduce((a, x) => a + x[1], 0)), op = Math.max(0, p.active - named.reduce((a, x) => a + x[2], 0));
+  top('g_city', 'ph-map-pin', 'Usuarios activos por ciudad', [...named.map(x => ({ n: x[0], v: x[1], pv: x[2] })), { n: 'Otras', v: oc, pv: op, other: true }], c.active, `Top ${named.length} + otras`);
   drawLand();
   if (R?.length) drawKpis();
 }
