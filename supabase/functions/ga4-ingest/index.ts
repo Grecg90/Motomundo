@@ -43,7 +43,23 @@ Deno.serve(async (req) => {
   if (!secret || given.length !== secret.length || given !== secret) return json({ error: 'no autorizado' }, 401);
 
   if (body.action === 'config') {
-    return json({ composio_api_key: await secretOf('composio_api_key'), composio_user_id: st.composio_user_id, ga4_property: st.ga4_property });
+    const { data: brands } = await sb.from('brands').select('id,name,color,landing_url,store_url,product_paths').order('sort');
+    return json({ composio_api_key: await secretOf('composio_api_key'), composio_user_id: st.composio_user_id, ga4_property: st.ga4_property, brands: brands || [] });
+  }
+  // Caché de reportes GA4 por rango (evita consultar GA4 en cada visita)
+  if (body.action === 'cache_get') {
+    const { data } = await sb.from('ga4_cache').select('data, created_at').eq('key', String(body.key)).maybeSingle();
+    const fresh = data && Date.now() - Date.parse(data.created_at) < 24 * 3600e3;
+    return json(fresh ? { hit: true, data: data.data, at: data.created_at } : { hit: false });
+  }
+  if (body.action === 'cache_put') {
+    if (typeof body.key !== 'string' || body.key.length > 200 || !body.data) return json({ error: 'datos inválidos' }, 400);
+    await sb.from('ga4_cache').upsert({ key: body.key, data: body.data, created_at: new Date().toISOString() });
+    return json({ ok: true });
+  }
+  if (body.action === 'cache_clear') {
+    await sb.from('ga4_cache').delete().neq('key', '');
+    return json({ ok: true });
   }
 
   if (body.action === 'notify') {

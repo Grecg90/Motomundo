@@ -345,6 +345,24 @@
   .ctl-lab { display:flex; align-items:center; gap:6px; font-weight:700; font-size:12px; color:var(--gray-500); text-transform:uppercase; letter-spacing:.04em; white-space:nowrap; flex:none; }
   .fbar .lab, .lfilters .lab { text-transform:uppercase; letter-spacing:.04em; font-size:12px; color:var(--gray-500); }
   .only-m { display:none !important; }
+  /* Franja de control: agrupar · filtros · etiquetas activas · buscar · vista (todo 40 px, mismo lenguaje) */
+  .fstrip { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:0 0 14px; }
+  .fstrip .sp { flex:1; }
+  .fstrip .dd-btn, .fs-btn { height:40px; border-radius:999px; border:1px solid var(--gray-200); background:var(--white); padding:0 14px; font-size:13px; font-weight:600; color:var(--gray-700); display:inline-flex; align-items:center; gap:8px; transition:border-color .15s, color .15s, background .15s; }
+  .fstrip .dd-btn:hover, .fs-btn:hover, .fs-btn[aria-expanded="true"] { border-color:var(--ink); color:var(--ink); }
+  .fstrip .dd-btn .dv { max-width:140px; }
+  .fs-btn .fc { background:var(--red); color:var(--white); border-radius:999px; font-size:11px; padding:1px 7px; } .fs-btn .fc:empty { display:none; }
+  .fs-btn .cr { transition:transform .2s var(--ease); } .fs-btn[aria-expanded="true"] .cr { transform:rotate(180deg); }
+  .fstrip .fchip { height:32px; background:var(--red-50); color:var(--red-600); border:1px solid transparent; padding:0 8px 0 12px; }
+  .fstrip .fchip span { color:var(--red-600); opacity:.75; } .fstrip .fchip i { color:var(--red-600); } .fstrip .fchip:hover { border-color:var(--red); }
+  .fs-clear { border:0; background:none; font-size:13px; font-weight:600; color:var(--gray-500); text-decoration:underline; text-underline-offset:3px; padding:0 4px; height:40px; }
+  .fs-clear:hover { color:var(--ink); } .fs-clear:disabled { opacity:.4; text-decoration:none; }
+  .fs-search { height:40px; flex:0 1 300px; min-width:180px; background:var(--white); border:1px solid var(--gray-200); }
+  .fs-search:focus-within { border-color:var(--ink); }
+  .fs-view { height:40px; padding:3px; }
+  .fp-grid { display:flex; flex-wrap:wrap; gap:8px; }
+  .fsheet .fpanel-f { display:flex; align-items:center; gap:12px; width:100%; margin-top:12px; padding-top:12px; border-top:1px solid var(--gray-200); }
+  .fsheet .fpanel-f .sp { flex:1; }
   .fline { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:0 0 14px; padding:8px; background:var(--gray-100); border-radius:var(--r-md); transition:border-radius .2s; }
   .fline:has(+ .fsheet.on) { border-radius:var(--r-md) var(--r-md) 0 0; margin-bottom:0; }
   .fline + .fsheet.on { border-radius:0 0 var(--r-md) var(--r-md); border-top:1px solid var(--gray-200); padding-top:12px; }
@@ -363,7 +381,7 @@
   .fpanel-f { display:flex; gap:8px; align-items:center; margin-left:auto; }
   @media (min-width:721px) {
     .fsheet:not(.on) { display:none !important; }
-    .fsheet.on { animation:viewIn .22s var(--ease); }
+    .fsheet.on { animation:viewIn .22s var(--ease); display:block !important; background:var(--gray-100); border-radius:var(--r-md); padding:14px; margin:0 0 14px; }
     .fpanel-f .btn { display:none; }
   }
   .mbar { gap:8px; align-items:center; margin:0 0 12px; }
@@ -395,6 +413,61 @@
   .sk-chart { height:120px; margin-top:auto; border-radius:12px; }
   .sk-row { height:44px; margin-bottom:8px; border-radius:10px; }
   .loading #kpis .tile, .loading #canales .tile, .loading #out { opacity:.55; transition:opacity .2s; }
+
+  /* ===== GA4 · Generalidades ===== */
+  .g-half { grid-column:span 6; }
+  .brow { grid-column:1 / -1; display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:14px; }
+  .bcard { display:flex; flex-direction:column; gap:10px; }
+  .bchip { align-self:flex-start; display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:999px; color:#fff; font-weight:700; font-size:12.5px; letter-spacing:.02em; }
+  .bcard .v { font-size:38px; font-weight:700; letter-spacing:-.02em; line-height:1; }
+  .bcard .lbl { font-size:12px; color:var(--gray-500); font-weight:600; line-height:1.4; }
+  .bcard .cmpr { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--gray-500); }
+  .gpill { display:inline-flex; align-items:center; gap:3px; padding:3px 9px; border-radius:999px; font-size:12px; font-weight:700; }
+  .gpill.up { background:var(--ok-50); color:var(--ok); } .gpill.dn { background:var(--red-50); color:var(--red-600); } .gpill.eq { background:var(--gray-100); color:var(--gray-500); }
+  .t-hero .gpill, .t-red .gpill, .t-graph .gpill { background:rgba(255,255,255,.14); color:#fff; }
+  .bcard .ft { display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; border-top:1px solid var(--gray-100); padding-top:12px; margin-top:auto; }
+  .bcard .ft b { display:block; font-size:18px; font-weight:700; } .bcard .ft span { font-size:11px; color:var(--gray-500); font-weight:600; }
+  .g-kv { font-size:56px; font-weight:700; letter-spacing:-.02em; line-height:1; margin-top:14px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .g-kv .gpill { font-size:13px; }
+  .g-sub { font-size:13px; color:var(--gray-300); margin-top:8px; }
+  .mixbar { display:flex; height:14px; border-radius:999px; overflow:hidden; margin:16px 0 12px; background:var(--gray-100); }
+  .mixbar i { display:block; height:100%; transition:width .6s var(--ease); }
+  .hbars { display:grid; gap:10px; margin-top:6px; }
+  .hb-r { display:grid; grid-template-columns:minmax(0, 150px) 1fr auto; gap:12px; align-items:center; font-size:13px; }
+  .hb-r > span { font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .hb-r .tr { position:relative; height:22px; }
+  .hb-r .tr i { position:absolute; left:0; border-radius:6px; transition:width .6s var(--ease); }
+  .hb-r .tr i.a { top:0; height:12px; background:var(--red); } .hb-r .tr i.n { top:14px; height:7px; background:var(--graphite); }
+  .hb-r .tr i.solo { top:5px; height:12px; background:var(--red); } .hb-r.other .tr i.solo { background:var(--gray-300); }
+  .hb-r b { font-weight:700; text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; } .hb-r b small { display:block; font-size:11px; color:var(--gray-500); font-weight:600; }
+  .legend-i { display:flex; gap:14px; font-size:12px; color:var(--gray-500); font-weight:600; } .legend-i span { display:flex; align-items:center; gap:6px; } .legend-i i { width:10px; height:10px; border-radius:3px; display:inline-block; }
+  .lgrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:10px; }
+  .lcard2 { border:1px solid var(--gray-200); border-radius:var(--r-md); padding:14px; display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .lcard2 .pth { font-family:var(--mono); font-size:12px; color:var(--ink); overflow-wrap:anywhere; line-height:1.4; }
+  .lcard2 .rk { font-size:11px; font-weight:700; color:var(--gray-500); }
+  .lcard2 .nb { display:flex; align-items:baseline; gap:10px; } .lcard2 .nb b { font-size:24px; font-weight:700; } .lcard2 .nb span { font-size:12px; color:var(--gray-500); font-weight:600; }
+  .lcard2.top { background:var(--black); color:#fff; border-color:var(--black); } .lcard2.top .pth { color:#fff; } .lcard2.top .share { background:var(--graphite-2); }
+  .lcard2 .share { height:6px; border-radius:999px; background:var(--gray-100); overflow:hidden; } .lcard2 .share i { display:block; height:100%; background:var(--red); }
+  .more-btn { margin:14px auto 0; display:flex; }
+  .g-desc { margin:-6px 0 14px; color:var(--gray-500); font-size:13px; line-height:1.5; }
+  .g-cb { display:flex; align-items:center; gap:16px; flex-wrap:wrap; } .g-cb > div { flex:1; min-width:260px; } .g-cb .g-desc { margin:6px 0 0; }
+  .btable td .bchip { font-size:12px; }
+  .btable .url { display:flex; align-items:center; gap:6px; color:var(--gray-700); text-decoration:none; max-width:280px; } .btable .url span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .btable code { font-family:var(--mono); font-size:12px; background:var(--gray-100); padding:3px 7px; border-radius:6px; overflow-wrap:anywhere; }
+  .bm { width:min(760px, 100%); }
+  .bm-body { padding:16px 22px; overflow:auto; display:grid; gap:16px; background:var(--white); }
+  .bm-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; } .bm-w { grid-column:1 / -1; }
+  .bm-sug { display:grid; gap:6px; background:var(--gray-100); border-radius:var(--r-md); padding:12px 14px; font-size:13px; }
+  .bm-sug #bm_sug { display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+  .sug { border:1px solid var(--gray-200); background:var(--white); border-radius:999px; padding:5px 10px; font-size:12px; font-family:var(--mono); display:inline-flex; gap:6px; align-items:center; }
+  .sug:hover { border-color:var(--ink); } .sug em { font-style:normal; color:var(--gray-500); font-family:var(--font); }
+  .adm { position:relative; }
+  .adm-btn { display:inline-flex; align-items:center; gap:7px; height:40px; padding:0 14px; border-radius:999px; border:0; background:var(--graphite); color:var(--gray-300); font-weight:600; font-size:13px; }
+  .adm-btn:hover, .adm-btn.on { color:var(--white); } .adm-btn.on { background:var(--white); color:var(--black); }
+  .adm-pop { left:0; right:auto; width:220px; }
+  .brand.spin img { animation:pulse1 .9s var(--ease) infinite; } @keyframes pulse1 { 50% { opacity:.45; transform:scale(.94); } }
+  @media (max-width:1100px) { .g-half { grid-column:1 / -1; } }
+  @media (max-width:720px) { .brow { grid-template-columns:1fr 1fr; gap:10px; } .bcard .v { font-size:28px; } .bcard .ft { grid-template-columns:1fr 1fr; } .bcard .ft div:last-child { grid-column:1 / -1; } .bm-grid { grid-template-columns:1fr; } .hb-r { grid-template-columns:minmax(0, 96px) 1fr auto; } .g-kv { font-size:44px; } .adm { display:none !important; } }
 
   /* ===== Agrupar canales (modal con tablero) ===== */
   .modal-bg { position:fixed; inset:0; z-index:70; background:rgba(13,14,16,.38); backdrop-filter:blur(10px) saturate(1.1); -webkit-backdrop-filter:blur(10px) saturate(1.1);
@@ -464,6 +537,7 @@
     .hl-btn .hl-t { display:none; }
   }
   @media (max-width:720px) {
+    .fstrip .fs-search { order:9; flex-basis:100%; } .fstrip .sp { display:none; }
     .only-m { display:flex !important; } .only-d { display:none !important; }
     .fsheet { position:fixed; left:0; right:0; bottom:0; z-index:50; margin:0 !important; border-radius:20px 20px 0 0; background:var(--white) !important; box-shadow:var(--shadow-pop);
       padding:16px 16px calc(16px + env(safe-area-inset-bottom)) !important; max-height:82dvh; overflow:auto; transform:translateY(105%); transition:transform .3s var(--ease);
@@ -657,7 +731,8 @@
 <div id="app" hidden>
 <aside class="drawer" id="drawer" aria-label="Menú" inert>
   <div class="drawer-h"><img class="logo" src="/logo-motomundo.png" alt="Motomundo"><button class="ibtn" id="dr_x" aria-label="Cerrar menú"><i class="ph ph-x"></i></button></div>
-  <button class="dr-item" data-go="reporte"><i class="ph ph-chart-bar"></i>Reporte</button>
+  <button class="dr-item" data-go="ga4"><i class="ph ph-chart-line-up"></i>GA4</button>
+  <button class="dr-item" data-go="reporte"><i class="ph ph-megaphone"></i>Campañas</button>
   <button class="dr-item" data-go="utms" data-need="crear"><i class="ph ph-link-simple"></i>Constructor</button>
   <button class="dr-item" data-go="usuarios" data-need="admin"><i class="ph ph-users-three"></i>Usuarios</button>
   <button class="dr-item" data-go="bitacora" data-need="admin"><i class="ph ph-clock-counter-clockwise"></i>Bitácora</button>
@@ -679,17 +754,39 @@
     </div>
   </div>
 </div>
+<div class="modal-bg" id="bm_modal" hidden>
+  <div class="modal bm" role="dialog" aria-modal="true" aria-labelledby="bm_t">
+    <div class="modal-h"><div><h2 id="bm_t">Editar marca</h2><p>Pega las URLs completas; la ruta se extrae sola. Los productos van uno por línea (URL o ruta).</p></div><span class="sp"></span><button class="ibtn" data-bm-x aria-label="Cerrar"><i class="ph ph-x"></i></button></div>
+    <div class="bm-body">
+      <div class="bm-grid">
+        <label class="field"><span>Marca</span><input id="bm_name" maxlength="40" autocomplete="off"></label>
+        <label class="field"><span>Color</span><div class="color-in"><input type="color" id="bm_colp" aria-label="Elegir color"><input class="inp" id="bm_col" maxlength="7"></div></label>
+        <label class="field bm-w"><span>URL de la landing <em>opcional</em></span><input id="bm_land" placeholder="https://www.motomundohn.com/marca/" autocomplete="off"><div class="norm" id="bm_land_r"></div></label>
+        <label class="field bm-w"><span>URL de la tienda <em>categoría de la marca</em></span><input id="bm_store" placeholder="https://www.motomundohn.com/categoria-producto/marca/" autocomplete="off"><div class="norm" id="bm_store_r"></div></label>
+        <label class="field bm-w"><span>Productos <em id="bm_pc"></em></span><textarea id="bm_prod" rows="6" placeholder="/producto/tvs-kargo/"></textarea></label>
+      </div>
+      <div class="bm-sug"><b>Sugeridos desde GA4</b><span class="muted" id="bm_sug_h">Páginas de producto con visitas en el periodo que contienen el nombre de la marca.</span><div id="bm_sug"></div></div>
+    </div>
+    <div class="modal-f"><button class="fs-clear" id="bm_del">Eliminar marca</button><span class="sp"></span><button class="btn btn-ghost" data-bm-x>Cancelar</button><button class="btn btn-red" id="bm_save"><i class="ph ph-floppy-disk"></i>Guardar marca</button></div>
+  </div>
+</div>
 <header class="top">
   <div class="top-in">
     <button class="hb" id="hb" aria-label="Abrir menú" aria-expanded="false" aria-controls="drawer"><i class="ph ph-list"></i></button>
-    <a class="brand" href="#/reporte" aria-label="Motomundo Campañas, inicio"><img class="logo only-d" src="/logo-motomundo.png" alt="Motomundo"><img class="logo-m only-m" src="/favicon-512.png" alt="Motomundo"></a>
+    <a class="brand" href="#/ga4" id="brand_btn" aria-label="Actualizar datos" title="Actualizar datos"><img class="logo only-d" src="/logo-motomundo.png" alt="Motomundo"><img class="logo-m only-m" src="/favicon-512.png" alt="Motomundo"></a>
     <div class="seg dark" id="nav" role="tablist" aria-label="Secciones">
       <span class="pill" aria-hidden="true"></span>
-      <button data-r="reporte" role="tab"><i class="ph ph-chart-bar"></i>Reporte</button>
+      <button data-r="ga4" role="tab"><i class="ph ph-chart-line-up"></i>GA4</button>
+      <button data-r="reporte" role="tab"><i class="ph ph-megaphone"></i>Campañas</button>
       <button data-r="utms" role="tab" data-need="crear"><i class="ph ph-link-simple"></i>Constructor</button>
-      <button data-r="usuarios" role="tab" data-need="admin"><i class="ph ph-users-three"></i>Usuarios</button>
-      <button data-r="bitacora" role="tab" data-need="admin"><i class="ph ph-clock-counter-clockwise"></i>Bitácora</button>
-      <button data-r="config" role="tab" data-need="admin"><i class="ph ph-gear-six"></i>Configuración</button>
+    </div>
+    <div class="adm" data-need="admin" hidden>
+      <button class="adm-btn" id="adm_btn" aria-haspopup="menu" aria-expanded="false"><i class="ph ph-shield-check"></i><span>Admin</span><i class="ph ph-caret-down"></i></button>
+      <div class="um-pop adm-pop pop-in" id="adm_pop" role="menu" hidden>
+        <a class="um-item" href="#/usuarios" role="menuitem"><i class="ph ph-users-three"></i>Usuarios</a>
+        <a class="um-item" href="#/bitacora" role="menuitem"><i class="ph ph-clock-counter-clockwise"></i>Bitácora</a>
+        <a class="um-item" href="#/config" role="menuitem"><i class="ph ph-gear-six"></i>Configuración</a>
+      </div>
     </div>
     <div class="sp"></div>
     <div class="hl-wrap" data-need="admin" hidden>
@@ -739,36 +836,60 @@
       </div>
       <div class="contents" id="canales"><div class="tile cn"><div class="sk sk-l"></div><div class="sk sk-s" style="width:60%"></div><div class="sk sk-v" style="width:90%;height:34px"></div></div><div class="tile cn"><div class="sk sk-l"></div><div class="sk sk-s" style="width:60%"></div><div class="sk sk-v" style="width:90%;height:34px"></div></div><div class="tile cn"><div class="sk sk-l"></div><div class="sk sk-s" style="width:60%"></div><div class="sk sk-v" style="width:90%;height:34px"></div></div><div class="tile cn"><div class="sk sk-l"></div><div class="sk sk-s" style="width:60%"></div><div class="sk sk-v" style="width:90%;height:34px"></div></div></div>
       <div class="tile card" id="report">
-        <div class="card-h">
-          <h2>Detalle por UTM</h2>
-          <div class="toolbar">
-            <div class="seg icons" id="viewMode" aria-label="Visualización"><span class="pill"></span>
-              <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button>
-              <button data-v="bento" title="Tarjetas" aria-label="Tarjetas"><i class="ph ph-squares-four"></i></button>
-            </div>
-          </div>
-        </div>
-        <div class="ctl-row">
-          <span class="ctl-lab"><i class="ph ph-stack"></i>Ver por</span>
-          <div class="seg only-d" id="groupBy" aria-label="Ver por"><span class="pill"></span></div>
-          <span class="only-m" id="gbdd" style="flex:1"></span>
-        </div>
-        <div class="fline">
-          <button class="btn btn-ghost fbtn" data-sheet="fbar" aria-controls="fbar" aria-expanded="false"><i class="ph ph-funnel-simple"></i>Filtros<span class="fc" id="fc"></span><i class="ph ph-caret-down cr"></i></button>
+        <div class="card-h"><h2>Detalle por UTM</h2><div class="count" id="count"></div></div>
+        <div class="fstrip">
+          <span class="fs-slot" id="gbdd"></span>
+          <button class="fs-btn fbtn" data-sheet="fbar" aria-controls="fbar" aria-expanded="false"><i class="ph ph-funnel-simple"></i>Filtros<span class="fc" id="fc"></span><i class="ph ph-caret-down cr"></i></button>
           <span class="fchips" id="fchips"></span>
-          <button class="clear" id="clear_all" hidden><i class="ph ph-x-circle"></i>Limpiar todo</button>
+          <button class="fs-clear" id="clear_all" hidden>Limpiar todo</button>
           <span class="sp"></span>
-          <label class="sw"><input type="checkbox" id="only"><span class="tr"></span>Solo con cotizaciones</label>
-          <label class="search"><i class="ph ph-magnifying-glass"></i><input id="q" placeholder="Buscar campaña, término, página…" aria-label="Buscar"></label>
+          <label class="search fs-search"><i class="ph ph-magnifying-glass"></i><input id="q" placeholder="Buscar campaña, término, página…" aria-label="Buscar"></label>
+          <div class="seg icons fs-view" id="viewMode" aria-label="Visualización"><span class="pill"></span>
+            <button data-v="bento" title="Tarjetas" aria-label="Tarjetas"><i class="ph ph-squares-four"></i></button>
+            <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button>
+          </div>
         </div>
         <div class="fbar fsheet" id="fbar">
           <div class="sheet-h only-m"><b>Filtros</b><button class="ibtn" data-sheet-x aria-label="Cerrar filtros"><i class="ph ph-x"></i></button></div>
-          <span id="fpills" style="display:contents"></span>
-          <span id="fstate" style="display:contents"></span>
-          <div class="fpanel-f"><button class="clear" id="clear"><i class="ph ph-x"></i>Limpiar filtros</button><button class="btn btn-red" data-sheet-x>Ver resultados</button></div>
+          <div class="fp-grid"><span id="fpills" style="display:contents"></span><span id="fstate" style="display:contents"></span></div>
+          <div class="fpanel-f"><label class="sw"><input type="checkbox" id="only"><span class="tr"></span>Solo con cotizaciones</label><span class="sp"></span><button class="fs-clear" id="clear">Limpiar filtros</button><button class="btn btn-red only-m" data-sheet-x>Ver resultados</button></div>
         </div>
-        <div class="count" id="count"></div>
         <div id="out"><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== GA4 · GENERALIDADES ===================== -->
+  <section class="view" id="view-ga4" hidden>
+    <div class="intro">
+      <div><h1>Generalidades GA4</h1><p>Todo el tráfico del sitio: usuarios, marcas, canales, ciudades y páginas de destino.</p></div>
+      <div class="cmp"><b>Todo el sitio</b><br><span id="g_period"></span></div>
+    </div>
+    <div class="bento" id="g_bento">
+      <div class="tile t-hero" id="g_kpi"><div class="sk sk-l dk"></div><div class="sk sk-v dk" style="width:45%;height:56px"></div><div class="sk sk-chart dk"></div></div>
+      <div class="tile t-sm t-red" id="g_new"><div class="sk sk-l dk"></div><div class="sk sk-v dk"></div></div>
+      <div class="tile t-sm t-graph" id="g_ret"><div class="sk sk-l dk"></div><div class="sk sk-v dk"></div></div>
+      <div class="tile t-md" id="g_mix"><div class="sk sk-l"></div><div class="sk sk-v" style="width:40%"></div><div class="sk sk-s" style="width:100%;height:12px"></div></div>
+      <div class="brow" id="g_brands"></div>
+      <div class="tile g-half" id="g_chan"><div class="sk sk-l"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div></div>
+      <div class="tile g-half" id="g_city"><div class="sk sk-l"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div></div>
+      <div class="tile t-full" id="g_land_t">
+        <div class="card-h"><h2><i class="ph ph-signpost" style="color:var(--red)"></i> Páginas de destino</h2>
+          <div class="toolbar"><div class="seg icons" id="g_land_v" aria-label="Visualización"><span class="pill"></span>
+            <button data-v="bento" title="Tarjetas" aria-label="Tarjetas"><i class="ph ph-squares-four"></i></button>
+            <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button></div></div></div>
+        <div id="g_land"><div class="sk sk-row"></div><div class="sk sk-row"></div></div>
+      </div>
+      <div class="tile t-full g-adm" data-need="admin" hidden>
+        <div class="card-h"><h2><i class="ph ph-tag" style="color:var(--red)"></i> Marcas y rutas de destino</h2>
+          <div class="toolbar"><button class="btn btn-ghost" id="b_add"><i class="ph ph-plus"></i>Agregar marca</button></div></div>
+        <p class="desc g-desc">Landing, tienda y productos de cada marca. Las rutas se sacan solas de la URL y alimentan las tarjetas de marcas de arriba.</p>
+        <div id="b_table"></div>
+      </div>
+      <div class="tile t-full g-adm g-cb" data-need="admin" hidden>
+        <div><h2><i class="ph ph-kanban" style="color:var(--red)"></i> Agrupación de canales de campañas</h2>
+        <p class="desc g-desc">Solo aplica al reporte de Campañas (Pauta, Directos, Redes, Otros). Los canales de este módulo son los de GA4. <span id="cb_rules"></span></p></div>
+        <button class="btn btn-dark" id="cb_open"><i class="ph ph-kanban"></i>Agrupar canales</button>
       </div>
     </div>
   </section>
@@ -777,7 +898,7 @@
   <section class="view" id="view-utms" hidden>
     <div class="intro">
       <div><h1>Constructor de UTMs</h1><p>Crea links con el estándar de Motomundo, guárdalos y mide lo que generaron en GA4.</p></div>
-      <div class="cmp"><b id="libCount">—</b><br><span>UTMs guardadas</span></div>
+      <div class="cmp"><b id="libCount">-</b><br><span>UTMs guardadas</span></div>
     </div>
     <div class="bento">
       <div class="tile b-form">
@@ -823,29 +944,24 @@
         <div class="card-h">
           <h2>UTMs guardadas</h2>
           <div class="toolbar">
-            <div class="seg icons" id="libView" aria-label="Visualización"><span class="pill"></span>
-              <button data-v="bento" title="Tarjetas" aria-label="Tarjetas"><i class="ph ph-squares-four"></i></button>
-              <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button>
-            </div>
           </div>
         </div>
-        <div class="ctl-row">
-          <span class="ctl-lab"><i class="ph ph-stack"></i>Ver por</span>
-          <div class="seg only-d" id="libGroup" aria-label="Ver por"><span class="pill"></span></div>
-          <span class="only-m" id="lgdd" style="flex:1"></span>
-        </div>
-        <div class="fline">
-          <button class="btn btn-ghost fbtn" data-sheet="lfilters" aria-controls="lfilters" aria-expanded="false"><i class="ph ph-funnel-simple"></i>Filtros<span class="fc" id="lfc"></span><i class="ph ph-caret-down cr"></i></button>
+        <div class="fstrip">
+          <span class="fs-slot" id="lgdd"></span>
+          <button class="fs-btn fbtn" data-sheet="lfilters" aria-controls="lfilters" aria-expanded="false"><i class="ph ph-funnel-simple"></i>Filtros<span class="fc" id="lfc"></span><i class="ph ph-caret-down cr"></i></button>
           <span class="fchips" id="lfchips"></span>
-          <button class="clear" id="lf_clear_all" hidden><i class="ph ph-x-circle"></i>Limpiar todo</button>
+          <button class="fs-clear" id="lf_clear_all" hidden>Limpiar todo</button>
           <span class="sp"></span>
-          <label class="sw"><input type="checkbox" id="lf_mine"><span class="tr"></span>Solo mías</label>
-          <label class="search"><i class="ph ph-magnifying-glass"></i><input id="lq" placeholder="Buscar UTM…" aria-label="Buscar UTM"></label>
+          <label class="search fs-search"><i class="ph ph-magnifying-glass"></i><input id="lq" placeholder="Buscar UTM…" aria-label="Buscar UTM"></label>
+          <div class="seg icons fs-view" id="libView" aria-label="Visualización"><span class="pill"></span>
+            <button data-v="bento" title="Tarjetas" aria-label="Tarjetas"><i class="ph ph-squares-four"></i></button>
+            <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button>
+          </div>
         </div>
         <div class="lfilters fsheet" id="lfilters">
           <div class="sheet-h only-m"><b>Filtros</b><button class="ibtn" data-sheet-x aria-label="Cerrar filtros"><i class="ph ph-x"></i></button></div>
-          <span id="lf_pills" style="display:contents"></span>
-          <div class="fpanel-f"><button class="clear" id="lf_clear"><i class="ph ph-x"></i>Limpiar filtros</button><button class="btn btn-red" data-sheet-x>Ver resultados</button></div>
+          <div class="fp-grid"><span id="lf_pills" style="display:contents"></span></div>
+          <div class="fpanel-f"><label class="sw"><input type="checkbox" id="lf_mine"><span class="tr"></span>Solo mías</label><span class="sp"></span><button class="fs-clear" id="lf_clear">Limpiar filtros</button><button class="btn btn-red only-m" data-sheet-x>Ver resultados</button></div>
         </div>
         <div id="lib"></div>
       </div>
@@ -856,7 +972,7 @@
   <section class="view" id="view-usuarios" hidden>
     <div class="intro">
       <div><h1>Usuarios y roles</h1><p>Crea usuarios, asigna su rol y envíales la invitación para que definan su contraseña.</p></div>
-      <div class="cmp"><b id="uCount">—</b><br><span>usuarios</span></div>
+      <div class="cmp"><b id="uCount">-</b><br><span>usuarios</span></div>
     </div>
     <div class="bento">
       <div class="tile u-form">
@@ -899,7 +1015,7 @@
   <section class="view" id="view-bitacora" hidden>
     <div class="intro">
       <div><h1>Bitácora</h1><p>Lo que pasó en la plataforma en los últimos 7 días: quién creó, editó o eliminó UTMs y usuarios, y cuándo. Los registros más antiguos se borran solos.</p></div>
-      <div class="cmp"><b id="aCount">—</b><br><span>registros</span></div>
+      <div class="cmp"><b id="aCount">-</b><br><span>registros</span></div>
     </div>
     <div class="bento">
       <div class="tile card">
@@ -933,15 +1049,10 @@
         <div id="cfg_health" class="cfg-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0 20px"></div>
       </div>
 
-      <div class="tile cfg full" style="flex-direction:row;align-items:center;flex-wrap:wrap;gap:16px">
-        <div style="flex:1;min-width:240px"><h2><i class="ph ph-kanban"></i>Agrupación de canales</h2><p class="desc" style="margin-top:6px">Define a qué canal (Pauta, Directos, Redes, Otros) pertenece cada medio y, si hace falta, cada fuente. <span id="cb_rules"></span></p></div>
-        <button class="btn btn-dark" id="cb_open"><i class="ph ph-kanban"></i>Agrupar canales</button>
-      </div>
-
       <div class="tile cfg">
         <h2><i class="ph ph-plugs-connected"></i>Composio y GA4</h2>
         <p class="desc">GA4 se conecta a través de Composio. Primero conecta la cuenta de Google en Composio; luego elige aquí la propiedad.</p>
-        <div class="cfg-row"><b style="font-size:13px">Llave de Composio</b><span class="sec-state" id="cs_composio">—</span></div>
+        <div class="cfg-row"><b style="font-size:13px">Llave de Composio</b><span class="sec-state" id="cs_composio">-</span></div>
         <div class="cfg-row"><input class="inp" id="c_ckey" type="password" autocomplete="off" placeholder="Pegar nueva llave (ak_…)" style="flex:1;min-width:200px"><button class="btn btn-dark" data-secret="composio_api_key" data-in="c_ckey"><i class="ph ph-lock-key"></i>Guardar llave</button></div>
         <div class="cfg-grid">
           <label class="field"><span>Usuario de Composio <em>user_id</em></span><input id="c_cuser" autocomplete="off"></label>
@@ -954,7 +1065,7 @@
       <div class="tile cfg">
         <h2><i class="ph ph-envelope-simple"></i>Correo (Resend)</h2>
         <p class="desc">Se usa para invitaciones y recuperación de contraseña. Sin dominio propio, Resend solo entrega al correo dueño de la cuenta.</p>
-        <div class="cfg-row"><b style="font-size:13px">Llave de Resend</b><span class="sec-state" id="cs_resend">—</span></div>
+        <div class="cfg-row"><b style="font-size:13px">Llave de Resend</b><span class="sec-state" id="cs_resend">-</span></div>
         <div class="cfg-row"><input class="inp" id="c_rkey" type="password" autocomplete="off" placeholder="Pegar nueva llave (re_…)" style="flex:1;min-width:200px"><button class="btn btn-dark" data-secret="resend_api_key" data-in="c_rkey"><i class="ph ph-lock-key"></i>Guardar llave</button></div>
         <div class="cfg-grid">
           <label class="field"><span>Nombre del remitente</span><input id="c_mname" autocomplete="off"></label>
@@ -1335,14 +1446,13 @@ $('fchips').addEventListener('click', e => { const b = e.target.closest('[data-f
 $('only').onchange = () => { draw(); fillFilters(); };
 
 const GB_OPTS = ORDER.map(d => ({ v: d, l: DIMS[d], ic: DIM_IC[d] }));
-const GBD = Dropdown($('gbdd'), { options: GB_OPTS, value: view, search: false, block: true, onChange: v => { view = v; GB.set(v); draw(); } });
-const GB = Seg($('groupBy'), ORDER.map(d => [d, DIMS[d], DIM_IC[d]]), view, v => { view = v; GBD.set(v); draw(); });
+const GBD = Dropdown($('gbdd'), { label: 'Agrupar', icon: 'ph-stack', options: GB_OPTS, value: view, search: false, onChange: v => { view = v; draw(); } });
 Seg($('viewMode'), null, mode, v => { mode = v; draw(); });
 
 const fmtDim = (d, v) => d === 'p' ? `<span class="page">${esc(v)}</span>` : d === 't' || d === 'x' ? `<span class="term">${esc(v)}</span>` : esc(v);
 const tags = (d, arr) => arr.length === 1 ? fmtDim(d, arr[0])
   : arr.slice(0, 2).map(x => `<span class="tag">${esc(x)}</span>`).join('') + (arr.length > 2 ? `<span class="tag">+${arr.length - 2}</span>` : '');
-const evc = (n, p) => `<td class="ev ${n ? '' : 'z'}">${n ? num(n) : '—'}${dl(n, p)}</td>`;
+const evc = (n, p) => `<td class="ev ${n ? '' : 'z'}">${n ? num(n) : '-'}${dl(n, p)}</td>`;
 const metrics = (a, p = { u:0, e1:0, e2:0 }) => `<td>${num(a.u)}${dl(a.u, p.u)}</td>${evc(a.e1, p.e1)}${evc(a.e2, p.e2)}${evc(a.e1 + a.e2, p.e1 + p.e2)}`;
 const utmParts = r => [['utm_source', r.s], ['utm_medium', r.m], ['utm_campaign', r.c], ['utm_term', r.t], ['utm_content', r.x]].filter(([, v]) => v && !v.startsWith('('));
 const qs = r => utmParts(r).map(([k, v]) => k + '=' + encodeURIComponent(v)).join('&');
@@ -1493,6 +1603,7 @@ let RANGO = { from:'', to:'', preset:'mes' }, sel = { a:'', b:'' }, hover = '', 
 async function aplicarRango(from, to, preset) {
   if (from > to) [from, to] = [to, from];
   RANGO = { from, to, preset };
+  if (curRoute() === 'ga4') loadGa4();
   const n = days(from, to) + 1, pTo = addD(from, -1), pFrom = addD(pTo, -(n - 1));
   const name = PRESETS.find(p => p[0] === preset)?.[1];
   const label = `${name ? `<b>${name}</b><span class="lbl-long"> · ${shortRange(from, to)}</span>` : `<b>${shortRange(from, to)}</b>`}`;
@@ -1682,7 +1793,7 @@ async function start() {
   $('um_name').textContent = nm; $('um_mail').textContent = p.email; $('um_role').innerHTML = roleChip(p);
   document.querySelectorAll('[data-need]').forEach(el => el.hidden = !can[el.dataset.need]());
   NAV.move();
-  if (!location.hash || /^#\/(login|recuperar|crear-contrasena)/.test(location.hash)) location.hash = '#/reporte';
+  if (!location.hash || /^#\/(login|recuperar|crear-contrasena)/.test(location.hash)) location.hash = '#/ga4';
   route();
   if (STARTED) return; STARTED = true;
   loadLinks();
@@ -1896,8 +2007,7 @@ $('lf_clear').onclick = () => { Object.keys(LF).forEach(k => { LF[k] = ''; LFD[k
 const LG_KEY = LV;
 const LG_IC = Object.fromEntries(ORDER.map(d => [d, k => d === 'g' ? (CANAL_INFO[k]?.[1] || DIM_IC.g) : DIM_IC[d]]));
 libGroup = 'g';
-const LGD = Dropdown($('lgdd'), { options: GB_OPTS, value: libGroup, search: false, block: true, onChange: v => { libGroup = v; LGS.set(v); drawLib(); } });
-const LGS = Seg($('libGroup'), ORDER.map(d => [d, DIMS[d], DIM_IC[d]]), libGroup, v => { libGroup = v; LGD.set(v); drawLib(); });
+const LGD = Dropdown($('lgdd'), { label: 'Agrupar', icon: 'ph-stack', options: GB_OPTS, value: libGroup, search: false, onChange: v => { libGroup = v; drawLib(); } });
 Seg($('libView'), null, libView, v => { libView = v; drawLib(); });
 const ago = s => { const d = (Date.now() - new Date(s)) / 864e5; return d < 1 ? 'hoy' : d < 2 ? 'ayer' : `hace ${Math.floor(d)} días`; };
 function libActions(l, u) {
@@ -1912,7 +2022,7 @@ function libCard(l) {
   let host = ''; try { const x = new URL(l.url); host = x.host + x.pathname; } catch { host = l.url; }
   const actions = confirmDel === l.id
     ? `<span class="confirm"><i class="ph ph-trash"></i>¿Eliminar?</span><span><button class="btn btn-red" data-del-yes="${l.id}" style="padding:6px 12px">Eliminar</button> <button class="btn btn-ghost" data-del-no style="padding:6px 12px">No</button></span>`
-    : `<span class="when">${esc(l.created_by_name || '—')} · ${l.updated_at !== l.created_at ? 'editada' : 'creada'} ${ago(l.updated_at)}</span><span>${libActions(l, u)}</span>`;
+    : `<span class="when">${esc(l.created_by_name || '-')} · ${l.updated_at !== l.created_at ? 'editada' : 'creada'} ${ago(l.updated_at)}</span><span>${libActions(l, u)}</span>`;
   return `<div class="gcard lcard" data-id="${l.id}">
     <div class="gt"><b style="font-weight:600">${esc(l.campaign)}</b>${BADGE[lv](iss.length)}</div>
     <div class="chips"><span class="tag"><i>fuente</i> ${esc(l.source)}</span><span class="tag"><i>medio</i> ${esc(l.medium)}</span>${l.zone ? `<span class="tag"><i>zona</i> ${esc(l.zone)}</span>` : ''}${l.term ? `<span class="tag"><i>término</i> ${esc(l.term)}</span>` : ''}${l.content ? `<span class="tag"><i>contenido</i> ${esc(l.content)}</span>` : ''}</div>
@@ -1941,8 +2051,8 @@ function drawLib() {
     swap($('lib'), `<div class="table-wrap"><table><thead><tr><th class="l">Campaña</th><th class="l">Fuente / medio</th><th class="l">Zona · término · contenido</th><th class="l">Creada por</th><th class="l">Estado</th><th>Usuarios</th><th>${EV1}</th><th>${EV2}</th><th></th></tr></thead><tbody>${keys.map(k =>
       `<tr><td class="l" colspan="9" style="background:var(--gray-100);font-weight:600"><i class="ph ${LG_IC[libGroup](k)}" style="color:var(--red)"></i> ${esc(k)} <span class="muted">· ${M.get(k).length}</span></td></tr>` +
       M.get(k).map(l => { const iss = validar({ s: l.source, m: l.medium, c: l.campaign, t: l.term }), ga = gaFor(l), u = fullUrl(l);
-        return `<tr><td class="l">${esc(l.campaign)}<div class="term">${esc(l.url)}</div></td><td class="l">${esc(l.source)} / ${esc(l.medium)}</td><td class="l"><span class="term">${esc(l.zone || '—')} · ${esc(l.term || '—')} · ${esc(l.content || '—')}</span></td>
-          <td class="l"><span class="term">${esc(l.created_by_name || '—')}</span></td><td class="l">${BADGE[nivel(iss)](iss.length)}</td><td>${ga ? num(ga.u) : '—'}</td><td class="ev ${ga?.e1 ? '' : 'z'}">${ga?.e1 ? num(ga.e1) : '—'}</td><td class="ev ${ga?.e2 ? '' : 'z'}">${ga?.e2 ? num(ga.e2) : '—'}</td>
+        return `<tr><td class="l">${esc(l.campaign)}<div class="term">${esc(l.url)}</div></td><td class="l">${esc(l.source)} / ${esc(l.medium)}</td><td class="l"><span class="term">${esc(l.zone || '-')} · ${esc(l.term || '-')} · ${esc(l.content || '-')}</span></td>
+          <td class="l"><span class="term">${esc(l.created_by_name || '-')}</span></td><td class="l">${BADGE[nivel(iss)](iss.length)}</td><td>${ga ? num(ga.u) : '-'}</td><td class="ev ${ga?.e1 ? '' : 'z'}">${ga?.e1 ? num(ga.e1) : '-'}</td><td class="ev ${ga?.e2 ? '' : 'z'}">${ga?.e2 ? num(ga.e2) : '-'}</td>
           <td style="white-space:nowrap">${libActions(l, u)}</td></tr>`; }).join('')).join('')}</tbody></table></div>`);
     return;
   }
@@ -1973,14 +2083,9 @@ $('lib').addEventListener('click', async e => {
 });
 
 // ============================================================
-// Usuarios (solo admin) — la función admin-users usa la llave de servicio en el servidor
+// Usuarios (solo admin) - la función admin-users usa la llave de servicio en el servidor
 // ============================================================
-const adminCall = async body => {
-  const { data, error } = await sb.functions.invoke('admin-users', { body });
-  if (error) { let m = error.message; try { m = (await error.context.json()).error || m; } catch {} throw new Error(m); }
-  if (data?.error) throw new Error(data.error);
-  return data;
-};
+const adminCall = body => edgeCall('admin-users', body);
 let USERS = null, uView = 'bento';
 const U_LINK_DEFAULT = $('u_link').innerHTML;
 const ROLE_OPTS = [{ v:'especialista', l:'Especialista', m:'crea UTMs' }, { v:'jefe', l:'Jefe de canal', m:'crea y edita su canal' }, { v:'subgerente', l:'Subgerente', m:'solo reportes' }, { v:'admin', l:'Jefe Web (admin)', m:'controla todo' }];
@@ -2032,7 +2137,7 @@ async function loadUsers() {
   try { USERS = await adminCall({ action:'list' }); } catch (e) { $('users').innerHTML = `<div class="empty"><i class="ph ph-plugs"></i><b>No se pudo cargar el equipo</b><span>${esc(e.message)}</span></div>`; return; }
   $('uCount').textContent = num(USERS.length); drawUsers();
 }
-const dt = s => s ? new Date(s).toLocaleString('es-MX', { dateStyle:'medium', timeStyle:'short' }) : '—';
+const dt = s => s ? new Date(s).toLocaleString('es-MX', { dateStyle:'medium', timeStyle:'short' }) : '-';
 const stChip = u => !u.active ? '<span class="role-chip off"><i class="ph ph-prohibit"></i>Desactivado</span>' : u.pending ? '<span class="role-chip pending"><i class="ph ph-hourglass"></i>Invitación pendiente</span>' : '<span class="role-chip" style="background:var(--ok-50);color:var(--ok)"><i class="ph ph-check-circle"></i>Activo</span>';
 function userActions(u) {
   const self = u.id === ME.id;
@@ -2049,12 +2154,12 @@ function drawUsers() {
   UDD.length = 0;
   if (uView === 'table') {
     swap($('users'), `<div class="table-wrap"><table><thead><tr><th class="l">Usuario</th><th class="l">Rol</th><th class="l">Canal</th><th class="l">Estado</th><th class="l">Último ingreso</th><th></th></tr></thead><tbody>${us.map(u => `
-      <tr><td class="l"><div class="nm"><span class="av">${initials(u.full_name || u.email)}</span><div>${esc(u.full_name || '—')}<div class="term">${esc(u.email)}</div></div></div></td>
+      <tr><td class="l"><div class="nm"><span class="av">${initials(u.full_name || u.email)}</span><div>${esc(u.full_name || '-')}<div class="term">${esc(u.email)}</div></div></div></td>
       <td class="l"><span data-urole="${u.id}"></span></td><td class="l"><span data-ucanal="${u.id}"></span></td><td class="l">${stChip(u)}</td><td class="l"><span class="term">${dt(u.last_sign_in_at)}</span></td>
       <td style="white-space:nowrap">${userActions(u)}</td></tr>`).join('')}</tbody></table></div>`);
   } else {
     swap($('users'), `<div class="gbento">${us.map(u => `<div class="gcard lcard ucard ${u.active ? '' : 'off'}" data-uid="${u.id}">
-      <div class="top-row"><span class="av ${u.role === 'admin' ? 'red' : ''}">${initials(u.full_name || u.email)}</span><div style="min-width:0"><b>${esc(u.full_name || '—')}</b><br><span>${esc(u.email)}</span></div></div>
+      <div class="top-row"><span class="av ${u.role === 'admin' ? 'red' : ''}">${initials(u.full_name || u.email)}</span><div style="min-width:0"><b>${esc(u.full_name || '-')}</b><br><span>${esc(u.email)}</span></div></div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">${roleChip(u)}${stChip(u)}</div>
       <div class="ctl"><span data-urole="${u.id}"></span><span data-ucanal="${u.id}"></span></div>
       <div class="meta"><span><i class="ph ph-calendar-plus"></i>Creado ${dt(u.created_at)}</span><span><i class="ph ph-sign-in"></i>${u.last_sign_in_at ? 'Entró ' + dt(u.last_sign_in_at) : 'Nunca ha entrado'}</span></div>
@@ -2063,7 +2168,7 @@ function drawUsers() {
   // Controles de rol y canal por usuario
   us.forEach(u => {
     const rh = document.querySelector(`[data-urole="${u.id}"]`), ch = document.querySelector(`[data-ucanal="${u.id}"]`);
-    if (u.id === ME.id) { rh.innerHTML = roleChip(u); ch.innerHTML = `<span class="term">${esc(u.canal || '—')}</span>`; return; }
+    if (u.id === ME.id) { rh.innerHTML = roleChip(u); ch.innerHTML = `<span class="term">${esc(u.canal || '-')}</span>`; return; }
     Dropdown(rh, { label:'Rol', options: ROLE_OPTS, value: u.role, search:false, onChange: v => updUser(u, { role: v }) });
     Dropdown(ch, { label:'Canal', options: CANAL_OPTS, value: u.canal || '', search:false, onChange: v => updUser(u, { canal: v || null }) });
   });
@@ -2129,6 +2234,7 @@ const ACT_INFO = {
   'usuario.activar': ['Activó un usuario', 'ph-check-circle'], 'usuario.eliminar': ['Eliminó un usuario', 'ph-user-minus'], 'usuario.reenviar_invitacion': ['Generó una invitación', 'ph-paper-plane-tilt'],
   'usuario.enlace_recuperacion': ['Generó un enlace de recuperación', 'ph-key'], 'auth.ingreso': ['Inició sesión', 'ph-sign-in'], 'auth.salida': ['Cerró sesión', 'ph-sign-out'],
   'auth.contrasena_creada': ['Creó su contraseña', 'ph-key'], 'auth.contrasena_cambiada': ['Cambió su contraseña', 'ph-key'], 'auth.recuperar_solicitud': ['Pidió recuperar su contraseña', 'ph-lifebuoy'],
+  'marca.crear': ['Creó una marca', 'ph-tag'], 'marca.editar': ['Editó una marca', 'ph-tag'], 'marca.eliminar': ['Eliminó una marca', 'ph-tag'],
   'config.editar': ['Cambió la configuración', 'ph-gear-six'], 'config.llave': ['Cambió una llave de conexión', 'ph-lock-key'],
 };
 const AF = { user:'', type:'' };
@@ -2145,10 +2251,10 @@ const actDesc = a => {
   const d = a.detail || {};
   if (a.action.startsWith('utm.')) return `<b style="display:inline;font-weight:600">${esc(a.summary)}</b> · ${esc(d.source || '')} / ${esc(d.medium || '')}${d.zone ? ' · ' + esc(d.zone) : ''}`;
   if (a.action === 'usuario.editar') {
-    const L = { full_name:'nombre', email:'correo', role:'rol', canal:'canal', active:'activo' }, fv = (k, v) => k === 'role' ? (ROLE_NAME[v] || v) : v ?? '—';
+    const L = { full_name:'nombre', email:'correo', role:'rol', canal:'canal', active:'activo' }, fv = (k, v) => k === 'role' ? (ROLE_NAME[v] || v) : v ?? '-';
     return `${esc(a.summary)} · ${Object.entries(d).map(([k, v]) => v && typeof v === 'object' && 'ahora' in v ? `${L[k] || k}: ${esc(fv(k, v.antes))} → ${esc(fv(k, v.ahora))}` : `${L[k] || k}: ${esc(fv(k, v))}`).join(' · ')}`;
   }
-  if (a.action === 'config.editar') return Object.entries(d).map(([k, v]) => `${esc(k)}: ${esc(v?.antes ?? '—')} → ${esc(v?.ahora ?? '—')}`).join(' · ');
+  if (a.action === 'config.editar') return Object.entries(d).map(([k, v]) => `${esc(k)}: ${esc(v?.antes ?? '-')} → ${esc(v?.ahora ?? '-')}`).join(' · ');
   if (a.action === 'config.llave') return `${esc(a.summary)} · ${esc(d.accion || '')}`;
   if (a.action === 'usuario.crear') return `${esc(a.summary)} · ${esc(ROLE_NAME[d.role] || d.role || '')}${d.canal ? ' · ' + esc(d.canal) : ''}`;
   return esc(a.summary || '');
@@ -2184,7 +2290,7 @@ Seg($('aView'), null, aView, v => { aView = v; drawActs(); });
 // Navegación entre vistas (según el rol)
 // ============================================================
 // ============================================================
-// Marca configurable (colores, logo, favicon, nombre) — se lee antes de iniciar sesión
+// Marca configurable (colores, logo, favicon, nombre) - se lee antes de iniciar sesión
 // ============================================================
 const BRAND_DEF = { brand_name:'Motomundo', app_name:'Campañas', color_primary:'#d71920', color_dark:'#0d0e10', logo_url:null, favicon_url:null };
 const mixHex = (a, b, t) => '#' + [0, 2, 4].map(i => Math.round(parseInt(a.substr(i + 1, 2), 16) * (1 - t) + parseInt(b.substr(i + 1, 2), 16) * t).toString(16).padStart(2, '0')).join('');
@@ -2213,13 +2319,7 @@ async function applyBrand() {
 // ============================================================
 let RT_STATE = 'CONNECTING', HEALTH = { db: null, ga: null }, HEALTH_T = null;
 const agoTxt = t => { const m = Math.round((Date.now() - new Date(t)) / 6e4); return m < 60 ? `hace ${m} min` : m < 1440 ? `hace ${Math.round(m / 60)} h` : `hace ${Math.round(m / 1440)} d`; };
-async function callAdminApi() {
-  const { data: { session } } = await sb.auth.getSession();
-  const r = await fetch('/api/admin', { method: 'POST', headers: { authorization: 'Bearer ' + session.access_token } });
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error(j.error || 'Error ' + r.status);
-  return j;
-}
+const callAdminApi = () => apiCall('/api/admin');
 function healthChecks() {
   const d = HEALTH.db, g = HEALTH.ga, C = [];
   const add = (s, ic, t, m) => C.push({ s, ic, t, m });
@@ -2267,14 +2367,9 @@ $('hl_re').onclick = () => runHealth(true);
 document.addEventListener('click', e => { if (!$('hl_pop').hidden && !e.target.closest('.hl-wrap')) { $('hl_pop').hidden = true; $('hl_btn').setAttribute('aria-expanded', false); } });
 
 // ============================================================
-// Configuración (solo admin) — la función app-config guarda en el servidor; las llaves nunca vuelven al navegador
+// Configuración (solo admin) - la función app-config guarda en el servidor; las llaves nunca vuelven al navegador
 // ============================================================
-const cfgCall = async body => {
-  const { data, error } = await sb.functions.invoke('app-config', { body });
-  if (error) { let m = error.message; try { m = (await error.context.json()).error || m; } catch {} throw new Error(m); }
-  if (data?.error) throw new Error(data.error);
-  return data;
-};
+const cfgCall = body => edgeCall('app-config', body);
 let CFG = null, CFG_PEND = {};
 const CF = { brand_name:'c_brand', app_name:'c_app', app_url:'c_url', color_primary:'c_col1', color_dark:'c_col2', ga4_property:'c_prop', composio_user_id:'c_cuser', mail_from_name:'c_mname' };
 const secState = (el, on) => { $(el).className = 'sec-state ' + (on ? 'on' : 'off'); $(el).innerHTML = on ? '<i class="ph-fill ph-lock-key"></i>Configurada' : '<i class="ph ph-warning"></i>Sin configurar'; };
@@ -2290,7 +2385,8 @@ function fillConfig() {
 }
 async function loadConfig() {
   drawHealthUI();
-  try { CFG = await cfgCall({ action: 'get' }); fillConfig(); } catch (e) { toast('No se pudo cargar la configuración: ' + e.message, true); }
+  if (CFG) return fillConfig();
+  try { CFG = await cfgCall({ action: 'get' }); fillConfig(); } catch (e) { $('c_upd').textContent = 'No se pudo leer la configuración (' + e.message + '). Vuelve a abrir esta pestaña para reintentar.'; }
 }
 [['c_col1p', 'c_col1'], ['c_col2p', 'c_col2']].forEach(([p, t]) => {
   $(p).addEventListener('input', () => { $(t).value = $(p).value; previewColors(); });
@@ -2383,18 +2479,228 @@ document.addEventListener('click', e => {
 addEventListener('keydown', e => { if (e.key === 'Escape' && !ddOpen) { drawer(false); sheet(null); } });
 matchMedia('(min-width:721px)').addEventListener('change', () => { if (SHEET) sheet(SHEET.id); });
 
-const NAV = Seg($('nav'), null, 'reporte', r => { location.hash = '#/' + r; });
-const VIEWS = { reporte: () => true, utms: can.crear, usuarios: can.admin, bitacora: can.admin, config: can.admin };
+// ============================================================
+// Sesión siempre vigente: renueva el token antes de llamar al servidor y reintenta una vez
+// (al volver a una pestaña inactiva el token pudo vencer mientras el navegador pausaba el temporizador)
+// ============================================================
+async function freshToken(force) {
+  if (!force) {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session && session.expires_at * 1000 - Date.now() > 60e3) return session.access_token;
+  }
+  const { data } = await sb.auth.refreshSession();
+  return data.session?.access_token || '';
+}
+async function edgeCall(fn, body) {
+  for (let i = 0; i < 2; i++) {
+    const token = await freshToken(i > 0);
+    const { data, error } = await sb.functions.invoke(fn, { body, headers: { Authorization: 'Bearer ' + token } });
+    if (error) {
+      let m = error.message; const st = error.context?.status;
+      try { m = (await error.context.json()).error || m; } catch {}
+      if (i === 0 && (st === 401 || /sesi[oó]n inv[aá]lida/i.test(m))) continue;
+      throw new Error(m);
+    }
+    if (data?.error) throw new Error(data.error);
+    return data;
+  }
+}
+async function apiCall(path, body = {}) {
+  for (let i = 0; i < 2; i++) {
+    const token = await freshToken(i > 0);
+    const r = await fetch(path, { method: 'POST', headers: { authorization: 'Bearer ' + token, 'content-type': 'application/json' }, body: JSON.stringify(body) });
+    const j = await r.json().catch(() => ({}));
+    if (r.ok) return j;
+    if (i === 0 && (r.status === 401 || r.status === 403) && /sesi[oó]n/i.test(j.error || '')) continue;
+    throw new Error(j.error || 'Error ' + r.status);
+  }
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden && ME) freshToken().catch(() => {}); });
+
+// ============================================================
+// GA4 · Generalidades (datos por rango desde /api/ga4, con caché de 24 h en el servidor)
+// ============================================================
+let GA = null, GA_KEY = '', GA_LOADING = '', gLandView = 'bento', gLandAll = false, BRANDS = null;
+const gdl = (cur, prev) => {
+  if (!prev && !cur) return '<span class="gpill eq">0%</span>';
+  if (!prev) return '<span class="gpill up"><i class="ph-fill ph-sparkle"></i>nuevo</span>';
+  const v = (cur - prev) / prev;
+  if (Math.abs(v) < .005) return '<span class="gpill eq"><i class="ph ph-equals"></i>0%</span>';
+  return `<span class="gpill ${v > 0 ? 'up' : 'dn'}"><i class="ph-fill ${v > 0 ? 'ph-trend-up' : 'ph-trend-down'}"></i>${Math.abs(v * 100).toFixed(Math.abs(v) < .1 ? 1 : 0)}%</span>`;
+};
+const GSK = {
+  g_kpi: '<div class="sk sk-l dk"></div><div class="sk sk-v dk" style="width:45%;height:56px"></div><div class="sk sk-chart dk"></div>',
+  g_new: '<div class="sk sk-l dk"></div><div class="sk sk-v dk"></div>', g_ret: '<div class="sk sk-l dk"></div><div class="sk sk-v dk"></div>',
+  g_mix: '<div class="sk sk-l"></div><div class="sk sk-v" style="width:40%"></div><div class="sk sk-s" style="width:100%;height:12px"></div>',
+  g_chan: '<div class="sk sk-l"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div>',
+  g_city: '<div class="sk sk-l"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div>',
+};
+async function loadGa4(force = false) {
+  if (!RANGO.from) return;
+  const key = RANGO.from + '|' + RANGO.to;
+  if (!force && (GA_KEY === key || GA_LOADING === key)) return;
+  GA_LOADING = key;
+  if (GA) $('view-ga4').classList.add('loading'); else Object.entries(GSK).forEach(([id, h]) => $(id).innerHTML = h);
+  $('g_period').textContent = 'Cargando…';
+  try {
+    const d = await apiCall('/api/ga4', { from: RANGO.from, to: RANGO.to, force });
+    if (GA_LOADING !== key) return;
+    GA = d; GA_KEY = key; drawGa4();
+  } catch (e) {
+    if (GA_LOADING !== key) return;
+    $('g_kpi').innerHTML = `<div class="l"><i class="ph ph-warning"></i>No se pudieron cargar los datos de GA4</div><div class="g-sub">${esc(e.message)}. Intenta de nuevo con el logo.</div>`;
+    $('g_period').textContent = '';
+  }
+  GA_LOADING = ''; $('view-ga4').classList.remove('loading');
+}
+function gaChart(daily) {
+  if (!daily.length) return '';
+  const W = 600, H = 110, n = daily.length, max = Math.max(1, ...daily.map(d => d[1])), gap = n > 40 ? 1 : 3, bw = Math.max(1, (W - gap * (n - 1)) / n);
+  const bars = daily.map(([d, a, nw], i) => {
+    const x = i * (bw + gap), ha = a / max * H, hn = Math.min(ha, nw / max * H);
+    return `<g><title>${date(d)}: ${num(a)} activos · ${num(nw)} nuevos</title><rect x="${x}" y="${H - ha}" width="${bw}" height="${ha}" rx="2" fill="#ffffff"/><rect x="${x}" y="${H - hn}" width="${bw}" height="${hn}" rx="2" fill="var(--red)"/></g>`;
+  }).join('');
+  return `<div class="chart"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Usuarios activos por día">${bars}</svg>
+    <div class="ax"><span>${date(daily[0][0])}</span><span>Activos por día (rojo: nuevos) · máx. ${num(max)}</span><span>${date(daily[n - 1][0])}</span></div></div>`;
+}
+function drawGa4() {
+  const g = GA, c = g.totals.cur, p = g.totals.prev, ret = x => Math.max(0, x.active - x.new);
+  $('g_period').textContent = `Comparado con ${date(g.range.pFrom)} al ${date(g.range.pTo)}`;
+  $('g_kpi').innerHTML = `<div class="l"><i class="ph ph-users-three"></i>Usuarios activos</div>
+    <div class="g-kv">${num(c.active)} ${gdl(c.active, p.active)}</div><div class="g-sub">Periodo anterior: ${num(p.active)}</div>${gaChart(g.daily)}`;
+  $('g_new').innerHTML = `<div class="l"><i class="ph ph-user-plus"></i>Usuarios nuevos</div><div class="v">${num(c.new)}</div><div class="s" style="margin-top:10px">${gdl(c.new, p.new)} vs periodo anterior</div>`;
+  $('g_ret').innerHTML = `<div class="l"><i class="ph ph-arrows-counter-clockwise"></i>Usuarios recurrentes</div><div class="v">${num(ret(c))}</div><div class="s" style="margin-top:10px">${gdl(ret(c), ret(p))} activos menos nuevos</div>`;
+  const pn = c.active ? c.new / c.active : 0;
+  $('g_mix').innerHTML = `<div class="l"><i class="ph ph-chart-pie-slice"></i>Usuarios activos = nuevos + recurrentes</div>
+    <div class="v" style="font-size:30px;margin-top:10px">${num(c.active)} <span style="font-size:15px;font-weight:600;color:var(--gray-500)">= ${num(c.new)} + ${num(ret(c))}</span></div>
+    <div class="mixbar"><i style="width:${pn * 100}%;background:var(--red)"></i><i style="width:${(1 - pn) * 100}%;background:var(--graphite)"></i></div>
+    <div class="legend-i"><span><i style="background:var(--red)"></i>Nuevos ${pct(pn)}</span><span><i style="background:var(--graphite)"></i>Recurrentes ${pct(1 - pn)}</span></div>`;
+  // Marcas
+  $('g_brands').innerHTML = (g.brands || []).map(b => `<div class="tile bcard">
+      <span class="bchip" style="background:${esc(b.color)}"><i class="ph ph-tag"></i>${esc(b.name)}</span>
+      <div class="v">${num(b.users)}</div><div class="lbl">Usuarios en landing, tienda y productos</div>
+      <div class="cmpr">${gdl(b.users, b.prev)} vs periodo anterior</div>
+      <div class="ft"><div title="${b.productsSeen} con visitas en el periodo"><b>${num(b.products)}</b><span>Productos</span></div><div><b>${num(b.categories)}</b><span>Categorías</span></div><div><b>${c.active ? pct(b.users / c.active) : '0%'}</b><span>Participación</span></div></div>
+    </div>`).join('');
+  // Canales (grupo de canales del primer contacto: todos los de GA4)
+  const ch = g.channels.filter(x => x[1] || x[3]), cmax = Math.max(1, ...ch.map(x => x[1]));
+  $('g_chan').innerHTML = `<div class="card-h" style="margin-bottom:10px"><h2><i class="ph ph-git-branch" style="color:var(--red)"></i> Canales del primer contacto</h2><div class="legend-i"><span><i style="background:var(--red)"></i>Activos</span><span><i style="background:var(--graphite)"></i>Nuevos</span></div></div>
+    <div class="hbars">${ch.map(x => `<div class="hb-r" title="${esc(x[0])}: ${num(x[1])} activos, ${num(x[2])} nuevos"><span>${esc(x[0])}</span><div class="tr"><i class="a" style="width:${x[1] / cmax * 100}%"></i><i class="n" style="width:${x[2] / cmax * 100}%"></i></div><b>${num(x[1])}<small>${num(x[2])} nuevos</small></b></div>`).join('')}</div>`;
+  // Ciudades: 9 + Otras
+  const cmx = Math.max(1, ...g.cities.map(x => x[1]));
+  $('g_city').innerHTML = `<div class="card-h" style="margin-bottom:10px"><h2><i class="ph ph-map-pin" style="color:var(--red)"></i> Usuarios activos por ciudad</h2></div>
+    <div class="hbars">${g.cities.map(([nm, u]) => `<div class="hb-r ${nm === 'Otras' ? 'other' : ''}"><span>${esc(nm)}</span><div class="tr"><i class="solo" style="width:${u / cmx * 100}%"></i></div><b>${num(u)}<small>${c.active ? pct(u / c.active) : ''}</small></b></div>`).join('')}</div>`;
+  drawLand();
+}
+function drawLand() {
+  if (!GA) return;
+  const tot = GA.totals.cur.active || 1, L = gLandAll ? GA.landing : GA.landing.slice(0, 12);
+  const more = GA.landing.length > 12 ? `<button class="btn btn-ghost more-btn" id="g_more">${gLandAll ? 'Ver menos' : `Ver las ${GA.landing.length}`}</button>` : '';
+  if (gLandView === 'table') {
+    swap($('g_land'), `<div class="table-wrap"><table><thead><tr><th class="l">Página de destino</th><th>Usuarios activos</th><th>Usuarios nuevos</th><th>% del total</th></tr></thead><tbody>${L.map(([pg, a, nw]) => `<tr><td class="l"><span class="page">${esc(pg || '(not set)')}</span></td><td>${num(a)}</td><td>${num(nw)}</td><td>${pct(a / tot)}</td></tr>`).join('')}</tbody></table></div>${more}`);
+  } else {
+    swap($('g_land'), `<div class="lgrid">${L.map(([pg, a, nw], i) => `<div class="lcard2 ${i === 0 ? 'top' : ''}"><span class="rk">#${i + 1}</span><span class="pth">${esc(pg || '(not set)')}</span>
+      <div class="nb"><b>${num(a)}</b><span>activos · ${num(nw)} nuevos</span></div><div class="share"><i style="width:${Math.max(2, a / tot * 100)}%"></i></div></div>`).join('')}</div>${more}`);
+  }
+}
+$('g_land').addEventListener('click', e => { if (e.target.closest('#g_more')) { gLandAll = !gLandAll; drawLand(); } });
+Seg($('g_land_v'), null, gLandView, v => { gLandView = v; drawLand(); });
+
+// ---------- Marcas y rutas (solo admin) ----------
+const urlPath = u => { try { return new URL(u).pathname; } catch { return ""; } };
+async function loadBrands() {
+  const { data, error } = await sb.from('brands').select('*').order('sort');
+  if (error) { $('b_table').innerHTML = `<div class="empty"><b>No se pudieron cargar las marcas</b><span>${esc(error.message)}</span></div>`; return; }
+  BRANDS = data; drawBrands();
+}
+function drawBrands() {
+  const link = u => u ? `<a class="url" href="${esc(u)}" target="_blank" rel="noopener"><span>${esc(u.replace(/^https:\/\//, ''))}</span><i class="ph ph-arrow-square-out"></i></a>` : '<span class="muted" style="font-style:italic">Sin landing</span>';
+  $('b_table').innerHTML = `<div class="table-wrap btable"><table><thead><tr><th class="l">Marca</th><th class="l">URL landing</th><th class="l">Ruta landing</th><th class="l">URL tienda</th><th class="l">Ruta tienda</th><th>Productos</th><th></th></tr></thead><tbody>${BRANDS.map(b => `
+    <tr><td class="l"><span class="bchip" style="background:${esc(b.color)}">${esc(b.name)}</span></td><td class="l">${link(b.landing_url)}</td><td class="l">${b.landing_url ? `<code>${esc(urlPath(b.landing_url))}</code>` : '<span class="muted">-</span>'}</td>
+    <td class="l">${link(b.store_url)}</td><td class="l">${b.store_url ? `<code>${esc(urlPath(b.store_url))}</code>` : '<span class="muted">-</span>'}</td><td>${b.product_paths.length}</td>
+    <td><button class="btn btn-ghost" data-bedit="${b.id}"><i class="ph ph-pencil-simple"></i>Editar</button></td></tr>`).join('')}</tbody></table></div>`;
+}
+let BRM = null;
+const normPath = v => { v = v.trim(); if (!v) return ''; const p = /^https?:\/\//.test(v) ? urlPath(v) : v; return p.startsWith('/') ? p : '/' + p; };
+function bmSync() {
+  $('bm_land_r').innerHTML = $('bm_land').value ? `ruta: <b>${esc(urlPath($('bm_land').value) || 'URL inválida')}</b>` : '';
+  $('bm_store_r').innerHTML = $('bm_store').value ? `ruta: <b>${esc(urlPath($('bm_store').value) || 'URL inválida')}</b>` : '';
+  const list = [...new Set($('bm_prod').value.split('\n').map(normPath).filter(Boolean))];
+  $('bm_pc').textContent = `${list.length} producto${list.length === 1 ? '' : 's'}`;
+  const slug = $('bm_name').value.trim().toLowerCase().replace(/\s+/g, '-');
+  const sug = slug.length > 1 ? (GA?.productPages || []).filter(([pp]) => pp.toLowerCase().includes(slug) && !list.includes(pp)).slice(0, 30) : [];
+  $('bm_sug').innerHTML = sug.length ? sug.map(([pp, u]) => `<button class="sug" data-sug="${esc(pp)}"><i class="ph ph-plus"></i>${esc(pp)} <em>${num(u)}</em></button>`).join('') : '<span class="muted">Sin sugerencias para este periodo.</span>';
+}
+function bmOpen(b) {
+  BRM = b || null;
+  $('bm_t').textContent = b ? `Editar ${b.name}` : 'Nueva marca'; $('bm_del').hidden = !b;
+  $('bm_name').value = b?.name || ''; $('bm_col').value = $('bm_colp').value = b?.color || '#d71920';
+  $('bm_land').value = b?.landing_url || ''; $('bm_store').value = b?.store_url || ''; $('bm_prod').value = (b?.product_paths || []).join('\n');
+  bmSync(); $('bm_modal').hidden = false; requestAnimationFrame(() => $('bm_modal').classList.add('on')); document.body.style.overflow = 'hidden'; $('bm_name').focus();
+}
+function bmClose() { $('bm_modal').classList.remove('on'); document.body.style.overflow = ''; setTimeout(() => $('bm_modal').hidden = true, 280); }
+['bm_name', 'bm_land', 'bm_store', 'bm_prod'].forEach(id => $(id).addEventListener('input', bmSync));
+$('bm_colp').oninput = () => { $('bm_col').value = $('bm_colp').value; };
+$('bm_col').oninput = () => { if (/^#[0-9a-f]{6}$/i.test($('bm_col').value)) $('bm_colp').value = $('bm_col').value; };
+$('bm_sug').addEventListener('click', e => { const b = e.target.closest('[data-sug]'); if (!b) return; $('bm_prod').value = ($('bm_prod').value.trim() + '\n' + b.dataset.sug).trim(); bmSync(); });
+$('bm_modal').addEventListener('click', e => { if (e.target === $('bm_modal') || e.target.closest('[data-bm-x]')) bmClose(); });
+$('b_add').onclick = () => bmOpen(null);
+$('b_table').addEventListener('click', e => { const b = e.target.closest('[data-bedit]'); if (b) bmOpen(BRANDS.find(x => x.id === b.dataset.bedit)); });
+$('bm_save').onclick = async () => {
+  const name = $('bm_name').value.trim(), color = $('bm_col').value.trim(), land = $('bm_land').value.trim(), store = $('bm_store').value.trim();
+  if (!name) return toast('Escribe el nombre de la marca', true);
+  if (!/^#[0-9a-f]{6}$/i.test(color)) return toast('Color inválido', true);
+  for (const u of [land, store]) if (u && (!/^https:\/\/\S+$/.test(u) || !urlPath(u))) return toast('Las URLs deben empezar con https://', true);
+  const row = { name, color, landing_url: land || null, store_url: store || null, product_paths: [...new Set($('bm_prod').value.split('\n').map(normPath).filter(Boolean))], updated_at: new Date().toISOString() };
+  if (!BRM) row.sort = (BRANDS?.length || 0) + 1;
+  $('bm_save').disabled = true;
+  const { error } = BRM ? await sb.from('brands').update(row).eq('id', BRM.id) : await sb.from('brands').insert(row);
+  $('bm_save').disabled = false;
+  if (error) return toast('No se pudo guardar: ' + (error.message.includes('duplicate') ? 'ya existe una marca con ese nombre' : error.message), true);
+  bmClose(); await loadBrands(); GA_KEY = ''; loadGa4();
+  notify({ icon:'ph-tag', tone:'ok', title:'Marca guardada', body:`<b style="display:inline;font-weight:600">${esc(name)}</b> · ${row.product_paths.length} productos. Las tarjetas se recalculan con las nuevas rutas.` });
+};
+$('bm_del').onclick = async () => {
+  if (!BRM || !confirm(`¿Eliminar la marca ${BRM.name}?`)) return;
+  const { error } = await sb.from('brands').delete().eq('id', BRM.id);
+  if (error) return toast('No se pudo eliminar: ' + error.message, true);
+  bmClose(); await loadBrands(); GA_KEY = ''; loadGa4();
+  notify({ icon:'ph-trash', tone:'bad', title:'Marca eliminada', body: esc(BRM.name) });
+};
+addEventListener('keydown', e => { if (e.key === 'Escape' && !$('bm_modal').hidden) bmClose(); });
+
+// ---------- Menú Admin y logo que actualiza los datos ----------
+$('adm_btn').onclick = e => { e.stopPropagation(); const o = $('adm_pop').hidden; $('adm_pop').hidden = !o; $('adm_btn').setAttribute('aria-expanded', o); };
+document.addEventListener('click', e => { if (!$('adm_pop').hidden && !e.target.closest('.adm')) { $('adm_pop').hidden = true; $('adm_btn').setAttribute('aria-expanded', false); } });
+$('adm_pop').addEventListener('click', () => { $('adm_pop').hidden = true; });
+$('brand_btn').onclick = async e => {
+  e.preventDefault();
+  const b = $('brand_btn'); if (b.classList.contains('spin')) return;
+  b.classList.add('spin');
+  CARGADO = { from: '', to: '' };
+  const tasks = [aplicarRango(RANGO.from, RANGO.to, RANGO.preset), loadLinks()];
+  if (curRoute() === 'ga4') { GA_KEY = ''; tasks.push(loadGa4(can.admin())); } else GA_KEY = '';
+  if (can.admin()) tasks.push(runHealth(false));
+  await Promise.allSettled(tasks);
+  setTimeout(() => b.classList.remove('spin'), 300);
+  notify({ icon:'ph-arrows-clockwise', tone:'dark', title:'Datos actualizados', body:'Se volvieron a leer los datos del periodo elegido.', ms: 4000 });
+};
+const curRoute = () => (location.hash.match(/^#\/(\w+)/) || [])[1] || 'ga4';
+
+const NAV = Seg($('nav'), null, 'ga4', r => { location.hash = '#/' + r; });
+const VIEWS = { ga4: () => true, reporte: () => true, utms: can.crear, usuarios: can.admin, bitacora: can.admin, config: can.admin };
 function route() {
   if (location.hash.startsWith('#/crear-contrasena')) return;
   if (!ME) return;
-  let r = (location.hash.match(/^#\/(\w+)/) || [])[1] || 'reporte';
-  if (!VIEWS[r] || !VIEWS[r]()) r = 'reporte';
+  let r = (location.hash.match(/^#\/(\w+)/) || [])[1] || 'ga4';
+  if (!VIEWS[r] || !VIEWS[r]()) r = 'ga4';
   NAV.set(r); document.querySelectorAll('.dr-item').forEach(b => b.classList.toggle('on', b.dataset.go === r));
   Object.keys(VIEWS).forEach(v => { const el = $('view-' + v); const show = v === r; if (show && el.hidden) { el.hidden = false; el.classList.remove('view'); void el.offsetWidth; el.classList.add('view'); } else if (!show) el.hidden = true; });
   if (r === 'usuarios' && !USERS) loadUsers();
   if (r === 'bitacora' && !ACTS) loadActs();
-  if (r === 'config') { loadConfig(); cbRules(); }
+  if (r === 'config') loadConfig();
+  if (r === 'ga4') { loadGa4(); if (can.admin()) { cbRules(); if (!BRANDS) loadBrands(); } }
+  $('adm_btn').classList.toggle('on', ['usuarios', 'bitacora', 'config'].includes(r));
   scrollTo({ top: 0 });
 }
 addEventListener('hashchange', () => {

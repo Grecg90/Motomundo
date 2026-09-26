@@ -1,6 +1,7 @@
 import { timingSafeEqual } from 'node:crypto';
 import { fetchDaily } from '../lib/ga4sync.js';
 import { loadConfig } from '../lib/composio.js';
+import { cachedOverview } from '../lib/ga4cache.js';
 
 // Fecha de Honduras (UTC-6) desplazada n días
 const hnDate = (n = 0) => new Date(Date.now() - 6 * 3600e3 + n * 864e5).toISOString().slice(0, 10);
@@ -25,9 +26,11 @@ export default async function handler(req, res) {
     for (let d = from; d <= to; d = addD(d, 1)) {
       result[d] = await ingest(d, byDay.get(d) || []);
     }
+    // Generalidades GA4: se limpia la caché y se deja listo "este mes" (el periodo por defecto)
+    const warm = await callIngest({ action: 'cache_clear' }).then(() => { const t = hnDate(-1); return cachedOverview(t.slice(0, 8) + '01', t, { force: true }); }).then(() => 'ok').catch(e => e.message);
     // Aviso push al dispositivo solo en la corrida diaria automática
     const push = req.query.from || req.query.pase ? null : await callIngest({ action: 'notify' }).catch(e => ({ error: e.message }));
-    res.status(200).json({ from, to, rows: rows.length, porDia: result, push });
+    res.status(200).json({ from, to, rows: rows.length, porDia: result, push, warm });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Falló la sincronización' });

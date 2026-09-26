@@ -266,3 +266,35 @@ create or replace function public.channel_map() returns jsonb language sql stabl
 $$;
 revoke all on function public.channel_map() from public, anon;
 grant execute on function public.channel_map() to authenticated;
+
+-- ---------------------------------------------------------------- Marcas (módulo GA4) y caché de reportes GA4
+create table if not exists public.brands (
+  id uuid primary key default gen_random_uuid(),
+  name text not null unique check (length(name) between 1 and 40),
+  color text not null default '#d71920' check (color ~ '^#[0-9a-fA-F]{6}$'),
+  landing_url text check (landing_url is null or landing_url ~ '^https://\S+$'),
+  store_url text check (store_url is null or store_url ~ '^https://\S+$'),
+  product_paths text[] not null default '{}' check (cardinality(product_paths) <= 400),
+  sort int not null default 0, updated_at timestamptz not null default now()
+);
+alter table public.brands enable row level security;
+create policy brands_read on public.brands for select to authenticated using (public.my_role() is not null);
+create policy brands_admin_ins on public.brands for insert to authenticated with check (public.my_role() = 'admin');
+create policy brands_admin_upd on public.brands for update to authenticated using (public.my_role() = 'admin') with check (public.my_role() = 'admin');
+create policy brands_admin_del on public.brands for delete to authenticated using (public.my_role() = 'admin');
+revoke all on public.brands from anon;
+grant select, insert, update, delete on public.brands to authenticated;
+create or replace function public.brands_log() returns trigger language plpgsql security definer set search_path = public, private as $$
+declare r brands;
+begin
+  r := coalesce(new, old);
+  if tg_op = 'UPDATE' then new.updated_at := now(); end if;
+  perform private.log_internal(case tg_op when 'INSERT' then 'marca.crear' when 'UPDATE' then 'marca.editar' else 'marca.eliminar' end,
+    'marca', r.id::text, r.name, jsonb_build_object('landing', r.landing_url, 'tienda', r.store_url, 'productos', cardinality(r.product_paths)));
+  return coalesce(new, old);
+end $$;
+revoke all on function public.brands_log() from public, anon, authenticated;
+create trigger brands_log before insert or update or delete on public.brands for each row execute function public.brands_log();
+create table if not exists public.ga4_cache (key text primary key, data jsonb not null, created_at timestamptz not null default now());
+alter table public.ga4_cache enable row level security;
+revoke all on public.ga4_cache from anon, authenticated;
