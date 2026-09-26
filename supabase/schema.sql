@@ -298,3 +298,6 @@ create trigger brands_log before insert or update or delete on public.brands for
 create table if not exists public.ga4_cache (key text primary key, data jsonb not null, created_at timestamptz not null default now());
 alter table public.ga4_cache enable row level security;
 revoke all on public.ga4_cache from anon, authenticated;
+
+-- ---------------------------------------------------------------- Sin UTMs duplicadas aunque dos usuarios guarden a la vez
+create unique index if not exists utm_links_unique_full on public.utm_links (url, source, medium, campaign, term, content);

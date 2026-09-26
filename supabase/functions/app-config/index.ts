@@ -41,6 +41,9 @@ Deno.serve(async (req) => {
         mail_from: from ? (from.match(/<([^>]+)>/)?.[1] || from) : '' });
     }
     if (action === 'save') {
+      // Candado de edición simultánea: si otro admin guardó después de que abriste la pantalla, no se pisa
+      if (body.expected_updated_at && body.expected_updated_at !== st.updated_at) return json({ error: 'Otro administrador cambió la configuración mientras la editabas; se cargó la versión actual' }, 409);
+      if (body.expected_map !== undefined && JSON.stringify(body.expected_map || {}) !== JSON.stringify(st.channel_map || {})) return json({ error: 'Otro administrador cambió la agrupación mientras la editabas; vuelve a abrirla' }, 409);
       const patch: Record<string, unknown> = {}, changes: Record<string, unknown> = {};
       for (const [k, ok] of Object.entries(FIELDS)) {
         if (body.settings?.[k] === undefined) continue;

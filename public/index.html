@@ -1632,12 +1632,12 @@ $('mm_reset').onclick = () => { MM_EDIT = {}; drawBoard(); };
 $('mm_save').onclick = async () => {
   $('mm_save').disabled = true;
   try {
-    const r = await cfgCall({ action: 'save', channel_map: MM_EDIT });
-    CMAP = r.settings.channel_map || {};
+    const r = await cfgCall({ action: 'save', channel_map: MM_EDIT, expected_map: CMAP });
+    CMAP = r.settings.channel_map || {}; CFG = null;
     [R, P || []].forEach(rs => rs.forEach(x => { x.g = canal(x.s, x.m); }));
     cbClose(); update(); cbRules();
     notify({ icon:'ph-kanban', tone:'ok', title:'Agrupación guardada', body:'El reporte ya usa la nueva agrupación de canales.' });
-  } catch (e) { toast('No se pudo guardar: ' + e.message, true); }
+  } catch (e) { toast('No se pudo guardar: ' + e.message, true); if (/otro administrador/i.test(e.message)) { const { data } = await sb.rpc('channel_map'); CMAP = data || {}; cbClose(); } }
   $('mm_save').disabled = false;
 };
 $('q').addEventListener('input', fillFilters); $('only').addEventListener('change', fillFilters);
@@ -1946,7 +1946,7 @@ function utmNotify(l, prefix = '', edit = false) {
 // ============================================================
 const ZONAS = ['Centro', 'Norte', 'Litoral', 'Sur', 'Oriente', 'Occidente', 'Nacional'];
 RULES.splice(3, 0, { f:'zona', n:'Zona', req:false, d:'Se agrega al final del nombre de la campaña. Deja "Sin zona" si la campaña es para todo el país sin distinción.', ej: ZONAS });
-let LINKS = null, editId = '', libGroup = 'canal', libView = 'bento', confirmDel = '';
+let LINKS = null, editVer = '', editId = '', libGroup = 'canal', libView = 'bento', confirmDel = '';
 $('rules').innerHTML = RULES.map(r => `<div class="rule"><div class="k">${r.f}</div><h4>${r.n}<small>${r.req ? 'obligatorio' : 'opcional'}</small></h4><p>${r.d}</p>
   <p>${r.ej.map(x => `<code>${esc(x)}</code>`).join('')}</p></div>`).join('');
 $('rules').style.gridTemplateColumns = 'repeat(auto-fit, minmax(220px, 1fr))';
@@ -2004,7 +2004,7 @@ function build() {
 ['b_url', 'b_s', 'b_c', 'b_t', 'b_x', 'b_note'].forEach(id => $(id).addEventListener('input', build));
 $('b_copy').onclick = () => copy($('b_out').textContent);
 function resetForm() {
-  editId = ''; ['b_s', 'b_c', 'b_t', 'b_x', 'b_note'].forEach(id => $(id).value = ''); BM.set('paid_social'); BZ.set('');
+  editId = ''; editVer = ''; ['b_s', 'b_c', 'b_t', 'b_x', 'b_note'].forEach(id => $(id).value = ''); BM.set('paid_social'); BZ.set('');
   $('b_url').value = 'https://www.motomundohn.com/cotizar-en-linea';
   $('formTitle').textContent = 'Nueva UTM'; $('editing').hidden = true; $('b_cancel').hidden = true; $('b_save').querySelector('span').textContent = 'Guardar UTM';
   build();
@@ -2013,9 +2013,26 @@ $('b_reset').onclick = resetForm; $('b_cancel').onclick = resetForm;
 $('b_save').onclick = async () => {
   const f = form(); $('b_save').disabled = true;
   const row = { url: f.url, source: f.source, medium: f.medium, campaign: f.campaign, term: f.term, content: f.content, note: f.note, zone: f.zone, canal: canal(f.source, f.medium) };
-  const q = editId ? sb.from('utm_links').update(row).eq('id', editId).select().single() : sb.from('utm_links').insert(row).select().single();
+  // Edición: solo se guarda si nadie más la cambió desde que la abriste (updated_at funciona como versión)
+  const q = editId ? sb.from('utm_links').update(row).eq('id', editId).eq('updated_at', editVer).select().single() : sb.from('utm_links').insert(row).select().single();
   const { data, error } = await q;
-  if (error) { toast('No se pudo guardar: ' + (error.message.includes('row-level') ? 'no tienes permiso para esta acción' : error.message), true); build(); return; }
+  if (error) {
+    if (error.code === '23505') {
+      await loadLinks(); build();
+      const dup = LINKS?.find(l => fullUrl(l) === fullUrl(f));
+      notify({ icon:'ph-copy', tone:'warn', title:'Esta UTM ya existe', body: dup ? `La creó <b style="display:inline;font-weight:600">${esc(dup.created_by_name || 'otro usuario')}</b>. Te la marcamos en la lista.` : 'Otro usuario la guardó al mismo tiempo.' });
+      if (dup) setTimeout(() => { const c = document.querySelector(`.lcard[data-id="${dup.id}"]`); c?.classList.add('flash'); c?.scrollIntoView({ block:'nearest', behavior:'smooth' }); }, 60);
+      return;
+    }
+    if (editId && error.code === 'PGRST116') {
+      const { data: now } = await sb.from('utm_links').select('id, updated_at').eq('id', editId).maybeSingle();
+      await loadLinks();
+      if (!now) { notify({ icon:'ph-trash', tone:'bad', title:'La UTM ya no existe', body:'Otro usuario la eliminó mientras la editabas. Tus cambios no se guardaron.' }); resetForm(); return; }
+      notify({ icon:'ph-warning', tone:'warn', title:'Otro usuario la modificó', body:'Alguien guardó cambios en esta UTM mientras la editabas. Revisa la versión actual en la lista y vuelve a editarla.', ms: 12000 });
+      resetForm(); return;
+    }
+    toast('No se pudo guardar: ' + (error.message.includes('row-level') ? 'no tienes permiso para esta acción' : error.message), true); build(); return;
+  }
   copy(fullUrl(data), editId ? 'UTM actualizada y link copiado' : 'UTM guardada y link copiado');
   utmNotify(data, '', !!editId);
   await loadLinks(); resetForm();
@@ -2120,7 +2137,7 @@ $('lib').addEventListener('click', async e => {
   const cp = t.closest('[data-copy]'); if (cp) return copy(cp.dataset.copy);
   const ed = t.closest('[data-edit]');
   if (ed) {
-    const l = LINKS.find(x => x.id === ed.dataset.edit); editId = l.id;
+    const l = LINKS.find(x => x.id === ed.dataset.edit); editId = l.id; editVer = l.updated_at;
     const base = l.zone && l.campaign.endsWith('_' + l.zone) ? l.campaign.slice(0, -(l.zone.length + 1)) : l.campaign;
     $('b_url').value = l.url; $('b_s').value = l.source; BM.set(MEDIOS.includes(l.medium) ? l.medium : 'paid_social'); BZ.set(l.zone || '');
     $('b_c').value = base; $('b_t').value = l.term; $('b_x').value = l.content; $('b_note').value = l.note;
@@ -2474,11 +2491,11 @@ $('c_save').onclick = async () => {
   if (!/^https:\/\/[^/\s]+$/.test(settings.app_url)) return toast('La dirección de la app debe ser https://dominio, sin / al final', true);
   $('c_save').disabled = true;
   try {
-    const r = await cfgCall({ action: 'save', settings, mail_from: $('c_maddr').value.trim() });
+    const r = await cfgCall({ action: 'save', settings, mail_from: $('c_maddr').value.trim(), expected_updated_at: CFG.settings.updated_at });
     CFG.settings = r.settings; CFG.mail_from = $('c_maddr').value.trim(); fillConfig();
     paintBrand(r.settings); try { localStorage.setItem('brand', JSON.stringify(r.settings)); } catch {}
     notify({ icon:'ph-check-circle', tone:'ok', title:'Configuración guardada', body:'Los cambios ya aplican para todos los usuarios.' });
-  } catch (e) { toast('No se pudo guardar: ' + e.message, true); }
+  } catch (e) { toast('No se pudo guardar: ' + e.message, true); if (/otro administrador/i.test(e.message)) { CFG = null; loadConfig(); } }
   $('c_save').disabled = false;
 };
 document.addEventListener('click', async e => {
@@ -2746,8 +2763,9 @@ $('bm_save').onclick = async () => {
   const row = { name, color, landing_url: land || null, store_url: store || null, updated_at: new Date().toISOString() };
   if (!BRM) row.sort = (BRANDS?.length || 0) + 1;
   $('bm_save').disabled = true;
-  const { error } = BRM ? await sb.from('brands').update(row).eq('id', BRM.id) : await sb.from('brands').insert(row);
+  const { data: saved, error } = BRM ? await sb.from('brands').update(row).eq('id', BRM.id).eq('updated_at', BRM.updated_at).select() : await sb.from('brands').insert(row).select();
   $('bm_save').disabled = false;
+  if (!error && BRM && !saved?.length) { modalClose('bm_modal'); await loadBrands(); return notify({ icon:'ph-warning', tone:'warn', title:'Otro administrador cambió esta marca', body:'Se cargó la versión actual; vuelve a abrirla para editar.' }); }
   if (error) return toast('No se pudo guardar: ' + (error.message.includes('duplicate') ? 'ya existe una marca con ese nombre' : error.message), true);
   modalClose('bm_modal'); await loadBrands(); GA_KEY = ''; loadGa4();
   notify({ icon:'ph-tag', tone:'ok', title:'Marca guardada', body:`<b style="display:inline;font-weight:600">${esc(name)}</b>: las tarjetas se recalculan con las nuevas rutas.` });
