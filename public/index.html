@@ -351,6 +351,7 @@
   .fstrip .dd-btn, .fs-btn { height:40px; border-radius:999px; border:1px solid var(--gray-200); background:var(--white); padding:0 14px; font-size:13px; font-weight:600; color:var(--gray-700); display:inline-flex; align-items:center; gap:8px; transition:border-color .15s, color .15s, background .15s; }
   .fstrip .dd-btn:hover, .fs-btn:hover, .fs-btn[aria-expanded="true"] { border-color:var(--ink); color:var(--ink); }
   .fstrip .dd-btn .dv { max-width:140px; }
+  .fstrip .dd-btn.active { background:var(--white); border-color:var(--gray-200); color:var(--gray-700); } .fstrip .dd-btn.active .k { color:var(--gray-500); } .fstrip .dd-btn.active .dv, .fstrip .dd-btn.active .ph-caret-down { color:var(--ink); }
   .fs-btn .fc { background:var(--red); color:var(--white); border-radius:999px; font-size:11px; padding:1px 7px; } .fs-btn .fc:empty { display:none; }
   .fs-btn .cr { transition:transform .2s var(--ease); } .fs-btn[aria-expanded="true"] .cr { transform:rotate(180deg); }
   .fstrip .fchip { height:32px; background:var(--red-50); color:var(--red-600); border:1px solid transparent; padding:0 8px 0 12px; }
@@ -416,6 +417,21 @@
 
   /* ===== GA4 · Generalidades ===== */
   .g-half { grid-column:span 6; }
+  .g-vs { display:flex; align-items:center; gap:8px; margin-top:12px; } .g-vs span { font-size:12px; }
+  .bcard .ft2 { grid-template-columns:1fr 1fr; gap:10px; }
+  .bcard .ft2 > div { display:grid; gap:2px; align-content:start; } .bcard .ft2 .gpill { justify-self:start; margin-top:4px; font-size:11px; padding:2px 7px; }
+  .bcard .ft2 em { font-style:normal; font-size:11px; color:var(--gray-500); margin-top:4px; }
+  .tlead { display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center; background:var(--black); color:#fff; border-radius:var(--r-md); padding:14px 16px; margin-bottom:10px; }
+  .tlead .rk { font-size:12px; font-weight:700; color:var(--gray-300); } .tlead b { font-size:17px; font-weight:700; display:block; } .tlead small { display:block; font-size:12px; color:var(--gray-300); margin-top:2px; }
+  .tlead .tv { text-align:right; display:grid; justify-items:end; gap:3px; } .tlead .tv b { font-size:26px; letter-spacing:-.01em; }
+  .tlead .gpill.up { background:rgba(62,207,122,.18); color:#7ee2a8; } .tlead .gpill.dn { background:rgba(255,77,85,.2); color:#ff9296; } .tlead .gpill.eq { background:rgba(255,255,255,.1); color:var(--gray-300); }
+  .tgrid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .tcell { display:grid; grid-template-columns:auto minmax(0, 1fr) auto; grid-template-areas:"rk nm v" ". sh dl"; gap:2px 8px; align-items:center; background:var(--gray-100); border-radius:12px; padding:10px 12px; }
+  .tcell .rk { grid-area:rk; font-size:11px; font-weight:700; color:var(--gray-500); } .tcell .nm { grid-area:nm; font-weight:600; font-size:13px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .tcell b { grid-area:v; font-weight:700; font-size:15px; text-align:right; } .tcell .sh { grid-area:sh; font-size:11.5px; color:var(--gray-500); font-weight:600; } .tcell .gpill { grid-area:dl; font-size:11px; padding:2px 7px; justify-self:end; }
+  .tcell.other { background:transparent; border:1px dashed var(--gray-200); }
+  .gcard .gt b.mono { font-family:var(--mono); font-size:14px; overflow-wrap:anywhere; }
+  .bl { width:min(1100px, 100%); } .bl-body { padding:0 22px 16px; overflow:auto; background:var(--white); }
   .brow { grid-column:1 / -1; display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:14px; }
   .bcard { display:flex; flex-direction:column; gap:10px; }
   .bchip { align-self:flex-start; display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:999px; color:#fff; font-weight:700; font-size:12.5px; letter-spacing:.02em; }
@@ -731,7 +747,7 @@
 <div id="app" hidden>
 <aside class="drawer" id="drawer" aria-label="Menú" inert>
   <div class="drawer-h"><img class="logo" src="/logo-motomundo.png" alt="Motomundo"><button class="ibtn" id="dr_x" aria-label="Cerrar menú"><i class="ph ph-x"></i></button></div>
-  <button class="dr-item" data-go="ga4"><i class="ph ph-chart-line-up"></i>GA4</button>
+  <button class="dr-item" data-go="ga4"><i class="ph ph-chart-line-up"></i>GA4 Audience</button>
   <button class="dr-item" data-go="reporte"><i class="ph ph-megaphone"></i>Campañas</button>
   <button class="dr-item" data-go="utms" data-need="crear"><i class="ph ph-link-simple"></i>Constructor</button>
   <button class="dr-item" data-go="usuarios" data-need="admin"><i class="ph ph-users-three"></i>Usuarios</button>
@@ -754,18 +770,24 @@
     </div>
   </div>
 </div>
+<div class="modal-bg" id="bl_modal" hidden>
+  <div class="modal bl" role="dialog" aria-modal="true" aria-labelledby="bl_t">
+    <div class="modal-h"><div><h2 id="bl_t">Marcas y rutas de destino</h2><p>Editor central de landing y tienda por marca. Las rutas se extraen solas de la URL y alimentan las tarjetas de marcas.</p></div><span class="sp"></span><button class="ibtn" data-bl-x aria-label="Cerrar"><i class="ph ph-x"></i></button></div>
+    <div class="bl-body" id="b_table"></div>
+    <div class="modal-f"><span class="sp"></span><button class="btn btn-ghost" data-bl-x>Cerrar</button><button class="btn btn-red" id="b_add"><i class="ph ph-plus"></i>Agregar marca</button></div>
+  </div>
+</div>
 <div class="modal-bg" id="bm_modal" hidden>
   <div class="modal bm" role="dialog" aria-modal="true" aria-labelledby="bm_t">
-    <div class="modal-h"><div><h2 id="bm_t">Editar marca</h2><p>Pega las URLs completas; la ruta se extrae sola. Los productos van uno por línea (URL o ruta).</p></div><span class="sp"></span><button class="ibtn" data-bm-x aria-label="Cerrar"><i class="ph ph-x"></i></button></div>
+    <div class="modal-h"><div><h2 id="bm_t">Editar marca</h2><p>Pega las URLs completas de la landing y de la tienda; la ruta se extrae sola.</p></div><span class="sp"></span><button class="ibtn" data-bm-x aria-label="Cerrar"><i class="ph ph-x"></i></button></div>
     <div class="bm-body">
       <div class="bm-grid">
         <label class="field"><span>Marca</span><input id="bm_name" maxlength="40" autocomplete="off"></label>
         <label class="field"><span>Color</span><div class="color-in"><input type="color" id="bm_colp" aria-label="Elegir color"><input class="inp" id="bm_col" maxlength="7"></div></label>
         <label class="field bm-w"><span>URL de la landing <em>opcional</em></span><input id="bm_land" placeholder="https://www.motomundohn.com/marca/" autocomplete="off"><div class="norm" id="bm_land_r"></div></label>
-        <label class="field bm-w"><span>URL de la tienda <em>categoría de la marca</em></span><input id="bm_store" placeholder="https://www.motomundohn.com/categoria-producto/marca/" autocomplete="off"><div class="norm" id="bm_store_r"></div></label>
-        <label class="field bm-w"><span>Productos <em id="bm_pc"></em></span><textarea id="bm_prod" rows="6" placeholder="/producto/tvs-kargo/"></textarea></label>
+        <label class="field bm-w"><span>URL de la tienda <em>landing de tienda de la marca</em></span><input id="bm_store" placeholder="https://www.motomundohn.com/categoria-producto/marca/" autocomplete="off"><div class="norm" id="bm_store_r"></div></label>
+
       </div>
-      <div class="bm-sug"><b>Sugeridos desde GA4</b><span class="muted" id="bm_sug_h">Páginas de producto con visitas en el periodo que contienen el nombre de la marca.</span><div id="bm_sug"></div></div>
     </div>
     <div class="modal-f"><button class="fs-clear" id="bm_del">Eliminar marca</button><span class="sp"></span><button class="btn btn-ghost" data-bm-x>Cancelar</button><button class="btn btn-red" id="bm_save"><i class="ph ph-floppy-disk"></i>Guardar marca</button></div>
   </div>
@@ -776,7 +798,7 @@
     <a class="brand" href="#/ga4" id="brand_btn" aria-label="Actualizar datos" title="Actualizar datos"><img class="logo only-d" src="/logo-motomundo.png" alt="Motomundo"><img class="logo-m only-m" src="/favicon-512.png" alt="Motomundo"></a>
     <div class="seg dark" id="nav" role="tablist" aria-label="Secciones">
       <span class="pill" aria-hidden="true"></span>
-      <button data-r="ga4" role="tab"><i class="ph ph-chart-line-up"></i>GA4</button>
+      <button data-r="ga4" role="tab"><i class="ph ph-chart-line-up"></i>GA4 Audience</button>
       <button data-r="reporte" role="tab"><i class="ph ph-megaphone"></i>Campañas</button>
       <button data-r="utms" role="tab" data-need="crear"><i class="ph ph-link-simple"></i>Constructor</button>
     </div>
@@ -862,7 +884,7 @@
   <!-- ===================== GA4 · GENERALIDADES ===================== -->
   <section class="view" id="view-ga4" hidden>
     <div class="intro">
-      <div><h1>Generalidades GA4</h1><p>Todo el tráfico del sitio: usuarios, marcas, canales, ciudades y páginas de destino.</p></div>
+      <div><h1>GA4 Audience</h1><p>Todo el tráfico del sitio: usuarios, marcas, canales, ciudades y páginas de destino, comparado con el periodo anterior.</p></div>
       <div class="cmp"><b>Todo el sitio</b><br><span id="g_period"></span></div>
     </div>
     <div class="bento" id="g_bento">
@@ -873,20 +895,24 @@
       <div class="brow" id="g_brands"></div>
       <div class="tile g-half" id="g_chan"><div class="sk sk-l"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div></div>
       <div class="tile g-half" id="g_city"><div class="sk sk-l"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div></div>
-      <div class="tile t-full" id="g_land_t">
-        <div class="card-h"><h2><i class="ph ph-signpost" style="color:var(--red)"></i> Páginas de destino</h2>
-          <div class="toolbar"><div class="seg icons" id="g_land_v" aria-label="Visualización"><span class="pill"></span>
+      <div class="tile t-full card" id="g_land_t">
+        <div class="card-h"><h2>Páginas de destino</h2><div class="count" id="g_lcount"></div></div>
+        <div class="fstrip">
+          <span class="fs-slot" id="g_lsort"></span>
+          <span class="sp"></span>
+          <label class="search fs-search"><i class="ph ph-magnifying-glass"></i><input id="g_lq" placeholder="Buscar página…" aria-label="Buscar página"></label>
+          <div class="seg icons fs-view" id="g_land_v" aria-label="Visualización"><span class="pill"></span>
             <button data-v="bento" title="Tarjetas" aria-label="Tarjetas"><i class="ph ph-squares-four"></i></button>
-            <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button></div></div></div>
+            <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button></div>
+        </div>
         <div id="g_land"><div class="sk sk-row"></div><div class="sk sk-row"></div></div>
       </div>
-      <div class="tile t-full g-adm" data-need="admin" hidden>
-        <div class="card-h"><h2><i class="ph ph-tag" style="color:var(--red)"></i> Marcas y rutas de destino</h2>
-          <div class="toolbar"><button class="btn btn-ghost" id="b_add"><i class="ph ph-plus"></i>Agregar marca</button></div></div>
-        <p class="desc g-desc">Landing, tienda y productos de cada marca. Las rutas se sacan solas de la URL y alimentan las tarjetas de marcas de arriba.</p>
-        <div id="b_table"></div>
+      <div class="tile g-half g-adm g-cb" data-need="admin" hidden>
+        <div><h2><i class="ph ph-tag" style="color:var(--red)"></i> Marcas y rutas</h2>
+        <p class="desc g-desc">Landing y tienda de cada marca. Alimentan las tarjetas de marcas. <span id="b_count"></span></p></div>
+        <button class="btn btn-dark" id="bl_open"><i class="ph ph-tag"></i>Administrar marcas</button>
       </div>
-      <div class="tile t-full g-adm g-cb" data-need="admin" hidden>
+      <div class="tile g-half g-adm g-cb" data-need="admin" hidden>
         <div><h2><i class="ph ph-kanban" style="color:var(--red)"></i> Agrupación de canales de campañas</h2>
         <p class="desc g-desc">Solo aplica al reporte de Campañas (Pauta, Directos, Redes, Otros). Los canales de este módulo son los de GA4. <span id="cb_rules"></span></p></div>
         <button class="btn btn-dark" id="cb_open"><i class="ph ph-kanban"></i>Agrupar canales</button>
@@ -1377,6 +1403,13 @@ function chartSvg() {
   return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Cotizaciones por día">${bars}</svg>
     <div class="ax"><span>${date(S[0][0])}</span><span>Cotizaciones por día · máx. ${num(max)}</span><span>${date(S[n - 1][0])}</span></div>`;
 }
+// Qué parte del total de usuarios del sitio (GA4 Audience, mismo periodo) llegó por campañas
+function siteShare(u) {
+  const key = RANGO.from + '|' + RANGO.to;
+  if (GA && GA_KEY === key && GA.totals.cur.active) return `${pct(u / GA.totals.cur.active)} de los ${num(GA.totals.cur.active)} usuarios del sitio`;
+  if (GA_LOADING !== key && RANGO.from) setTimeout(() => loadGa4(), 0);
+  return 'llegaron por campañas';
+}
 function drawKpis() {
   const ps = f => P ? P.reduce((s, r) => s + f(r), 0) : 0;
   const nc = rs => uniq(rs, r => r.c).length;
@@ -1391,7 +1424,7 @@ function drawKpis() {
       </div>
       <div class="chart">${chartSvg()}</div>
     </div>
-    <div class="tile t-sm t-red"><div class="l"><i class="ph ph-users"></i>Usuarios con UTM</div><div class="v">${num(sum(r => r.u))}${dl(sum(r => r.u), ps(r => r.u))}</div><div class="s">llegaron por campañas</div></div>
+    <div class="tile t-sm t-red"><div class="l"><i class="ph ph-users"></i>Usuarios con UTM</div><div class="v">${num(sum(r => r.u))}${dl(sum(r => r.u), ps(r => r.u))}</div><div class="s">${siteShare(sum(r => r.u))}</div></div>
     <div class="tile t-sm t-graph"><div class="l"><i class="ph ph-flag"></i>Campañas activas</div><div class="v">${num(nc(R))}${P ? dl(nc(R), nc(P.filter(r => r.u >= 5 || r.e1 || r.e2))) : ''}</div><div class="s">${nc(R.filter(r => r.e1 + r.e2))} generaron cotizaciones</div></div>
     <div class="tile t-md"><div class="l"><i class="ph ph-seal-check"></i>Calidad de las UTMs usadas</div>
       <div class="v">${num(bad)} <span style="font-size:15px;font-weight:700;color:var(--gray-500)">mal construidas de ${num(R.length)}</span></div>
@@ -2563,87 +2596,119 @@ function gaChart(daily) {
   return `<div class="chart"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Usuarios activos por día">${bars}</svg>
     <div class="ax"><span>${date(daily[0][0])}</span><span>Activos por día (rojo: nuevos) · máx. ${num(max)}</span><span>${date(daily[n - 1][0])}</span></div></div>`;
 }
+const pageName = p => p === '/' ? 'Homepage' : (p || '(not set)');
+const gpct = (a, b) => b ? pct(a / b) : '0%';
 function drawGa4() {
   const g = GA, c = g.totals.cur, p = g.totals.prev, ret = x => Math.max(0, x.active - x.new);
   $('g_period').textContent = `Comparado con ${date(g.range.pFrom)} al ${date(g.range.pTo)}`;
   $('g_kpi').innerHTML = `<div class="l"><i class="ph ph-users-three"></i>Usuarios activos</div>
     <div class="g-kv">${num(c.active)} ${gdl(c.active, p.active)}</div><div class="g-sub">Periodo anterior: ${num(p.active)}</div>${gaChart(g.daily)}`;
-  $('g_new').innerHTML = `<div class="l"><i class="ph ph-user-plus"></i>Usuarios nuevos</div><div class="v">${num(c.new)}</div><div class="s" style="margin-top:10px">${gdl(c.new, p.new)} vs periodo anterior</div>`;
-  $('g_ret').innerHTML = `<div class="l"><i class="ph ph-arrows-counter-clockwise"></i>Usuarios recurrentes</div><div class="v">${num(ret(c))}</div><div class="s" style="margin-top:10px">${gdl(ret(c), ret(p))} activos menos nuevos</div>`;
+  $('g_new').innerHTML = `<div class="l"><i class="ph ph-user-plus"></i>Usuarios nuevos</div><div class="v">${num(c.new)}</div><div class="s g-vs">${gdl(c.new, p.new)}<span>antes ${num(p.new)}</span></div>`;
+  $('g_ret').innerHTML = `<div class="l"><i class="ph ph-arrows-counter-clockwise"></i>Usuarios recurrentes</div><div class="v">${num(ret(c))}</div><div class="s g-vs">${gdl(ret(c), ret(p))}<span>antes ${num(ret(p))}</span></div>`;
   const pn = c.active ? c.new / c.active : 0;
   $('g_mix').innerHTML = `<div class="l"><i class="ph ph-chart-pie-slice"></i>Usuarios activos = nuevos + recurrentes</div>
     <div class="v" style="font-size:30px;margin-top:10px">${num(c.active)} <span style="font-size:15px;font-weight:600;color:var(--gray-500)">= ${num(c.new)} + ${num(ret(c))}</span></div>
     <div class="mixbar"><i style="width:${pn * 100}%;background:var(--red)"></i><i style="width:${(1 - pn) * 100}%;background:var(--graphite)"></i></div>
     <div class="legend-i"><span><i style="background:var(--red)"></i>Nuevos ${pct(pn)}</span><span><i style="background:var(--graphite)"></i>Recurrentes ${pct(1 - pn)}</span></div>`;
-  // Marcas
-  $('g_brands').innerHTML = (g.brands || []).map(b => `<div class="tile bcard">
+  // Marcas: total = landing + tienda
+  $('g_brands').innerHTML = (g.brands || []).map(b => {
+    const t = b.landing + b.store, pt = b.pLanding + b.pStore;
+    const kp = (on, v, pv, l) => `<div><b>${on ? num(v) : '-'}</b><span>${l}</span>${on ? gdl(v, pv) : '<em>sin URL</em>'}</div>`;
+    return `<div class="tile bcard">
       <span class="bchip" style="background:${esc(b.color)}"><i class="ph ph-tag"></i>${esc(b.name)}</span>
-      <div class="v">${num(b.users)}</div><div class="lbl">Usuarios en landing, tienda y productos</div>
-      <div class="cmpr">${gdl(b.users, b.prev)} vs periodo anterior</div>
-      <div class="ft"><div title="${b.productsSeen} con visitas en el periodo"><b>${num(b.products)}</b><span>Productos</span></div><div><b>${num(b.categories)}</b><span>Categorías</span></div><div><b>${c.active ? pct(b.users / c.active) : '0%'}</b><span>Participación</span></div></div>
-    </div>`).join('');
-  // Canales (grupo de canales del primer contacto: todos los de GA4)
-  const ch = g.channels.filter(x => x[1] || x[3]), cmax = Math.max(1, ...ch.map(x => x[1]));
-  $('g_chan').innerHTML = `<div class="card-h" style="margin-bottom:10px"><h2><i class="ph ph-git-branch" style="color:var(--red)"></i> Canales del primer contacto</h2><div class="legend-i"><span><i style="background:var(--red)"></i>Activos</span><span><i style="background:var(--graphite)"></i>Nuevos</span></div></div>
-    <div class="hbars">${ch.map(x => `<div class="hb-r" title="${esc(x[0])}: ${num(x[1])} activos, ${num(x[2])} nuevos"><span>${esc(x[0])}</span><div class="tr"><i class="a" style="width:${x[1] / cmax * 100}%"></i><i class="n" style="width:${x[2] / cmax * 100}%"></i></div><b>${num(x[1])}<small>${num(x[2])} nuevos</small></b></div>`).join('')}</div>`;
-  // Ciudades: 9 + Otras
-  const cmx = Math.max(1, ...g.cities.map(x => x[1]));
-  $('g_city').innerHTML = `<div class="card-h" style="margin-bottom:10px"><h2><i class="ph ph-map-pin" style="color:var(--red)"></i> Usuarios activos por ciudad</h2></div>
-    <div class="hbars">${g.cities.map(([nm, u]) => `<div class="hb-r ${nm === 'Otras' ? 'other' : ''}"><span>${esc(nm)}</span><div class="tr"><i class="solo" style="width:${u / cmx * 100}%"></i></div><b>${num(u)}<small>${c.active ? pct(u / c.active) : ''}</small></b></div>`).join('')}</div>`;
+      <div class="v">${num(t)}</div><div class="lbl">Usuarios · landing + tienda</div>
+      <div class="cmpr">${gdl(t, pt)} vs periodo anterior</div>
+      <div class="ft ft2">${kp(b.hasLanding, b.landing, b.pLanding, 'Landing')}${kp(b.hasStore, b.store, b.pStore, 'Tienda')}</div>
+    </div>`;
+  }).join('');
+  // Canales y ciudades: top compacto (líder destacado + resto en cuadrícula), con comparación
+  const top = (id, icon, title, rows, tot, note) => {
+    const [lead, ...rest] = rows;
+    $(id).innerHTML = `<div class="card-h" style="margin-bottom:12px"><h2><i class="ph ${icon}" style="color:var(--red)"></i> ${title}</h2><span class="muted" style="font-size:12px">${note}</span></div>
+      ${lead ? `<div class="tlead"><span class="rk">#1</span><div><b>${esc(lead.n)}</b><small>${lead.sub || ''}</small></div><div class="tv"><b>${num(lead.v)}</b><small>${gpct(lead.v, tot)} del total</small>${gdl(lead.v, lead.pv)}</div></div>` : ''}
+      <div class="tgrid">${rest.map((x, i) => `<div class="tcell ${x.other ? 'other' : ''}"><span class="rk">${x.other ? '' : '#' + (i + 2)}</span><span class="nm" title="${esc(x.n)}">${esc(x.n)}</span><b>${num(x.v)}</b><span class="sh">${gpct(x.v, tot)}</span>${gdl(x.v, x.pv)}</div>`).join('')}</div>`;
+  };
+  const ch = g.channels.filter(x => x[1]);
+  top('g_chan', 'ph-git-branch', 'Canales del primer contacto', ch.map(x => ({ n: x[0], v: x[1], pv: x[3], sub: `${num(x[2])} usuarios nuevos` })), c.active, 'Usuarios activos');
+  top('g_city', 'ph-map-pin', 'Usuarios activos por ciudad', g.cities.map(x => ({ n: x[0], v: x[1], pv: x[2], other: x[0] === 'Otras' })), c.active, 'Top 9 + otras');
   drawLand();
+  if (R?.length) drawKpis();
 }
+// Páginas de destino: mismo lenguaje que el detalle de Campañas (tarjetas por defecto, tabla opcional)
+let gLandSort = 'a';
+const LSORT = [{ v:'a', l:'Usuarios activos' }, { v:'n', l:'Usuarios nuevos' }, { v:'s', l:'Sesiones' }, { v:'e', l:'Tasa de interacción' }];
+const lval = (x, k) => k === 'a' ? x[1] : k === 'n' ? x[2] : k === 's' ? x[3] : (x[3] ? x[4] / x[3] : 0);
+const LSD = Dropdown($('g_lsort'), { label: 'Ordenar', icon: 'ph-sort-descending', options: LSORT, value: gLandSort, search: false, onChange: v => { gLandSort = v; drawLand(); } });
+$('g_lq').addEventListener('input', () => drawLand());
 function drawLand() {
   if (!GA) return;
-  const tot = GA.totals.cur.active || 1, L = gLandAll ? GA.landing : GA.landing.slice(0, 12);
-  const more = GA.landing.length > 12 ? `<button class="btn btn-ghost more-btn" id="g_more">${gLandAll ? 'Ver menos' : `Ver las ${GA.landing.length}`}</button>` : '';
+  const tot = GA.totals.cur.active || 1, q = $('g_lq').value.trim().toLowerCase();
+  const all = GA.landing.filter(x => !q || pageName(x[0]).toLowerCase().includes(q)).sort((a, b) => lval(b, gLandSort) - lval(a, gLandSort));
+  const L = gLandAll || q ? all : all.slice(0, 12), su = (i) => all.reduce((a, x) => a + x[i], 0);
+  $('g_lcount').innerHTML = `<span><b>${num(all.length)}</b> páginas</span><span><b>${num(su(1))}</b> usuarios activos</span><span><b>${num(su(2))}</b> nuevos</span><span><b>${num(su(3))}</b> sesiones</span>`;
+  const more = !q && all.length > 12 ? `<button class="btn btn-ghost more-btn" id="g_more">${gLandAll ? 'Ver menos' : `Ver las ${all.length}`}</button>` : '';
+  if (!L.length) return swap($('g_land'), '<div class="empty"><i class="ph ph-magnifying-glass"></i><b>Sin páginas con esa búsqueda</b></div>');
+  const er = x => x[3] ? x[4] / x[3] : 0;
   if (gLandView === 'table') {
-    swap($('g_land'), `<div class="table-wrap"><table><thead><tr><th class="l">Página de destino</th><th>Usuarios activos</th><th>Usuarios nuevos</th><th>% del total</th></tr></thead><tbody>${L.map(([pg, a, nw]) => `<tr><td class="l"><span class="page">${esc(pg || '(not set)')}</span></td><td>${num(a)}</td><td>${num(nw)}</td><td>${pct(a / tot)}</td></tr>`).join('')}</tbody></table></div>${more}`);
-  } else {
-    swap($('g_land'), `<div class="lgrid">${L.map(([pg, a, nw], i) => `<div class="lcard2 ${i === 0 ? 'top' : ''}"><span class="rk">#${i + 1}</span><span class="pth">${esc(pg || '(not set)')}</span>
-      <div class="nb"><b>${num(a)}</b><span>activos · ${num(nw)} nuevos</span></div><div class="share"><i style="width:${Math.max(2, a / tot * 100)}%"></i></div></div>`).join('')}</div>${more}`);
+    swap($('g_land'), `<div class="table-wrap"><table><thead><tr><th class="l">Página de destino</th><th>Usuarios activos</th><th>Nuevos</th><th>Sesiones</th><th>Interacción</th><th>% del total</th></tr></thead><tbody>${L.map(x => `
+      <tr><td class="l"><span class="page">${esc(pageName(x[0]))}</span></td><td>${num(x[1])}${gdlT(x[1], x[5])}</td><td>${num(x[2])}${gdlT(x[2], x[6])}</td><td>${num(x[3])}${gdlT(x[3], x[7])}</td><td>${pct(er(x))}</td><td>${pct(x[1] / tot)}</td></tr>`).join('')}</tbody></table></div>${more}`);
+    return;
   }
+  swap($('g_land'), `<div class="gbento">${L.map((x, i) => {
+    const cls = L.length === 1 ? 'xl full' : i === 0 ? 'xl' : i === 1 ? 'xl2' : i < 5 ? 'lg' : '';
+    return `<div class="gcard ${cls}">
+      <div class="gt"><b class="${x[0] === '/' ? '' : 'mono'}">${esc(pageName(x[0]))}</b><span class="rank">#${i + 1}</span></div>
+      <div class="gm"><div><b>${num(x[1])}</b>Activos ${gdlT(x[1], x[5])}</div><div><b>${num(x[2])}</b>Nuevos ${gdlT(x[2], x[6])}</div><div><b>${num(x[3])}</b>Sesiones ${gdlT(x[3], x[7])}</div></div>
+      <div class="share-l"><span>Participación en usuarios · interacción ${pct(er(x))}</span><b>${pct(x[1] / tot)}</b></div><div class="share"><i style="width:${Math.max(2, x[1] / tot * 100)}%"></i></div>
+    </div>`;
+  }).join('')}</div>${more}`);
 }
+// Variación compacta para tarjetas y tablas (mismo estilo que Campañas)
+const gdlT = (cur, prev) => {
+  if (!prev && !cur) return '';
+  if (!prev) return '<span class="dl up"><i class="ph-fill ph-sparkle"></i>nuevo</span>';
+  const v = (cur - prev) / prev;
+  if (Math.abs(v) < .005) return '<span class="dl eq"><i class="ph ph-equals"></i>0%</span>';
+  return `<span class="dl ${v > 0 ? 'up' : 'dn'}"><i class="ph-fill ${v > 0 ? 'ph-caret-up' : 'ph-caret-down'}"></i>${Math.abs(v * 100).toFixed(Math.abs(v) < .1 ? 1 : 0)}%</span>`;
+};
 $('g_land').addEventListener('click', e => { if (e.target.closest('#g_more')) { gLandAll = !gLandAll; drawLand(); } });
 Seg($('g_land_v'), null, gLandView, v => { gLandView = v; drawLand(); });
 
-// ---------- Marcas y rutas (solo admin) ----------
-const urlPath = u => { try { return new URL(u).pathname; } catch { return ""; } };
+// ---------- Marcas y rutas (solo admin, en modal) ----------
+const urlPath = u => { try { return new URL(u).pathname; } catch { return ''; } };
+const modalOpen = id => { $(id).hidden = false; requestAnimationFrame(() => $(id).classList.add('on')); document.body.style.overflow = 'hidden'; };
+const modalClose = id => { $(id).classList.remove('on'); setTimeout(() => { $(id).hidden = true; if ([...document.querySelectorAll('.modal-bg')].every(m => m.hidden)) document.body.style.overflow = ''; }, 280); };
 async function loadBrands() {
   const { data, error } = await sb.from('brands').select('*').order('sort');
   if (error) { $('b_table').innerHTML = `<div class="empty"><b>No se pudieron cargar las marcas</b><span>${esc(error.message)}</span></div>`; return; }
   BRANDS = data; drawBrands();
 }
 function drawBrands() {
+  $('b_count').textContent = BRANDS ? `${BRANDS.length} marca${BRANDS.length === 1 ? '' : 's'} configurada${BRANDS.length === 1 ? '' : 's'}.` : '';
   const link = u => u ? `<a class="url" href="${esc(u)}" target="_blank" rel="noopener"><span>${esc(u.replace(/^https:\/\//, ''))}</span><i class="ph ph-arrow-square-out"></i></a>` : '<span class="muted" style="font-style:italic">Sin landing</span>';
-  $('b_table').innerHTML = `<div class="table-wrap btable"><table><thead><tr><th class="l">Marca</th><th class="l">URL landing</th><th class="l">Ruta landing</th><th class="l">URL tienda</th><th class="l">Ruta tienda</th><th>Productos</th><th></th></tr></thead><tbody>${BRANDS.map(b => `
+  $('b_table').innerHTML = `<div class="table-wrap btable"><table><thead><tr><th class="l">Marca</th><th class="l">URL landing</th><th class="l">Ruta landing</th><th class="l">URL tienda</th><th class="l">Ruta tienda</th><th></th></tr></thead><tbody>${BRANDS.map(b => `
     <tr><td class="l"><span class="bchip" style="background:${esc(b.color)}">${esc(b.name)}</span></td><td class="l">${link(b.landing_url)}</td><td class="l">${b.landing_url ? `<code>${esc(urlPath(b.landing_url))}</code>` : '<span class="muted">-</span>'}</td>
-    <td class="l">${link(b.store_url)}</td><td class="l">${b.store_url ? `<code>${esc(urlPath(b.store_url))}</code>` : '<span class="muted">-</span>'}</td><td>${b.product_paths.length}</td>
+    <td class="l">${link(b.store_url)}</td><td class="l">${b.store_url ? `<code>${esc(urlPath(b.store_url))}</code>` : '<span class="muted">-</span>'}</td>
     <td><button class="btn btn-ghost" data-bedit="${b.id}"><i class="ph ph-pencil-simple"></i>Editar</button></td></tr>`).join('')}</tbody></table></div>`;
 }
 let BRM = null;
-const normPath = v => { v = v.trim(); if (!v) return ''; const p = /^https?:\/\//.test(v) ? urlPath(v) : v; return p.startsWith('/') ? p : '/' + p; };
 function bmSync() {
   $('bm_land_r').innerHTML = $('bm_land').value ? `ruta: <b>${esc(urlPath($('bm_land').value) || 'URL inválida')}</b>` : '';
   $('bm_store_r').innerHTML = $('bm_store').value ? `ruta: <b>${esc(urlPath($('bm_store').value) || 'URL inválida')}</b>` : '';
-  const list = [...new Set($('bm_prod').value.split('\n').map(normPath).filter(Boolean))];
-  $('bm_pc').textContent = `${list.length} producto${list.length === 1 ? '' : 's'}`;
-  const slug = $('bm_name').value.trim().toLowerCase().replace(/\s+/g, '-');
-  const sug = slug.length > 1 ? (GA?.productPages || []).filter(([pp]) => pp.toLowerCase().includes(slug) && !list.includes(pp)).slice(0, 30) : [];
-  $('bm_sug').innerHTML = sug.length ? sug.map(([pp, u]) => `<button class="sug" data-sug="${esc(pp)}"><i class="ph ph-plus"></i>${esc(pp)} <em>${num(u)}</em></button>`).join('') : '<span class="muted">Sin sugerencias para este periodo.</span>';
 }
 function bmOpen(b) {
   BRM = b || null;
   $('bm_t').textContent = b ? `Editar ${b.name}` : 'Nueva marca'; $('bm_del').hidden = !b;
   $('bm_name').value = b?.name || ''; $('bm_col').value = $('bm_colp').value = b?.color || '#d71920';
-  $('bm_land').value = b?.landing_url || ''; $('bm_store').value = b?.store_url || ''; $('bm_prod').value = (b?.product_paths || []).join('\n');
-  bmSync(); $('bm_modal').hidden = false; requestAnimationFrame(() => $('bm_modal').classList.add('on')); document.body.style.overflow = 'hidden'; $('bm_name').focus();
+  $('bm_land').value = b?.landing_url || ''; $('bm_store').value = b?.store_url || '';
+  bmSync(); modalOpen('bm_modal'); $('bm_name').focus();
 }
-function bmClose() { $('bm_modal').classList.remove('on'); document.body.style.overflow = ''; setTimeout(() => $('bm_modal').hidden = true, 280); }
-['bm_name', 'bm_land', 'bm_store', 'bm_prod'].forEach(id => $(id).addEventListener('input', bmSync));
+['bm_land', 'bm_store'].forEach(id => $(id).addEventListener('input', bmSync));
 $('bm_colp').oninput = () => { $('bm_col').value = $('bm_colp').value; };
 $('bm_col').oninput = () => { if (/^#[0-9a-f]{6}$/i.test($('bm_col').value)) $('bm_colp').value = $('bm_col').value; };
-$('bm_sug').addEventListener('click', e => { const b = e.target.closest('[data-sug]'); if (!b) return; $('bm_prod').value = ($('bm_prod').value.trim() + '\n' + b.dataset.sug).trim(); bmSync(); });
-$('bm_modal').addEventListener('click', e => { if (e.target === $('bm_modal') || e.target.closest('[data-bm-x]')) bmClose(); });
+$('bm_modal').addEventListener('click', e => { if (e.target === $('bm_modal') || e.target.closest('[data-bm-x]')) modalClose('bm_modal'); });
+$('bl_modal').addEventListener('click', e => { if (e.target === $('bl_modal') || e.target.closest('[data-bl-x]')) modalClose('bl_modal'); });
+$('bl_open').onclick = () => { if (!BRANDS) loadBrands(); modalOpen('bl_modal'); };
 $('b_add').onclick = () => bmOpen(null);
 $('b_table').addEventListener('click', e => { const b = e.target.closest('[data-bedit]'); if (b) bmOpen(BRANDS.find(x => x.id === b.dataset.bedit)); });
 $('bm_save').onclick = async () => {
@@ -2651,23 +2716,24 @@ $('bm_save').onclick = async () => {
   if (!name) return toast('Escribe el nombre de la marca', true);
   if (!/^#[0-9a-f]{6}$/i.test(color)) return toast('Color inválido', true);
   for (const u of [land, store]) if (u && (!/^https:\/\/\S+$/.test(u) || !urlPath(u))) return toast('Las URLs deben empezar con https://', true);
-  const row = { name, color, landing_url: land || null, store_url: store || null, product_paths: [...new Set($('bm_prod').value.split('\n').map(normPath).filter(Boolean))], updated_at: new Date().toISOString() };
+  if (!land && !store) return toast('Agrega al menos la URL de la landing o de la tienda', true);
+  const row = { name, color, landing_url: land || null, store_url: store || null, updated_at: new Date().toISOString() };
   if (!BRM) row.sort = (BRANDS?.length || 0) + 1;
   $('bm_save').disabled = true;
   const { error } = BRM ? await sb.from('brands').update(row).eq('id', BRM.id) : await sb.from('brands').insert(row);
   $('bm_save').disabled = false;
   if (error) return toast('No se pudo guardar: ' + (error.message.includes('duplicate') ? 'ya existe una marca con ese nombre' : error.message), true);
-  bmClose(); await loadBrands(); GA_KEY = ''; loadGa4();
-  notify({ icon:'ph-tag', tone:'ok', title:'Marca guardada', body:`<b style="display:inline;font-weight:600">${esc(name)}</b> · ${row.product_paths.length} productos. Las tarjetas se recalculan con las nuevas rutas.` });
+  modalClose('bm_modal'); await loadBrands(); GA_KEY = ''; loadGa4();
+  notify({ icon:'ph-tag', tone:'ok', title:'Marca guardada', body:`<b style="display:inline;font-weight:600">${esc(name)}</b>: las tarjetas se recalculan con las nuevas rutas.` });
 };
 $('bm_del').onclick = async () => {
   if (!BRM || !confirm(`¿Eliminar la marca ${BRM.name}?`)) return;
   const { error } = await sb.from('brands').delete().eq('id', BRM.id);
   if (error) return toast('No se pudo eliminar: ' + error.message, true);
-  bmClose(); await loadBrands(); GA_KEY = ''; loadGa4();
+  modalClose('bm_modal'); await loadBrands(); GA_KEY = ''; loadGa4();
   notify({ icon:'ph-trash', tone:'bad', title:'Marca eliminada', body: esc(BRM.name) });
 };
-addEventListener('keydown', e => { if (e.key === 'Escape' && !$('bm_modal').hidden) bmClose(); });
+addEventListener('keydown', e => { if (e.key !== 'Escape') return; if (!$('bm_modal').hidden) modalClose('bm_modal'); else if (!$('bl_modal').hidden) modalClose('bl_modal'); });
 
 // ---------- Menú Admin y logo que actualiza los datos ----------
 $('adm_btn').onclick = e => { e.stopPropagation(); const o = $('adm_pop').hidden; $('adm_pop').hidden = !o; $('adm_btn').setAttribute('aria-expanded', o); };
