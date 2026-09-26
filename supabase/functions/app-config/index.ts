@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
           if (addr !== curAddr) changes.mail_from = { antes: curAddr || '(predeterminado)', ahora: addr || '(predeterminado)' };
         }
       }
-      // Mapa de canales: { "m:<medio>": canal, "s:<fuente>": canal } (Campañas),
+      // Mapa de canales: { "p:<fuente>|<medio>", "m:<medio>" o "s:<fuente>": canal } (Campañas),
       // "n:<canal>": nombre visible, "g:<canal GA4>": grupo en Audiencia, "ga:mode": "custom" para usar esa agrupación
       if (body.channel_map !== undefined) {
         const cm = body.channel_map, CAN = ['Pauta', 'Directos', 'Redes', 'Otros'];
@@ -71,7 +71,7 @@ Deno.serve(async (req) => {
         const clean: Record<string, string> = {}, NAME = /^[^<>\r\n]{1,40}$/;
         for (const [k, raw] of Object.entries(cm)) {
           const v = String(raw).trim();
-          const ok = /^[ms]:.{1,80}$/.test(k) ? CAN.includes(v)
+          const ok = /^[ms]:.{1,80}$/.test(k) || /^p:[^|]{1,100}\|.{1,80}$/.test(k) ? CAN.includes(v)
             : /^n:/.test(k) ? CAN.includes(k.slice(2)) && NAME.test(v)
             : /^g:.{1,80}$/.test(k) ? NAME.test(v)
             : k === 'ga:mode' ? v === 'custom' : false;

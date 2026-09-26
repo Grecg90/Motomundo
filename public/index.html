@@ -113,7 +113,7 @@
   .dd-btn.block .dv { max-width:none; }
   .dd-btn.darkin.active { background:var(--white); border-color:var(--white); } .dd-btn.darkin.active .dv, .dd-btn.darkin.active .ph-caret-down, .dd-btn.darkin.active .ph { color:var(--black); }
   .dd-btn.darkin { background:var(--graphite); border-color:var(--graphite-2); color:var(--white); } .dd-btn.darkin .dv { color:var(--white); } .dd-btn.darkin:hover { border-color:#6a6e77; }
-  .dd-pop { position:fixed; z-index:60; width:320px; max-width:calc(100vw - 24px); background:var(--white); border-radius:var(--r-md); box-shadow:var(--shadow-pop); overflow:hidden; display:flex; flex-direction:column; max-height:min(420px, 70vh); }
+  .dd-pop { position:fixed; z-index:80; width:320px; max-width:calc(100vw - 24px); background:var(--white); border-radius:var(--r-md); box-shadow:var(--shadow-pop); overflow:hidden; display:flex; flex-direction:column; max-height:min(420px, 70vh); }
   .dd-search { display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:1px solid var(--gray-200); color:var(--gray-500); }
   .dd-search input { flex:1; border:0; outline:0; background:none; font-size:14px; min-width:0; color:var(--ink); }
   .dd-list { overflow-y:auto; padding:6px; overscroll-behavior:contain; }
@@ -305,7 +305,10 @@
   .gcard.lg { grid-column:span 4; }
   .gcard.xl .tag { background:var(--graphite-2); color:var(--gray-300); }
   .gcard.xl2 { grid-column:span 6; }
-  .gcard.full { grid-column:1 / -1; } 
+  .gcard.full { grid-column:1 / -1; }
+  .gbento.rank { grid-template-columns:repeat(24, minmax(0, 1fr)); }
+  .gbento.rank > .gcard { grid-column:span 6; } .gbento.rank > .gcard.r1 { grid-column:span 9; } .gbento.rank > .gcard.r2 { grid-column:span 8; } .gbento.rank > .gcard.r3 { grid-column:span 7; } .gbento.rank > .gcard.full { grid-column:1 / -1; }
+  @media (max-width:1100px) { .gbento.rank > .gcard, .gbento.rank > .gcard.r2, .gbento.rank > .gcard.r3 { grid-column:span 12; } .gbento.rank > .gcard.r1 { grid-column:1 / -1; } }
   .gcard .gt { display:flex; justify-content:space-between; gap:10px; align-items:flex-start; }
   .gcard .gt b { font-weight:600; font-size:16px; overflow-wrap:anywhere; line-height:1.25; }
   .gcard.xl .gt b { font-size:20px; }
@@ -495,6 +498,22 @@
   .brow { grid-column:1 / -1; display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:14px; }
   .brow .tile { padding:16px 18px; }
   .bcard { display:flex; flex-direction:column; gap:8px; }
+  .dt { width:min(860px, 100%); } .dt-body { padding:16px 22px 22px; overflow:auto; display:grid; grid-template-columns:minmax(0, 3fr) minmax(0, 2fr); gap:12px; align-items:start; }
+  .dt-sec { background:var(--white); border-radius:var(--r-md); padding:14px 16px; min-width:0; }
+  .dt-sec h3 { margin:0 0 10px; font-size:14px; font-weight:600; display:flex; align-items:center; gap:8px; } .dt-sec h3 .ph { color:var(--red); } .dt-sec h3 span { margin-left:auto; font-size:12px; font-weight:500; color:var(--gray-500); }
+  .dt-row { display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:4px 10px; padding:8px 0; border-top:1px solid var(--gray-100); font-size:13px; align-items:center; }
+  .dt-row:first-of-type { border-top:0; }
+  .dt-row .nm { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .dt-row .nm.mono { font-family:var(--mono); font-size:12px; } .dt-row b { font-weight:600; text-align:right; }
+  .dt-row .bar { grid-column:1 / -1; height:4px; border-radius:999px; background:var(--gray-100); overflow:hidden; } .dt-row .bar i { display:block; height:100%; background:var(--red); border-radius:999px; }
+  .dt-row .meta { grid-column:1 / -1; display:flex; gap:6px; flex-wrap:wrap; align-items:center; font-size:11.5px; color:var(--gray-500); }
+  .cp { display:inline-flex; align-items:center; gap:5px; border-radius:999px; padding:1px 8px; font-size:11px; font-weight:500; background:var(--gray-100); color:var(--gray-500); }
+  .cp.on { background:var(--ok-50); color:var(--ok); }
+  .dt-empty { color:var(--gray-500); font-size:13px; padding:8px 0; }
+  .tlead[data-dn], .tcell[data-dn] { cursor:pointer; transition:transform .15s var(--ease), box-shadow .15s var(--ease); } .tcell[data-dn]:hover { box-shadow:0 0 0 1px var(--gray-300); } .tlead[data-dn]:hover { transform:translateY(-1px); }
+  @media (max-width:760px) { .dt-body { grid-template-columns:1fr; padding:12px; } }
+  .bact { display:flex; align-items:center; gap:7px; font-size:12px; font-weight:500; color:var(--gray-500); margin-top:10px; padding-top:10px; border-top:1px solid var(--gray-100); }
+  .bact i { width:8px; height:8px; border-radius:50%; background:var(--gray-300); flex:none; }
+  .bact.on { color:var(--ok); } .bact.on i { background:#3ecf7a; box-shadow:0 0 0 3px rgba(62,207,122,.18); }
   .bchip { align-self:flex-start; display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:999px; color:#fff; font-weight:600; font-size:12.5px; letter-spacing:.02em; }
   .bcard .v { font-size:32px; font-weight:600; letter-spacing:-.02em; line-height:1; }
   .bcard .lbl { font-size:12px; color:var(--gray-500); font-weight:500; line-height:1.4; }
@@ -585,6 +604,9 @@
   .mm-sel { border:1px solid var(--gray-200); background:var(--white); border-radius:8px; font-size:12px; font-weight:500; padding:3px 6px; color:var(--ink); font-family:var(--font); max-width:130px; }
   .mc-h .mm-sel { margin-left:auto; }
   .cb-tab { margin-top:12px; }
+  .acts { display:flex; gap:2px; justify-content:flex-end; align-items:center; white-space:nowrap; }
+  .lcard .land { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--gray-500); background:var(--gray-100); border-radius:10px; padding:7px 10px; }
+  .lcard .land span { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--mono); font-size:11.5px; } .lcard .land b { color:var(--ink); font-weight:600; white-space:nowrap; }
   .jchips { display:flex; gap:8px; flex-wrap:wrap; margin:-4px 0 14px; }
   .jchip { border:1px solid var(--gray-200); background:var(--white); border-radius:999px; padding:7px 14px 7px 12px; font-size:13px; font-weight:500; color:var(--gray-700); display:inline-flex; align-items:center; gap:7px; transition:background .15s var(--ease), border-color .15s var(--ease), color .15s; }
   .jchip:hover { border-color:var(--gray-300); color:var(--ink); }
@@ -597,14 +619,26 @@
   .bcol-h > div { min-width:0; flex:1; }
   .ga-board { display:block; }
   .ga-mode { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
-  .gm { background:var(--white); border-radius:var(--r-md); padding:14px 16px 14px 44px; position:relative; cursor:pointer; border:1px solid transparent; display:grid; gap:3px; }
-  .gm input { position:absolute; left:16px; top:16px; accent-color:var(--red); width:16px; height:16px; margin:0; }
-  .gm b { font-size:14px; font-weight:600; } .gm span { font-size:12.5px; color:var(--gray-500); line-height:1.45; }
-  .gm.on { border-color:var(--red); box-shadow:0 0 0 1px var(--red); }
+  .gmo { background:var(--white); border-radius:var(--r-md); padding:14px 16px 14px 44px; position:relative; cursor:pointer; border:1px solid transparent; display:grid; gap:3px; }
+  .gmo input { position:absolute; left:16px; top:16px; accent-color:var(--red); width:16px; height:16px; margin:0; }
+  .gmo b { font-size:14px; font-weight:600; } .gmo span { font-size:12.5px; color:var(--gray-500); line-height:1.45; }
+  .gmo.on { border-color:var(--red); box-shadow:0 0 0 1px var(--red); }
   .ga-rows { background:var(--white); border-radius:var(--r-md); padding:6px 14px; display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); column-gap:28px; }
   .ga-rows.off { opacity:.55; }
   .ga-row { display:grid; grid-template-columns:minmax(0, 1fr) 64px 14px minmax(0, 1.1fr); align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--gray-100); font-size:13px; }
   .ga-row .nm { font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .ga-row em { font-style:normal; color:var(--gray-500); font-size:12px; text-align:right; } .ga-row .ph { color:var(--gray-300); }
+  .cb-names { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:10px; margin-bottom:12px; }
+  .cbn { background:var(--white); border-radius:var(--r-md); padding:12px 14px; display:flex; gap:10px; align-items:center; min-width:0; }
+  .cbn .ic { width:34px; height:34px; border-radius:10px; display:grid; place-items:center; background:var(--red); color:#fff; font-size:18px; flex:none; }
+  .cbn:nth-child(2) .ic { background:var(--graphite); } .cbn:nth-child(3) .ic { background:#3a3d44; } .cbn:nth-child(4) .ic { background:var(--gray-200); color:var(--ink); }
+  .cbn > div { min-width:0; flex:1; } .cbn small { display:block; font-size:11.5px; color:var(--gray-500); padding-left:0; }
+  .ga-hd { display:grid; grid-template-columns:minmax(0, 1fr) 64px 14px minmax(0, 1.1fr); gap:10px; font-size:11.5px; color:var(--gray-500); font-weight:500; padding:8px 0 4px; }
+  .ga-hd span:nth-child(2) { text-align:right; }
+  .ga-row.moved .nm::after { content:''; display:inline-block; width:6px; height:6px; border-radius:50%; background:#f5b800; margin-left:6px; vertical-align:middle; }
+  .ga-row .nm b { font-weight:600; }
+  .ga-row .dd-btn.block { padding:6px 10px; font-size:12.5px; border-radius:10px; }
+  .ga-fix { font-size:12.5px; color:var(--gray-500); padding:6px 10px; }
+  @media (max-width:760px) { .cb-names { grid-template-columns:1fr 1fr; } .ga-hd { display:none; } }
   .ga-in { border:1px solid var(--gray-200); border-radius:8px; padding:6px 9px; font-size:13px; min-width:0; background:var(--white); } .ga-in:focus { border-color:var(--red); outline:none; }
   .ga-in.set { border-color:#f5b800; background:#fffbea; }
   .ga-prev { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-top:12px; font-size:12.5px; color:var(--gray-500); } .ga-prev .tag b { margin-left:4px; }
@@ -865,7 +899,7 @@
           <button data-v="ga" role="tab"><i class="ph ph-chart-bar"></i>Audiencia GA4</button></div></div>
       <span class="sp"></span><button class="ibtn" id="cb_x" aria-label="Cerrar"><i class="ph ph-x"></i></button>
     </div>
-    <div class="board" id="board"></div>
+    <div class="board ga-board" id="board"></div>
     <div class="board ga-board" id="board_ga" hidden></div>
     <div class="modal-f">
       <span class="chg" id="cb_chg"></span><span class="sp"></span>
@@ -873,6 +907,12 @@
       <button class="btn btn-ghost" id="mm_cancel">Cancelar</button>
       <button class="btn btn-red" id="mm_save"><i class="ph ph-floppy-disk"></i>Guardar agrupación</button>
     </div>
+  </div>
+</div>
+<div class="modal-bg" id="dt_modal" hidden>
+  <div class="modal dt" role="dialog" aria-modal="true" aria-labelledby="dt_t">
+    <div class="modal-h"><div><h2 id="dt_t"></h2><p id="dt_s"></p></div><span class="sp"></span><button class="ibtn" data-dt-x aria-label="Cerrar"><i class="ph ph-x"></i></button></div>
+    <div class="dt-body" id="dt_b"></div>
   </div>
 </div>
 <div class="modal-bg" id="bl_modal" hidden>
@@ -1343,7 +1383,7 @@ function Seg(el, items, value, onChange) {
 }
 
 let ddOpen = null;
-function Dropdown(host, { label, icon, options, value, onChange, search = true, block = false, dark = false, allLabel }) {
+function Dropdown(host, { label, icon, options, value, onChange, search = true, block = false, dark = false, allLabel, create = false }) {
   let opts = options, val = value;
   const btn = document.createElement('button');
   btn.type = 'button'; btn.className = 'dd-btn' + (block ? ' block' : '') + (dark ? ' darkin' : '');
@@ -1367,8 +1407,9 @@ function Dropdown(host, { label, icon, options, value, onChange, search = true, 
     const list = pop.querySelector('.dd-list'), inp = pop.querySelector('input');
     let hl = 0, shown = [];
     const draw = () => {
-      const q = (inp?.value || '').toLowerCase();
+      const raw = (inp?.value || '').trim(), q = raw.toLowerCase();
       shown = opts.filter(o => !q || o.l.toLowerCase().includes(q));
+      if (create && raw && !opts.some(o => o.l.toLowerCase() === q)) shown = [{ v:raw, l:`Crear grupo "${raw}"`, ic:'ph-plus' }, ...shown];
       list.innerHTML = shown.length ? shown.map((o, i) => `${o.sep ? '<div class="dd-sep"></div>' : ''}<button type="button" class="dd-opt ${o.v === val ? 'sel' : ''} ${i === hl ? 'hl' : ''}" data-i="${i}" role="option" aria-selected="${o.v === val}">
           <i class="ph ph-check ck"></i>${o.ic ? `<i class="ph ${o.ic}"></i>` : ''}<span class="lb">${esc(o.l)}</span>${o.m ? `<span class="mt">${o.m}</span>` : ''}</button>`).join('')
         : '<div class="dd-empty">Sin resultados</div>';
@@ -1409,8 +1450,9 @@ const CN_DEF = { Pauta:'Adquisición', Directos:'Directo', Redes:'Redes', Otros:
 const cn = (k, map = CMAP) => map['n:' + k] || CN_DEF[k] || k;
 // Audiencia: agrupación de los canales de GA4 ("g:<canal GA4>" -> grupo) si el admin la activó ("ga:mode" = custom)
 const gaGroup = (ch, map = CMAP) => map['ga:mode'] === 'custom' ? (map['g:' + ch] || ch) : ch;
-const ruleCount = (map = CMAP) => Object.keys(map).filter(k => /^[ms]:/.test(k)).length;
+const ruleCount = (map = CMAP) => Object.keys(map).filter(k => /^[msp]:/.test(k)).length;
 function canal(s, m, map = CMAP) {
+  if (map['p:' + s + '|' + m]) return map['p:' + s + '|' + m];
   if (map['s:' + s]) return map['s:' + s];
   if (map['m:' + m]) return map['m:' + m];
   return canalAuto(s, m);
@@ -1592,7 +1634,7 @@ $('canales').addEventListener('click', e => { const b = e.target.closest('.cn');
 // Reporte: filtros (desplegables propios), agrupación y vista Tabla / Bento
 // ============================================================
 const F = Object.fromEntries(ORDER.map(d => [d, '']));
-let view = 'c', mode = 'bento', estado = '';
+let view = 'c', mode = 'bento', estado = '', AUTO_T = false;   // AUTO_T: la tabla la abrió un clic en tarjeta
 const matches = (r, skip) => ORDER.every(d => d === skip || !F[d] || r[d] === F[d]);
 const FD = {};
 ORDER.forEach(d => {
@@ -1609,6 +1651,8 @@ function fillFilters() {
   });
   $('clear').disabled = !ORDER.some(d => F[d]) && !estado && !$('only').checked && !$('q').value;
   $('clear_all').hidden = $('clear').disabled;
+  // Si la tabla se abrió desde una tarjeta y ya no queda ningún filtro, se vuelve a las tarjetas
+  if (AUTO_T && $('clear').disabled && mode === 'table') { document.querySelector('#viewMode [data-v="bento"]').click(); }
   const act = ORDER.filter(d => F[d]);
   $('fc').textContent = (act.length + !!estado) || '';
   $('fchips').innerHTML = act.map(d => `<button class="fchip" data-fx="${d}" title="Quitar filtro"><span>${DIMS[d]}</span><b>${esc(d === 'g' ? cn(F[d]) : F[d])}</b><i class="ph ph-x"></i></button>`).join('')
@@ -1622,7 +1666,7 @@ $('only').onchange = () => { draw(); fillFilters(); };
 
 const GB_OPTS = ORDER.map(d => ({ v: d, l: DIMS[d], ic: DIM_IC[d] }));
 const GBD = Dropdown($('gbdd'), { label: 'Agrupar', icon: 'ph-stack', options: GB_OPTS, value: view, search: false, onChange: v => { view = v; draw(); } });
-Seg($('viewMode'), null, mode, v => { mode = v; draw(); });
+Seg($('viewMode'), null, mode, v => { mode = v; AUTO_T = false; draw(); });
 
 const fmtDim = (d, v) => d === 'g' ? esc(cn(v)) : d === 'p' ? `<span class="page">${esc(v)}</span>` : d === 't' || d === 'x' ? `<span class="term">${esc(v)}</span>` : esc(v);
 const tags = (d, arr) => arr.length === 1 ? fmtDim(d, arr[0])
@@ -1659,8 +1703,8 @@ function draw() {
   const empty = `<div class="empty"><i class="ph ph-funnel-x"></i><b>Sin resultados con estos filtros</b><span>Quita algún filtro o cambia el periodo.</span></div>`;
   if (!G.length) return swap($('out'), empty);
   if (mode === 'bento') {
-    swap($('out'), `<div class="gbento">${G.map((a, i) => {
-      const p = PG.get(a.key) || { u:0, e1:0, e2:0 }, cls = G.length === 1 ? 'xl full' : i === 0 ? 'xl' : i === 1 ? 'xl2' : i < 5 ? 'lg' : '';
+    swap($('out'), `<div class="gbento rank">${G.map((a, i) => {
+      const p = PG.get(a.key) || { u:0, e1:0, e2:0 }, cls = rankCls(i, G.length);
       const side = view === 'p' ? 'c' : 'p', tops = group(a.rows, side).slice(0, i === 0 ? 4 : 3);
       return `<button class="gcard ${cls}" data-k="${esc(a.key)}" title="Ver en tabla">
         <div class="gt"><b>${esc(view === 'g' ? cn(a.key) : a.key)}</b><span class="rank">#${i + 1}</span></div>
@@ -1683,7 +1727,7 @@ function draw() {
 $('out').addEventListener('click', e => {
   const cp = e.target.closest('[data-copy]'); if (cp) return copy(cp.dataset.copy);
   const card = e.target.closest('.gcard[data-k]');
-  if (card) { F[view] = card.dataset.k; mode = 'table'; document.querySelector('#viewMode [data-v="table"]').click(); update(); return; }
+  if (card) { F[view] = card.dataset.k; mode = 'table'; document.querySelector('#viewMode [data-v="table"]').click(); AUTO_T = true; update(); return; }
   const tr = e.target.closest('tr.grp'); if (!tr) return;
   const open = tr.classList.toggle('open'); tr.setAttribute('aria-expanded', open);
   document.querySelectorAll(`#out tr.det[data-p="${tr.dataset.i}"]`).forEach(d => d.hidden = !open);
@@ -1692,31 +1736,26 @@ $('out').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === 
 function update() { fillFilters(); drawCanales(); draw(); if (LINKS) drawLib(); }
 
 // ---------- Agrupar canales: tablero en modal (medios como tarjetas; fuentes como excepciones) ----------
-let MM_EDIT = null, MM_OPEN = new Set(), MM_DRAG = '';
+let MM_EDIT = null;
 const CAN_IC = g => CANAL_INFO[g]?.[1] || 'ph-circle';
+// Campañas: cada combinación fuente + medio va a uno de los 4 canales (el nombre de cada canal se edita arriba)
 function drawBoard() {
-  const map = MM_EDIT, rows = R || [];
-  const cot = rs => rs.reduce((a, r) => a + r.e1 + r.e2, 0), us = rs => rs.reduce((a, r) => a + r.u, 0);
-  const medios = new Map(MEDIOS.map(m => [m, []]));
-  rows.forEach(r => (medios.get(r.m) || medios.set(r.m, []).get(r.m)).push(r));
-  const col = new Map(CANALES.map(c => [c, []]));
-  for (const [m, rs] of medios) col.get(canal('', m, map)).push([m, rs]);
-  const sel = (key, cur, extra = '') => `<select class="mm-sel" data-mk="${esc(key)}" aria-label="Canal">${extra}${CANALES.map(c => `<option value="${c}" ${c === cur ? 'selected' : ''}>${esc(cn(c, map))}</option>`).join('')}</select>`;
-  const changed = k => (map[k] || null) !== (CMAP[k] || null);
-  $('board').innerHTML = CANALES.map(c => {
-    const items = col.get(c).sort((a, b) => us(b[1]) - us(a[1]));
-    return `<div class="bcol" data-c="${c}"><div class="bcol-h"><span class="ic"><i class="ph ${CAN_IC(c)}"></i></span><div><input class="bcol-n" data-cn="${c}" value="${esc(cn(c, map))}" maxlength="40" aria-label="Nombre del canal ${esc(cn(c, map))}" title="Clic para renombrar"><span>${items.length} medio${items.length === 1 ? '' : 's'} · ${num(us(items.flatMap(x => x[1])))} usuarios</span></div></div>
-      <div class="bcol-b">${items.length ? items.map(([m, rs]) => {
-        const fs = group(rs, 's').sort((a, b) => b.u - a.u), exc = fs.filter(f => map['s:' + f.key] && map['s:' + f.key] !== c).length, open = MM_OPEN.has(m);
-        return `<div class="mcard ${changed('m:' + m) ? 'moved' : ''}" draggable="true" data-m="${esc(m)}">
-          <div class="mc-h"><i class="ph ph-dots-six-vertical"></i><b>${esc(m)}</b>${sel('m:' + m, c)}</div>
-          <div class="mc-m">${rs.length ? `${num(us(rs))} usuarios · ${num(cot(rs))} cot.` : 'sin datos en el periodo'}</div>
-          ${fs.length ? `<button class="mc-x" data-open="${esc(m)}" aria-expanded="${open}"><i class="ph ph-caret-${open ? 'up' : 'down'}"></i>${fs.length} fuente${fs.length === 1 ? '' : 's'}${exc ? `<span class="fx">${exc} excepción${exc === 1 ? '' : 'es'}</span>` : ''}</button>` : ''}
-          ${open ? `<div class="mc-fs">${fs.map(f => { const k = 's:' + f.key, v = map[k];
-            return `<div class="mc-f ${v && v !== c ? 'exc' : ''}"><span title="${esc(f.key)}">${esc(f.key)}</span><em>${num(f.u)}</em>${sel(k, v || '', `<option value="" ${v ? '' : 'selected'}>Igual al medio</option>`)}</div>`; }).join('')}</div>` : ''}
-        </div>`; }).join('') : '<div class="none">Arrastra aquí un medio</div>'}</div></div>`;
-  }).join('');
+  const map = MM_EDIT, pairs = new Map();
+  (R || []).forEach(r => { const k = r.s + '|' + r.m, e = pairs.get(k) || { s:r.s, m:r.m, u:0, cot:0 }; e.u += r.u; e.cot += r.e1 + r.e2; pairs.set(k, e); });
+  (LINKS || []).forEach(l => { const k = l.source + '|' + l.medium; if (!pairs.has(k)) pairs.set(k, { s:l.source, m:l.medium, u:0, cot:0 }); });
+  const list = [...pairs.values()].sort((a, b) => b.u - a.u || b.cot - a.cot), tot = new Map(CANALES.map(c => [c, { u:0, n:0 }]));
+  list.forEach(x => { x.c = canal(x.s, x.m, map); const t = tot.get(x.c); t.u += x.u; t.n++; });
+  $('board').innerHTML = `<div class="cb-names">${CANALES.map(c => `<label class="cbn"><span class="ic"><i class="ph ${CAN_IC(c)}"></i></span><div><input class="bcol-n" data-cn="${c}" value="${esc(cn(c, map))}" maxlength="40" aria-label="Nombre del canal" title="Clic para renombrar"><small>${tot.get(c).n} combinaci${tot.get(c).n === 1 ? 'ón' : 'ones'} · ${num(tot.get(c).u)} usuarios</small></div></label>`).join('')}</div>
+    ${list.length ? `<div class="ga-rows cb-rows"><div class="ga-hd"><span>Fuente / medio</span><span>Usuarios</span><span></span><span>Canal</span></div><div class="ga-hd"><span>Fuente / medio</span><span>Usuarios</span><span></span><span>Canal</span></div>${list.map((x, i) => `<div class="ga-row ${map['p:' + x.s + '|' + x.m] ? 'moved' : ''}"><span class="nm" title="${esc(x.s)} / ${esc(x.m)}"><b>${esc(x.s)}</b> / ${esc(x.m)}</span><em>${num(x.u)}</em><i class="ph ph-arrow-right"></i><span class="cb-dd" data-i="${i}"></span></div>`).join('')}</div>`
+      : '<div class="none">No hay campañas ni UTMs guardadas en el periodo elegido.</div>'}`;
+  list.forEach((x, i) => Dropdown($('board').querySelector(`.cb-dd[data-i="${i}"]`), { options: CANALES.map(c => ({ v:c, l:cn(c, map), ic:CAN_IC(c) })), value:x.c, search:false, block:true, onChange: v => pairSet(x.s, x.m, v) }));
   mmChg();
+}
+// Regla por combinación ("p:fuente|medio"); si coincide con lo que ya saldría sin ella, no se guarda
+function pairSet(s, m, v) {
+  const k = 'p:' + s + '|' + m, rest = { ...MM_EDIT }; delete rest[k];
+  if (canal(s, m, rest) === v) delete MM_EDIT[k]; else MM_EDIT[k] = v;
+  drawBoard();
 }
 function mmChg() {
   const map = MM_EDIT, n = new Set([...Object.keys(map), ...Object.keys(CMAP)].filter(k => (map[k] || null) !== (CMAP[k] || null))).size;
@@ -1727,50 +1766,35 @@ function drawBoardGa() {
   const map = MM_EDIT, custom = map['ga:mode'] === 'custom', chs = (GA?.channels || []).filter(x => x[1]);
   const tot = new Map(); chs.forEach(x => { const k = gaGroup(x[0], map); tot.set(k, (tot.get(k) || 0) + x[1]); });
   $('board_ga').innerHTML = `<div class="ga-mode">
-      <label class="gm ${custom ? '' : 'on'}"><input type="radio" name="gam" value="default" ${custom ? '' : 'checked'}><b>Predeterminada de GA4</b><span>Los canales tal como los entrega Google Analytics.</span></label>
-      <label class="gm ${custom ? 'on' : ''}"><input type="radio" name="gam" value="custom" ${custom ? 'checked' : ''}><b>Personalizada</b><span>Junta canales en un grupo y ponle nombre. Se usa en el gráfico principal y en la tarjeta de canales.</span></label>
+      <label class="gmo ${custom ? '' : 'on'}"><input type="radio" name="gam" value="default" ${custom ? '' : 'checked'}><b>Predeterminada de GA4</b><span>Los canales tal como los entrega Google Analytics.</span></label>
+      <label class="gmo ${custom ? 'on' : ''}"><input type="radio" name="gam" value="custom" ${custom ? 'checked' : ''}><b>Personalizada</b><span>Junta canales en un grupo y ponle nombre. Se usa en el gráfico principal y en la tarjeta de canales.</span></label>
     </div>${!chs.length ? '<div class="none">Abre GA4 Audience para cargar los canales del periodo.</div>' : `
     <div class="ga-rows ${custom ? '' : 'off'}">${chs.map(x => { const v = map['g:' + x[0]] || '';
-      return `<div class="ga-row"><span class="nm" title="${esc(x[0])}">${esc(x[0])}</span><em>${num(x[1])}</em><i class="ph ph-arrow-right"></i><input class="ga-in ${v ? 'set' : ''}" data-gk="${esc(x[0])}" list="ga_groups" value="${esc(v)}" placeholder="${esc(x[0])}" maxlength="40" ${custom ? '' : 'disabled'} aria-label="Grupo para ${esc(x[0])}"></div>`; }).join('')}</div>
-    <datalist id="ga_groups">${[...tot.keys()].map(n => `<option value="${esc(n)}">`).join('')}</datalist>
+      return `<div class="ga-row ${v ? 'moved' : ''}"><span class="nm" title="${esc(x[0])}">${esc(x[0])}</span><em>${num(x[1])}</em><i class="ph ph-arrow-right"></i>${custom ? `<span class="ga-dd" data-gk="${esc(x[0])}"></span>` : `<span class="ga-fix">${esc(x[0])}</span>`}</div>`; }).join('')}</div>
     ${custom ? `<div class="ga-prev">Quedan ${tot.size} canales:${[...tot].sort((a, b) => b[1] - a[1]).map(([n, v]) => `<span class="tag">${esc(n)}<b>${num(v)}</b></span>`).join('')}</div>` : ''}`}`;
+  const groups = [...new Set(Object.entries(map).filter(([k]) => k.startsWith('g:')).map(([, v]) => v))].sort((a, b) => a.localeCompare(b, 'es'));
+  $('board_ga').querySelectorAll('.ga-dd').forEach(h => { const k = h.dataset.gk;
+    Dropdown(h, { options:[{ v:'', l:'Sin agrupar', m:'usa su nombre' }, ...groups.map((g, i) => ({ v:g, l:g, ic:'ph-stack', sep:i === 0 }))], value: map['g:' + k] || '', allLabel:k, block:true, create:true,
+      onChange: v => { v = String(v || '').trim().replace(/[<>]/g, '').slice(0, 40); if (!v || v === k) delete MM_EDIT['g:' + k]; else MM_EDIT['g:' + k] = v; drawBoardGa(); } }); });
   mmChg();
 }
 $('board_ga').addEventListener('change', e => {
   const t = e.target;
   if (t.name === 'gam') { if (t.value === 'custom') MM_EDIT['ga:mode'] = 'custom'; else delete MM_EDIT['ga:mode']; return drawBoardGa(); }
-  const k = t.dataset.gk; if (!k) return;
-  const v = t.value.trim().replace(/[<>]/g, '').slice(0, 40);
-  if (!v || v === k) delete MM_EDIT['g:' + k]; else MM_EDIT['g:' + k] = v;
-  drawBoardGa();
 });
 let CB_TAB = 'camp';
-const CB_DESC = { camp:'Arrastra cada medio a su canal o elige el canal en su selector. Haz clic en el nombre de un canal para renombrarlo. Abre un medio para mandar una fuente a otro canal como excepción.',
+const CB_DESC = { camp:'Cada combinación de fuente y medio de tus campañas va a uno de los 4 canales. Haz clic en el nombre de un canal para renombrarlo.',
   ga:'Elige si GA4 Audience usa los canales predeterminados de Google Analytics o tu propia agrupación con nombres.' };
 const CBT = Seg($('cb_tab'), null, CB_TAB, v => cbTab(v));
 function cbTab(v) { CB_TAB = v; CBT.set(v); $('board').hidden = v !== 'camp'; $('board_ga').hidden = v !== 'ga'; $('cb_desc').textContent = CB_DESC[v]; v === 'ga' ? drawBoardGa() : drawBoard(); }
-// Asigna un canal a un medio ("m:") o a una fuente ("s:"); si coincide con lo automático no guarda regla
-function mmSet(k, v) {
-  if (!v) { delete MM_EDIT[k]; return drawBoard(); }
-  const rest = { ...MM_EDIT }; delete rest[k];
-  const auto = k.startsWith('m:') ? canal('', k.slice(2), rest) : null;
-  if (v === auto) delete MM_EDIT[k]; else MM_EDIT[k] = v;
-  drawBoard();
-}
 $('board').addEventListener('change', e => {
   const n = e.target.closest('[data-cn]');
   if (n) { const c = n.dataset.cn, v = n.value.trim().replace(/[<>]/g, '').slice(0, 40); if (!v || v === CN_DEF[c]) delete MM_EDIT['n:' + c]; else MM_EDIT['n:' + c] = v; return drawBoard(); }
-  const s = e.target.closest('[data-mk]'); if (s) mmSet(s.dataset.mk, s.value);
 });
 $('board').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('.bcol-n')) e.target.blur(); });
-$('board').addEventListener('click', e => { const b = e.target.closest('[data-open]'); if (!b) return; const m = b.dataset.open; MM_OPEN.has(m) ? MM_OPEN.delete(m) : MM_OPEN.add(m); drawBoard(); });
-$('board').addEventListener('dragstart', e => { const c = e.target.closest?.('.mcard'); if (!c) return; MM_DRAG = c.dataset.m; c.classList.add('drag'); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', MM_DRAG); });
-$('board').addEventListener('dragend', () => { MM_DRAG = ''; document.querySelectorAll('.bcol.over, .mcard.drag').forEach(x => x.classList.remove('over', 'drag')); });
-$('board').addEventListener('dragover', e => { const c = e.target.closest('.bcol'); if (!c || !MM_DRAG) return; e.preventDefault(); document.querySelectorAll('.bcol.over').forEach(x => x !== c && x.classList.remove('over')); c.classList.add('over'); });
-$('board').addEventListener('drop', e => { const c = e.target.closest('.bcol'); if (!c || !MM_DRAG) return; e.preventDefault(); const m = MM_DRAG; MM_DRAG = ''; mmSet('m:' + m, c.dataset.c); });
 function cbOpen() {
   if (!can.admin()) return;
-  MM_EDIT = { ...CMAP }; MM_OPEN = new Set(); cbTab(location.hash.startsWith('#/ga4') ? 'ga' : 'camp');
+  MM_EDIT = { ...CMAP }; cbTab(location.hash.startsWith('#/ga4') ? 'ga' : 'camp');
   $('cb_modal').hidden = false; requestAnimationFrame(() => $('cb_modal').classList.add('on'));
   document.body.style.overflow = 'hidden'; $('cb_x').focus();
 }
@@ -1783,7 +1807,7 @@ $('cb_open').onclick = cbOpen;
 $('cb_x').onclick = cbClose; $('mm_cancel').onclick = cbClose;
 $('cb_modal').addEventListener('mousedown', e => { if (e.target === $('cb_modal')) cbClose(); });
 addEventListener('keydown', e => { if (e.key === 'Escape' && !$('cb_modal').hidden) cbClose(); });
-$('mm_reset').onclick = () => { const re = CB_TAB === 'ga' ? /^(g|ga):/ : /^[msn]:/; Object.keys(MM_EDIT).forEach(k => { if (re.test(k)) delete MM_EDIT[k]; }); cbTab(CB_TAB); };
+$('mm_reset').onclick = () => { const re = CB_TAB === 'ga' ? /^(g|ga):/ : /^[msnp]:/; Object.keys(MM_EDIT).forEach(k => { if (re.test(k)) delete MM_EDIT[k]; }); cbTab(CB_TAB); };
 $('mm_save').onclick = async () => {
   $('mm_save').disabled = true;
   try {
@@ -1827,6 +1851,7 @@ async function aplicarRango(from, to, preset) {
   R = agg(from, to).filter(r => r.u >= 5 || r.e1 || r.e2);
   P = pFrom >= REPORT.minDate ? agg(pFrom, pTo) : null;
   drawKpis(); update(); $('view-reporte').classList.remove('loading');
+  if (GA) drawGa4();
 }
 function drawCal() {
   $('dp_presets').innerHTML = PRESETS.map(([k, l]) => `<button data-k="${k}" class="${RANGO.preset === k ? 'on' : ''}">${l}${RANGO.preset === k ? '<i class="ph ph-check"></i>' : ''}</button>`).join('');
@@ -2246,6 +2271,12 @@ function libActions(l, u) {
     ${ed ? `<button class="ibtn" data-edit="${l.id}" title="Editar" aria-label="Editar"><i class="ph ph-pencil-simple"></i></button>
     <button class="ibtn danger" data-del="${l.id}" title="Eliminar" aria-label="Eliminar"><i class="ph ph-trash"></i></button>` : ''}`;
 }
+// Usuarios que llegaron a la landing de destino de la UTM (todo el tráfico del sitio, periodo de GA4 Audience)
+function landUsers(url) {
+  if (!GA) { if (RANGO.from && !GA_LOADING) setTimeout(() => loadGa4(), 0); return null; }
+  const p = pathOf(url), x = GA.landing.find(y => y[0] === p);
+  return { p, u: x ? x[1] : 0 };
+}
 function libCard(l) {
   const iss = validar({ s: l.source, m: l.medium, c: l.campaign, t: l.term }), lv = nivel(iss), ga = gaFor(l), u = fullUrl(l);
   let host = ''; try { const x = new URL(l.url); host = x.host + x.pathname; } catch { host = l.url; }
@@ -2257,6 +2288,7 @@ function libCard(l) {
     <div class="chips"><span class="tag"><i>fuente</i> ${esc(l.source)}</span><span class="tag"><i>medio</i> ${esc(l.medium)}</span>${l.zone ? `<span class="tag"><i>zona</i> ${esc(l.zone)}</span>` : ''}${l.term ? `<span class="tag"><i>término</i> ${esc(l.term)}</span>` : ''}${l.content ? `<span class="tag"><i>contenido</i> ${esc(l.content)}</span>` : ''}</div>
     <div class="url"><b>${esc(host)}</b></div>
     ${l.note ? `<div class="note"><i class="ph ph-note-pencil"></i>${esc(l.note)}</div>` : ''}
+    ${(lu => lu ? `<div class="land" title="Usuarios que llegaron a esta landing en el periodo, por cualquier canal"><i class="ph ph-arrow-square-in"></i><span>Landing ${esc(pageName(lu.p))}</span><b>${num(lu.u)} usuarios</b></div>` : '')(landUsers(l.url))}
     ${ga ? `<div class="ga"><div><b>${num(ga.e1)}</b>${EV1}</div><div><b>${num(ga.e2)}</b>${EV2}</div><div><b>${num(ga.u)}</b>Usuarios</div></div>`
          : `<div class="ga none"><i class="ph ph-clock-countdown"></i>Sin visitas en GA4 en este periodo</div>`}
     <div class="lact">${actions}</div></div>`;
@@ -2277,7 +2309,7 @@ $('lib_xls').onclick = async () => {
     const data = rows.map(l => { const iss = validar({ s: l.source, m: l.medium, c: l.campaign, t: l.term }), ga = gaFor(l);
       return { Canal: cn(LV.g(l)), 'Campaña': l.campaign, Fuente: l.source, Medio: l.medium, Zona: l.zone || '', 'Término': l.term || '', Contenido: l.content || '',
         'URL de destino': l.url, 'Link con UTM': fullUrl(l), Estado: ESTADOS.find(e => e.v === nivel(iss))?.l || nivel(iss),
-        Usuarios: ga ? ga.u : 0, [EV1]: ga ? ga.e1 : 0, [EV2]: ga ? ga.e2 : 0, 'Creada por': l.created_by_name || '', Creada: (l.created_at || '').slice(0, 10), Nota: l.note || '' }; });
+        Usuarios: ga ? ga.u : 0, 'Usuarios en la landing': landUsers(l.url)?.u ?? '', [EV1]: ga ? ga.e1 : 0, [EV2]: ga ? ga.e2 : 0, 'Creada por': l.created_by_name || '', Creada: (l.created_at || '').slice(0, 10), Nota: l.note || '' }; });
     const ws = X.utils.json_to_sheet(data), keys = Object.keys(data[0]);
     ws['!cols'] = keys.map(k => ({ wch: Math.min(60, Math.max(k.length, ...data.map(r => String(r[k]).length)) + 2) }));
     ws['!autofilter'] = { ref: X.utils.encode_range({ s:{ r:0, c:0 }, e:{ r:data.length, c:keys.length - 1 } }) };
@@ -2312,7 +2344,7 @@ function drawLib() {
       M.get(k).map(l => { const iss = validar({ s: l.source, m: l.medium, c: l.campaign, t: l.term }), ga = gaFor(l), u = fullUrl(l);
         return `<tr><td class="l">${esc(l.campaign)}<div class="term">${esc(l.url)}</div></td><td class="l">${esc(l.source)} / ${esc(l.medium)}</td><td class="l"><span class="term">${esc(l.zone || '-')} · ${esc(l.term || '-')} · ${esc(l.content || '-')}</span></td>
           <td class="l"><span class="term">${esc(l.created_by_name || '-')}</span></td><td class="l">${BADGE[nivel(iss)](iss.length)}</td><td>${ga ? num(ga.u) : '-'}</td><td class="ev ${ga?.e1 ? '' : 'z'}">${ga?.e1 ? num(ga.e1) : '-'}</td><td class="ev ${ga?.e2 ? '' : 'z'}">${ga?.e2 ? num(ga.e2) : '-'}</td>
-          <td style="white-space:nowrap">${libActions(l, u)}</td></tr>`; }).join('')).join('')}</tbody></table></div>`);
+          <td><div class="acts">${libActions(l, u)}</div></td></tr>`; }).join('')).join('')}</tbody></table></div>`);
     return;
   }
   swap($('lib'), keys.map(k => `<div class="lib-group"><div class="lib-gh"><h3 style="font-weight:500"><i class="ph ${LG_IC[libGroup](k)}"></i>${esc(libGroup === 'g' ? cn(k) : k)}</h3><span>${M.get(k).length}</span></div>
@@ -2836,8 +2868,18 @@ function gaNote() {
   return `<b>${esc(gCh)}</b>: ${num(r[1])} usuarios (${gpct(r[1], GA.totals.cur.active)} del total) ${gdl(r[1], r[3])}`;
 }
 function drawGaChart() { $('g_chart').innerHTML = gaChart(); $('g_note').innerHTML = gaNote(); }
+const rankCls = (i, n) => n === 1 ? 'xl full' : i === 0 ? 'xl r1' : i === 1 ? 'r2' : i === 2 ? 'r3' : '';
 const pageName = p => p === '/' ? 'Homepage' : (p || '(not set)');
 const gpct = (a, b) => b ? pct(a / b) : '0%';
+// Campañas con tráfico en el periodo cuya página de destino es la landing o la tienda de la marca
+function brandCamps(b) {
+  if (!R?.length || (!b.lp && !b.sp)) return '';
+  const lo = x => (x || '').toLowerCase(), hit = r => r.u > 0 && ((b.lp && lo(r.p).startsWith(lo(b.lp))) || (b.sp && lo(r.p).startsWith(lo(b.sp))));
+  const cs = uniq(R.filter(hit), r => r.c);
+  return cs.length ? `<div class="bact on" title="${esc(cs.join(', '))}"><i></i>${cs.length} campaña${cs.length === 1 ? '' : 's'} activa${cs.length === 1 ? '' : 's'}</div>`
+    : '<div class="bact"><i></i>Sin campaña activa</div>';
+}
+const campPages = () => new Set((R || []).filter(r => r.u > 0).map(r => (r.p || '').toLowerCase()));
 function drawGa4() {
   const g = GA, c = g.totals.cur, p = g.totals.prev, ret = x => Math.max(0, x.active - x.new);
   $('g_period').textContent = `Comparado con ${date(g.range.pFrom)} al ${date(g.range.pTo)}`;
@@ -2874,14 +2916,15 @@ function drawGa4() {
       <div class="v">${num(t)}</div><div class="lbl">Usuarios · landing + tienda</div>
       <div class="cmpr">${gdl(t, pt)} vs periodo anterior</div>
       <div class="ft ft2">${kp(b.hasLanding, b.landing, b.pLanding, 'Landing')}${kp(b.hasStore, b.store, b.pStore, 'Tienda')}</div>
+      ${brandCamps(b)}
     </div>`;
   }).join('');
   // Canales y ciudades: top compacto (líder destacado + resto en cuadrícula), con comparación
   const top = (id, icon, title, rows, tot, note) => {
-    const [lead, ...rest] = rows;
+    const [lead, ...rest] = rows, kind = id === 'g_chan' ? 'chan' : 'city', at = x => x.other ? '' : ` data-dk="${kind}" data-dn="${esc(x.n)}" role="button" tabindex="0" title="Ver detalle"`;
     $(id).innerHTML = `<div class="card-h" style="margin-bottom:12px"><h2><i class="ph ${icon}" style="color:var(--red)"></i> ${title}</h2><span class="muted" style="font-size:12px">${note}</span></div>
-      ${lead ? `<div class="tlead"><span class="rk">#1</span><div><b>${esc(lead.n)}</b><small>${lead.sub || ''}</small></div><div class="tv"><b>${num(lead.v)}</b><small>${gpct(lead.v, tot)} del total</small>${gdl(lead.v, lead.pv)}</div></div>` : ''}
-      <div class="tgrid">${rest.map((x, i) => `<div class="tcell ${x.other ? 'other' : ''}"><span class="rk">${x.other ? '' : '#' + (i + 2)}</span><span class="nm" title="${esc(x.n)}">${esc(x.n)}</span><b>${num(x.v)}</b><span class="sh">${gpct(x.v, tot)}</span>${gdl(x.v, x.pv)}</div>`).join('')}</div>`;
+      ${lead ? `<div class="tlead"${at(lead)}><span class="rk">#1</span><div><b>${esc(lead.n)}</b><small>${lead.sub || ''}</small></div><div class="tv"><b>${num(lead.v)}</b><small>${gpct(lead.v, tot)} del total</small>${gdl(lead.v, lead.pv)}</div></div>` : ''}
+      <div class="tgrid">${rest.map((x, i) => `<div class="tcell ${x.other ? 'other' : ''}"${at(x)}><span class="rk">${x.other ? '' : '#' + (i + 2)}</span><span class="nm" title="${esc(x.n)}">${esc(x.n)}</span><b>${num(x.v)}</b><span class="sh">${gpct(x.v, tot)}</span>${gdl(x.v, x.pv)}</div>`).join('')}</div>`;
   };
   top('g_chan', 'ph-git-branch', 'Canales del primer contacto', GCH.map(x => ({ n: x[0], v: x[1], pv: x[3], sub: `${num(x[2])} usuarios nuevos` })), c.active, 'Usuarios activos');
   // Ciudades: tantas como tarjetas tenga el widget de canales (misma altura); el resto va a "Otras"
@@ -2890,6 +2933,7 @@ function drawGa4() {
   top('g_city', 'ph-map-pin', 'Usuarios activos por ciudad', [...named.map(x => ({ n: x[0], v: x[1], pv: x[2] })), { n: 'Otras', v: oc, pv: op, other: true }], c.active, `Top ${named.length} + otras`);
   drawLand();
   if (R?.length) drawKpis();
+  if (LINKS) drawLib();
 }
 // Páginas de destino: mismo lenguaje que el detalle de Campañas (tarjetas por defecto, tabla opcional)
 let gLandSort = 'a';
@@ -2911,8 +2955,8 @@ function drawLand() {
       <tr><td class="l"><span class="page">${esc(pageName(x[0]))}</span></td><td>${num(x[1])}${gdlT(x[1], x[5])}</td><td>${num(x[2])}${gdlT(x[2], x[6])}</td><td>${num(x[3])}${gdlT(x[3], x[7])}</td><td>${pct(er(x))}</td><td>${pct(x[1] / tot)}</td></tr>`).join('')}</tbody></table></div>${more}`);
     return;
   }
-  swap($('g_land'), `<div class="gbento">${L.map((x, i) => {
-    const cls = L.length === 1 ? 'xl full' : i === 0 ? 'xl' : i === 1 ? 'xl2' : i < 5 ? 'lg' : '';
+  swap($('g_land'), `<div class="gbento rank">${L.map((x, i) => {
+    const cls = rankCls(i, L.length);
     return `<div class="gcard ${cls}">
       <div class="gt"><b class="${x[0] === '/' ? '' : 'mono'}">${esc(pageName(x[0]))}</b><span class="rank">#${i + 1}</span></div>
       <div class="gm"><div><b>${num(x[1])}</b>Activos ${gdlT(x[1], x[5])}</div><div><b>${num(x[2])}</b>Nuevos ${gdlT(x[2], x[6])}</div><div><b>${num(x[3])}</b>Sesiones ${gdlT(x[3], x[7])}</div></div>
@@ -2933,6 +2977,35 @@ Seg($('g_land_v'), null, gLandView, v => { gLandView = v; drawLand(); });
 
 // ---------- Marcas y rutas (solo admin, en modal) ----------
 const urlPath = u => { try { return new URL(u).pathname; } catch { return ''; } };
+// Detalle de una ciudad o un canal agrupado: páginas de destino (con o sin campaña) y de dónde llegan
+function openDetail(kind, name) {
+  const g = GA; if (!g) return;
+  const cp = campPages(), camp = p => cp.has(p.toLowerCase()), tot = g.totals.cur.active || 1;
+  const sumBy = (rows, key, val) => { const M = new Map(); rows.forEach(r => M.set(key(r), (M.get(key(r)) || 0) + val(r))); return [...M].sort((a, b) => b[1] - a[1]); };
+  const list = (items, max, fmt) => { const mx = items[0]?.[1] || 1; return items.length ? items.slice(0, max).map(([n, v]) => `<div class="dt-row">${fmt(n)}<b>${num(v)}</b><div class="bar"><i style="width:${Math.max(2, v / mx * 100)}%"></i></div></div>`).join('') : '<div class="dt-empty">Sin datos en el periodo</div>'; };
+  const pageRow = n => `<span class="nm ${n === '/' ? '' : 'mono'}" title="${esc(n)}">${esc(pageName(n))}</span><span class="meta" style="grid-row:2">${camp(n) ? '<span class="cp on"><i class="ph-fill ph-megaphone-simple"></i>Con campaña</span>' : '<span class="cp">Sin campaña</span>'}</span>`;
+  const plain = n => `<span class="nm" title="${esc(n)}">${esc(n)}</span>`;
+  let users, pages, side, sideTitle, sideIc;
+  if (kind === 'city') {
+    users = (g.cities.find(x => x[0] === name) || [0, 0])[1];
+    pages = sumBy((g.cityPages || []).filter(r => r[0] === name), r => r[1], r => r[2]);
+    side = sumBy((g.cityChan || []).filter(r => r[0] === name), r => gaGroup(r[1]), r => r[2]); sideTitle = 'Canal por el que llegan'; sideIc = 'ph-git-branch';
+  } else {
+    users = (gaChannels().find(x => x[0] === name) || [0, 0])[1];
+    pages = sumBy((g.chanPages || []).filter(r => gaGroup(r[0]) === name), r => r[1], r => r[2]);
+    side = sumBy((g.cityChan || []).filter(r => gaGroup(r[1]) === name), r => r[0], r => r[2]); sideTitle = 'Ciudades'; sideIc = 'ph-map-pin';
+  }
+  const withCamp = pages.filter(([n]) => camp(n)).length;
+  $('dt_t').textContent = name;
+  $('dt_s').textContent = `${num(users)} usuarios activos · ${pct(users / tot)} del total · ${withCamp} de ${Math.min(pages.length, 12)} páginas principales con campaña activa`;
+  $('dt_b').innerHTML = `<div class="dt-sec"><h3><i class="ph ph-browser"></i>Páginas de destino<span>usuarios</span></h3>${list(pages, 12, pageRow)}</div>
+    <div class="dt-sec"><h3><i class="ph ${sideIc}"></i>${sideTitle}<span>usuarios</span></h3>${list(side, 10, plain)}</div>`;
+  modalOpen('dt_modal');
+}
+['g_chan', 'g_city'].forEach(id => {
+  $(id).addEventListener('click', e => { const t = e.target.closest('[data-dn]'); if (t) openDetail(t.dataset.dk, t.dataset.dn); });
+  $(id).addEventListener('keydown', e => { const t = e.target.closest('[data-dn]'); if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openDetail(t.dataset.dk, t.dataset.dn); } });
+});
 const modalOpen = id => { $(id).hidden = false; requestAnimationFrame(() => $(id).classList.add('on')); document.body.style.overflow = 'hidden'; };
 const modalClose = id => { $(id).classList.remove('on'); setTimeout(() => { $(id).hidden = true; if ([...document.querySelectorAll('.modal-bg')].every(m => m.hidden)) document.body.style.overflow = ''; }, 280); };
 async function loadBrands() {
@@ -2966,6 +3039,8 @@ function bmOpen(b) {
 $('bm_colp').oninput = () => { $('bm_col').value = $('bm_colp').value; };
 $('bm_col').oninput = () => { if (/^#[0-9a-f]{6}$/i.test($('bm_col').value)) $('bm_colp').value = $('bm_col').value; };
 $('bm_modal').addEventListener('click', e => { if (e.target === $('bm_modal') || e.target.closest('[data-bm-x]')) modalClose('bm_modal'); });
+$('dt_modal').addEventListener('click', e => { if (e.target === $('dt_modal') || e.target.closest('[data-dt-x]')) modalClose('dt_modal'); });
+addEventListener('keydown', e => { if (e.key === 'Escape' && !$('dt_modal').hidden) modalClose('dt_modal'); });
 $('bl_modal').addEventListener('click', e => { if (e.target === $('bl_modal') || e.target.closest('[data-bl-x]')) modalClose('bl_modal'); });
 $('bl_open').onclick = () => { if (!can.admin()) return; if (!BRANDS) loadBrands(); modalOpen('bl_modal'); };
 $('b_add').onclick = () => bmOpen(null);
