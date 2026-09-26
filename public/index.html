@@ -342,6 +342,19 @@
   .ctl-lab { display:flex; align-items:center; gap:6px; font-weight:700; font-size:12px; color:var(--gray-500); text-transform:uppercase; letter-spacing:.04em; white-space:nowrap; flex:none; }
   .fbar .lab, .lfilters .lab { text-transform:uppercase; letter-spacing:.04em; font-size:12px; color:var(--gray-500); }
   .only-m { display:none !important; }
+  .fline { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:0 0 12px; }
+  .fline .sp { flex:1; }
+  .fbtn[aria-expanded="true"] { border-color:var(--ink); color:var(--ink); } .fbtn .cr { transition:transform .2s var(--ease); } .fbtn[aria-expanded="true"] .cr { transform:rotate(180deg); }
+  .fchips { display:contents; }
+  .fchip { display:inline-flex; align-items:center; gap:6px; border:0; background:var(--black); color:var(--white); border-radius:999px; padding:6px 10px 6px 12px; font-size:12.5px; font-weight:600; max-width:260px; }
+  .fchip span { color:var(--gray-300); font-weight:500; } .fchip b { font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .fchip i { color:var(--gray-300); } .fchip:hover i { color:var(--white); }
+  .fpanel-f { display:flex; gap:8px; align-items:center; margin-left:auto; }
+  @media (min-width:721px) {
+    .fsheet:not(.on) { display:none !important; }
+    .fsheet.on { animation:viewIn .22s var(--ease); }
+    .fpanel-f .btn { display:none; }
+  }
   .mbar { gap:8px; align-items:center; margin:0 0 12px; }
   .mbar .btn { flex:none; } .mbar .fc { background:var(--red); color:var(--white); border-radius:999px; font-size:11px; padding:1px 7px; margin-left:2px; }
   .mbar .fc:empty { display:none; }
@@ -351,6 +364,7 @@
   .sheet-bg.on { opacity:1; pointer-events:auto; }
 
   /* ===== Menú lateral (móvil) ===== */
+  .brand .logo-m { height:34px; width:34px; border-radius:9px; }
   .hb { display:none; width:40px; height:40px; border-radius:12px; border:1px solid var(--graphite-2); background:transparent; color:var(--white); font-size:20px; place-items:center; flex:none; }
   .drawer { position:fixed; inset:0 auto 0 0; width:min(300px, 84vw); background:var(--black); color:var(--white); z-index:49; transform:translateX(-102%); transition:transform .3s var(--ease); display:flex; flex-direction:column; padding:18px 14px; gap:6px; box-shadow:var(--shadow-pop); }
   .drawer.on { transform:none; }
@@ -378,6 +392,8 @@
   .foot a { color:var(--gray-300); text-decoration:none; display:flex; align-items:center; gap:6px; } .foot a:hover { color:var(--white); }
   .foot .live { display:flex; align-items:center; gap:8px; } .foot .live i { width:8px; height:8px; border-radius:50%; background:#3ecf7a; box-shadow:0 0 0 3px rgba(62,207,122,.18); }
   .foot-bar { border-top:1px solid #23252a; }
+  .foot-bar .copy { display:flex; align-items:center; gap:12px; flex-wrap:wrap; } .foot-bar .copy img { height:22px; opacity:.9; }
+  #app:not([hidden]) { min-height:100dvh; display:flex; flex-direction:column; } #app > main { flex:1; width:100%; }
   .foot-bar div { max-width:1320px; margin:0 auto; padding:14px 20px; font-size:12px; color:var(--gray-500); display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 
   /* ===== Responsive ===== */
@@ -388,6 +404,9 @@
     .b-form, .b-prev { grid-column:1 / -1; }
     .rules { grid-template-columns:1fr 1fr; }
   }
+  @media (max-width:1440px) { .top .hl-btn .hl-t, .top .dp-btn .lbl-long { display:none; } .top .hl-btn { padding:8px; } .top-in { gap:12px; } }
+  @media (max-width:1180px) { .top #nav button { padding:8px 11px; } }
+  @media (max-width:1040px) { .top #nav button i { display:none; } }
   @media (max-width:860px) {
     .hb { display:grid; }
     .top #nav { display:none; }
@@ -401,7 +420,8 @@
     .fsheet.on { transform:none; }
     .fsheet > .lab, .fsheet > .div, .fsheet > span[style*="flex:1"] { display:none !important; }
     .fsheet .dd-btn { width:100%; border-radius:var(--r-sm); padding:11px 14px; } .fsheet .dd-btn .dv { max-width:none; margin-left:auto; } .fsheet .dd-btn.active .dv { color:var(--white); }
-    .fsheet .clear { align-self:flex-start; }
+    .fpanel-f { margin:4px 0 0; justify-content:space-between; width:100%; } .fpanel-f .btn { flex:1; justify-content:center; }
+    .fline .search { order:9; flex-basis:100%; } .fline .sp { display:none; }
     .top-in { height:60px; padding:0 12px; gap:8px; }
     .dp-btn > .ph-caret-down { display:none; } .dp-btn { gap:6px; } .hl-btn { padding:7px; }
     .brand-t span { display:none; }
@@ -496,11 +516,12 @@
   .inp:hover { border-color:var(--gray-300); } .inp:disabled { background:var(--gray-200); color:var(--gray-500); } .inp:focus { outline:0; border-color:var(--ink); box-shadow:0 0 0 3px rgba(13,14,16,.08); }
   .u-form { grid-column:span 5; } .u-link { grid-column:span 7; background:var(--black); color:var(--white); display:flex; flex-direction:column; gap:12px; }
   .u-link .out { background:var(--graphite); border-color:var(--graphite-2); }
-  .perm { display:grid; gap:8px; margin-top:4px; }
+  .perm { display:grid; gap:8px; margin-top:4px; flex:1; grid-auto-rows:1fr; }
+  .perm div { align-items:center; }
   .perm div { display:grid; grid-template-columns:130px 1fr; gap:10px; font-size:13px; padding:8px 12px; background:var(--graphite); border-radius:var(--r-sm); }
   .perm span { color:var(--gray-300); }
   .ucard .top-row { display:flex; gap:12px; align-items:center; }
-  .ucard .top-row b { font-weight:600; font-size:15px; overflow-wrap:anywhere; } .ucard .top-row span { font-size:12px; color:var(--gray-500); overflow-wrap:anywhere; }
+  .ucard .top-row b { font-weight:600; font-size:15px; overflow-wrap:anywhere; } .ucard .top-row span { font-size:12px; color:var(--gray-500); overflow-wrap:anywhere; } .ucard .top-row .av { color:var(--white); font-size:13px; }
   .ucard .ctl { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
   .ucard .meta { font-size:12px; color:var(--gray-500); display:flex; gap:12px; flex-wrap:wrap; }
   .ucard .meta span { display:flex; gap:5px; align-items:center; }
@@ -593,7 +614,7 @@
 <header class="top">
   <div class="top-in">
     <button class="hb" id="hb" aria-label="Abrir menú" aria-expanded="false" aria-controls="drawer"><i class="ph ph-list"></i></button>
-    <a class="brand" href="#/reporte" aria-label="Motomundo Campañas, inicio"><img class="logo" src="/logo-motomundo.png" alt="Motomundo"></a>
+    <a class="brand" href="#/reporte" aria-label="Motomundo Campañas, inicio"><img class="logo only-d" src="/logo-motomundo.png" alt="Motomundo"><img class="logo-m only-m" src="/favicon-512.png" alt="Motomundo"></a>
     <div class="seg dark" id="nav" role="tablist" aria-label="Secciones">
       <span class="pill" aria-hidden="true"></span>
       <button data-r="reporte" role="tab"><i class="ph ph-chart-bar"></i>Reporte</button>
@@ -664,18 +685,18 @@
           <div class="seg only-d" id="groupBy" aria-label="Ver por"><span class="pill"></span></div>
           <span class="only-m" id="gbdd" style="flex:1"></span>
         </div>
-        <div class="mbar only-m"><button class="btn btn-ghost" data-sheet="fbar"><i class="ph ph-funnel-simple"></i>Filtros<span class="fc" id="fc"></span></button></div>
+        <div class="fline">
+          <button class="btn btn-ghost fbtn" data-sheet="fbar" aria-controls="fbar" aria-expanded="false"><i class="ph ph-funnel-simple"></i>Filtros<span class="fc" id="fc"></span><i class="ph ph-caret-down cr"></i></button>
+          <span class="fchips" id="fchips"></span>
+          <span class="sp"></span>
+          <label class="sw"><input type="checkbox" id="only"><span class="tr"></span>Solo con cotizaciones</label>
+          <label class="search"><i class="ph ph-magnifying-glass"></i><input id="q" placeholder="Buscar campaña, término, página…" aria-label="Buscar"></label>
+        </div>
         <div class="fbar fsheet" id="fbar">
           <div class="sheet-h only-m"><b>Filtros</b><button class="ibtn" data-sheet-x aria-label="Cerrar filtros"><i class="ph ph-x"></i></button></div>
-          <span class="lab"><i class="ph ph-funnel-simple"></i>Filtrar</span>
           <span id="fpills" style="display:contents"></span>
-          <span class="div"></span>
           <span id="fstate" style="display:contents"></span>
-          <label class="sw"><input type="checkbox" id="only"><span class="tr"></span>Solo con cotizaciones</label>
-          <span style="flex:1"></span>
-          <label class="search"><i class="ph ph-magnifying-glass"></i><input id="q" placeholder="Buscar campaña, término, página…" aria-label="Buscar"></label>
-          <button class="clear" id="clear"><i class="ph ph-x"></i>Limpiar</button>
-          <button class="btn btn-red btn-block only-m" data-sheet-x>Ver resultados</button>
+          <div class="fpanel-f"><button class="clear" id="clear"><i class="ph ph-x"></i>Limpiar filtros</button><button class="btn btn-red" data-sheet-x>Ver resultados</button></div>
         </div>
         <div class="count" id="count"></div>
         <div id="out"><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div></div>
@@ -744,16 +765,17 @@
           <div class="seg only-d" id="libGroup" aria-label="Ver por"><span class="pill"></span></div>
           <span class="only-m" id="lgdd" style="flex:1"></span>
         </div>
-        <div class="mbar only-m"><button class="btn btn-ghost" data-sheet="lfilters"><i class="ph ph-funnel-simple"></i>Filtros<span class="fc" id="lfc"></span></button></div>
+        <div class="fline">
+          <button class="btn btn-ghost fbtn" data-sheet="lfilters" aria-controls="lfilters" aria-expanded="false"><i class="ph ph-funnel-simple"></i>Filtros<span class="fc" id="lfc"></span><i class="ph ph-caret-down cr"></i></button>
+          <span class="fchips" id="lfchips"></span>
+          <span class="sp"></span>
+          <label class="sw"><input type="checkbox" id="lf_mine"><span class="tr"></span>Solo mías</label>
+          <label class="search"><i class="ph ph-magnifying-glass"></i><input id="lq" placeholder="Buscar UTM…" aria-label="Buscar UTM"></label>
+        </div>
         <div class="lfilters fsheet" id="lfilters">
           <div class="sheet-h only-m"><b>Filtros</b><button class="ibtn" data-sheet-x aria-label="Cerrar filtros"><i class="ph ph-x"></i></button></div>
-          <span class="lab"><i class="ph ph-funnel-simple"></i>Filtrar</span>
           <span id="lf_pills" style="display:contents"></span>
-          <label class="sw"><input type="checkbox" id="lf_mine"><span class="tr"></span>Solo mías</label>
-          <span style="flex:1"></span>
-          <label class="search"><i class="ph ph-magnifying-glass"></i><input id="lq" placeholder="Buscar UTM…" aria-label="Buscar UTM"></label>
-          <button class="clear" id="lf_clear"><i class="ph ph-x"></i>Limpiar</button>
-          <button class="btn btn-red btn-block only-m" data-sheet-x>Ver resultados</button>
+          <div class="fpanel-f"><button class="clear" id="lf_clear"><i class="ph ph-x"></i>Limpiar filtros</button><button class="btn btn-red" data-sheet-x>Ver resultados</button></div>
         </div>
         <div id="lib"></div>
       </div>
@@ -908,7 +930,7 @@
     <div><b>Datos</b><span class="live"><i></i><span id="gen">Sincronización diaria 8:00 a.m. y 2:00 p.m.</span></span><a href="#/utms" data-need="crear"><i class="ph ph-link-simple"></i>Constructor de UTMs</a></div>
     <div><b>Eventos medidos</b>Cotiza_Producto<br>Cotización_Crédito</div>
   </div>
-  <div class="foot-bar"><div><span>© Motomundo</span><span>Los usuarios de un rango son la suma de cada día; las cotizaciones son exactas.</span></div></div>
+  <div class="foot-bar"><div><span class="copy"><img class="logo" src="/logo-motomundo.png" alt="Motomundo"><span>© 2026 Motomundo · ILP Motos · Todos los derechos reservados</span></span><span>Los usuarios de un rango son la suma de cada día; las cotizaciones son exactas.</span></div></div>
 </footer>
 </div>
 
@@ -1201,7 +1223,7 @@ ORDER.forEach(d => {
   FD[d] = Dropdown(host, { label: DIMS[d], options: [], value: '', onChange: v => { F[d] = v; update(); } });
 });
 const ESTADOS = [{ v:'', l:'Todas' }, { v:'err', l:'Mal construidas', ic:'ph-x-circle' }, { v:'warn', l:'Con advertencias', ic:'ph-warning' }, { v:'ok', l:'Correctas', ic:'ph-check-circle' }];
-const FE = Dropdown($('fstate'), { label: 'Estado UTM', options: ESTADOS, value: '', search: false, onChange: v => { estado = v; draw(); } });
+const FE = Dropdown($('fstate'), { label: 'Estado UTM', options: ESTADOS, value: '', search: false, onChange: v => { estado = v; draw(); fillFilters(); } });
 function fillFilters() {
   ORDER.forEach(d => {
     const gs = group(R.filter(r => matches(r, d)), d);
@@ -1209,10 +1231,14 @@ function fillFilters() {
     FD[d].set(F[d]);
   });
   $('clear').disabled = !ORDER.some(d => F[d]) && !estado && !$('only').checked && !$('q').value;
-  $('fc').textContent = (ORDER.filter(d => F[d]).length + !!estado + $('only').checked + !!$('q').value) || '';
+  const act = ORDER.filter(d => F[d]);
+  $('fc').textContent = (act.length + !!estado) || '';
+  $('fchips').innerHTML = act.map(d => `<button class="fchip" data-fx="${d}" title="Quitar filtro"><span>${DIMS[d]}</span><b>${esc(F[d])}</b><i class="ph ph-x"></i></button>`).join('')
+    + (estado ? `<button class="fchip" data-fx="estado"><span>Estado</span><b>${esc(ESTADOS.find(e => e.v === estado).l)}</b><i class="ph ph-x"></i></button>` : '');
 }
 $('clear').onclick = () => { ORDER.forEach(d => F[d] = ''); estado = ''; FE.set(''); $('q').value = ''; $('only').checked = false; update(); };
 $('q').oninput = () => { draw(); $('clear').disabled = false; };
+$('fchips').addEventListener('click', e => { const b = e.target.closest('[data-fx]'); if (!b) return; if (b.dataset.fx === 'estado') { estado = ''; FE.set(''); } else F[b.dataset.fx] = ''; update(); });
 $('only').onchange = () => { draw(); fillFilters(); };
 
 const GB_OPTS = ORDER.map(d => ({ v: d, l: DIMS[d], ic: DIM_IC[d] }));
@@ -1690,6 +1716,7 @@ function fillLibFilters() {
 }
 $('lf_mine').onchange = () => drawLib();
 $('lq').oninput = () => drawLib();
+$('lfchips').addEventListener('click', e => { const b = e.target.closest('[data-lfx]'); if (!b) return; LF[b.dataset.lfx] = ''; LFD[b.dataset.lfx]?.set(''); drawLib(); });
 $('lf_clear').onclick = () => { Object.keys(LF).forEach(k => { LF[k] = ''; LFD[k].set(''); }); $('lq').value = ''; $('lf_mine').checked = false; drawLib(); };
 const LG_KEY = LV;
 const LG_IC = Object.fromEntries(ORDER.map(d => [d, k => d === 'g' ? (CANAL_INFO[k]?.[1] || DIM_IC.g) : DIM_IC[d]]));
@@ -1727,7 +1754,8 @@ function drawLib() {
     && libMatch(l) && (!LF.estado || lvOf(l) === LF.estado) && (!mine || l.created_by === ME.id));
   fillLibFilters();
   $('lf_clear').disabled = !Object.values(LF).some(Boolean) && !q && !mine;
-  $('lfc').textContent = (Object.values(LF).filter(Boolean).length + !!q + !!mine) || '';
+  $('lfc').textContent = Object.values(LF).filter(Boolean).length || '';
+  $('lfchips').innerHTML = Object.entries(LF).filter(([, v]) => v).map(([d, v]) => `<button class="fchip" data-lfx="${d}" title="Quitar filtro"><span>${d === 'estado' ? 'Estado' : DIMS[d]}</span><b>${esc(d === 'estado' ? ESTADOS.find(e => e.v === v)?.l || v : v)}</b><i class="ph ph-x"></i></button>`).join('');
   if (!LINKS.length) return swap($('lib'), `<div class="empty"><i class="ph ph-link-simple-break"></i><b>Todavía no hay UTMs guardadas</b><span>Arma la primera arriba y pulsa "Guardar UTM".</span></div>`);
   if (!ls.length) return swap($('lib'), `<div class="empty"><i class="ph ph-funnel-x"></i><b>Ninguna UTM coincide con los filtros</b></div>`);
   const kf = LG_KEY[libGroup], M = new Map();
@@ -1991,6 +2019,7 @@ function paintBrand(b) {
   st.setProperty('--red-50', mixHex(b.color_primary, '#ffffff', .92)); st.setProperty('--red-100', mixHex(b.color_primary, '#ffffff', .82));
   st.setProperty('--black', b.color_dark);
   document.querySelectorAll('img.logo').forEach(i => { i.src = b.logo_url || '/logo-motomundo.png'; i.alt = b.brand_name; });
+  document.querySelectorAll('img.logo-m').forEach(i => { i.src = b.favicon_url || '/favicon-512.png'; i.alt = b.brand_name; });
   document.querySelectorAll('.brand-t').forEach(t => t.textContent = b.app_name);
   document.querySelectorAll('link[rel~="icon"], link[rel="apple-touch-icon"]').forEach(l => { if (!l.dataset.orig) l.dataset.orig = l.getAttribute('href'); l.href = b.favicon_url || l.dataset.orig; });
   document.title = `${b.app_name} · ${b.brand_name}`;
@@ -2160,9 +2189,12 @@ function drawer(on) {
   $('hb').setAttribute('aria-expanded', on); if (on) $('drawer').querySelector('.dr-item:not([hidden])')?.focus();
 }
 let SHEET = null;
+const isMobile = () => matchMedia('(max-width:720px)').matches;
 function sheet(id) {
+  if (id && SHEET?.id === id) id = null;   // el mismo botón abre y cierra
   SHEET?.classList.remove('on'); SHEET = id ? $(id) : null;
-  SHEET?.classList.add('on'); $('sheet_bg').classList.toggle('on', !!SHEET);
+  SHEET?.classList.add('on'); $('sheet_bg').classList.toggle('on', !!SHEET && isMobile());
+  document.querySelectorAll('[data-sheet]').forEach(b => b.setAttribute('aria-expanded', b.dataset.sheet === id));
 }
 $('hb').onclick = () => drawer(true);
 $('dr_x').onclick = () => drawer(false);
@@ -2173,7 +2205,7 @@ document.addEventListener('click', e => {
   if (e.target.closest('[data-sheet-x]')) sheet(null);
 });
 addEventListener('keydown', e => { if (e.key === 'Escape' && !ddOpen) { drawer(false); sheet(null); } });
-matchMedia('(min-width:721px)').addEventListener('change', () => sheet(null));
+matchMedia('(min-width:721px)').addEventListener('change', () => { if (SHEET) sheet(SHEET.id); });
 
 const NAV = Seg($('nav'), null, 'reporte', r => { location.hash = '#/' + r; });
 const VIEWS = { reporte: () => true, utms: can.crear, usuarios: can.admin, bitacora: can.admin, config: can.admin };
