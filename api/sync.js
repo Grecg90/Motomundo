@@ -22,7 +22,9 @@ export default async function handler(req, res) {
     for (let d = from; d <= to; d = addD(d, 1)) {
       result[d] = await ingest(d, byDay.get(d) || []);
     }
-    res.status(200).json({ from, to, rows: rows.length, porDia: result });
+    // Aviso push al dispositivo solo en la corrida diaria automática
+    const push = req.query.from ? null : await callIngest({ action: 'notify' }).catch(e => ({ error: e.message }));
+    res.status(200).json({ from, to, rows: rows.length, porDia: result, push });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Falló la sincronización' });
@@ -30,13 +32,14 @@ export default async function handler(req, res) {
 }
 
 // Envía las filas a la función ga4-ingest de Supabase, que escribe con la llave de servicio
-async function ingest(day, rows) {
+const ingest = (day, rows) => callIngest({ from: day, to: day, rows }).then(j => j.rows);
+async function callIngest(payload) {
   const res = await fetch(`${process.env.SUPABASE_URL}/functions/v1/ga4-ingest`, {
     method: 'POST',
     headers: { 'content-type': 'application/json', apikey: process.env.SUPABASE_KEY, 'x-sync-secret': process.env.SYNC_SECRET },
-    body: JSON.stringify({ from: day, to: day, rows }),
+    body: JSON.stringify(payload),
   });
   const j = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(`Supabase ${res.status}: ${j.error || ''}`);
-  return j.rows;
+  return j;
 }

@@ -7,6 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300..800&display=swap" rel="stylesheet">
 <!-- Íconos: Phosphor (regular + fill) -->
@@ -433,6 +434,10 @@
   @keyframes ntfOut { to { opacity:0; transform:translateX(24px); } }
   .ntf .ic { width:36px; height:36px; border-radius:10px; display:grid; place-items:center; background:var(--red); color:var(--white); font-size:18px; }
   .ntf .ic.dark { background:var(--black); } .ntf .ic.warn { background:var(--warn-50); color:var(--warn); }
+  .ntf.t-bad, .ntf.t-warn, .ntf.t-ok { border-left:4px solid; }
+  .ntf.t-bad { border-color:var(--red); background:#fff5f5; } .ntf.t-bad .ic { background:var(--red); color:#fff; } .ntf.t-bad .bar { background:var(--red); }
+  .ntf.t-warn { border-color:#e0a100; background:#fffbeb; } .ntf.t-warn .ic { background:#f5b800; color:var(--black); } .ntf.t-warn .bar { background:#e0a100; }
+  .ntf.t-ok { border-color:#15803d; background:#f0fdf4; } .ntf.t-ok .ic { background:#16a34a; color:#fff; } .ntf.t-ok .bar { background:#16a34a; }
   .ntf b { display:block; font-weight:600; font-size:13.5px; } .ntf p { margin:2px 0 0; color:var(--gray-700); font-size:13px; line-height:1.4; overflow-wrap:anywhere; }
   .ntf time { display:block; font-size:11.5px; color:var(--gray-500); margin-top:6px; }
   .ntf .bar { position:absolute; left:0; bottom:0; height:3px; background:var(--red); animation:ntfBar linear forwards; }
@@ -520,6 +525,7 @@
       <button class="um-btn" id="um_btn" aria-haspopup="menu" aria-expanded="false"><span class="av red" id="um_av"></span><i class="ph ph-caret-down nm-t"></i></button>
       <div class="um-pop pop-in" id="um_pop" hidden>
         <div class="um-head"><span class="av red" id="um_av2"></span><div><b id="um_name"></b><span id="um_mail"></span><div id="um_role" style="margin-top:4px"></div></div></div>
+        <button class="um-item" id="um_push" hidden><i class="ph ph-bell-ringing"></i><span>Avisos del reporte diario</span></button>
         <button class="um-item" id="um_pw"><i class="ph ph-key"></i>Cambiar contraseña</button>
         <button class="um-item" id="um_out"><i class="ph ph-sign-out"></i>Cerrar sesión</button>
       </div>
@@ -680,7 +686,7 @@
   <!-- ===================== BITÁCORA (admin) ===================== -->
   <section class="view" id="view-bitacora" hidden>
     <div class="intro">
-      <div><h1>Bitácora</h1><p>Todo lo que pasa en la plataforma: quién creó, editó o eliminó UTMs y usuarios, y cuándo.</p></div>
+      <div><h1>Bitácora</h1><p>Lo que pasó en la plataforma en los últimos 7 días: quién creó, editó o eliminó UTMs y usuarios, y cuándo. Los registros más antiguos se borran solos.</p></div>
       <div class="cmp"><b id="aCount">—</b><br><span>registros</span></div>
     </div>
     <div class="bento">
@@ -1176,7 +1182,7 @@ const logAct = (action, summary = '', detail = {}) => sb.rpc('log_activity', { p
 // Notificaciones flotantes tipo tarjeta
 // ============================================================
 function notify({ icon = 'ph-bell-simple', tone = '', title, body = '', ms = 7000 }) {
-  const n = document.createElement('div'); n.className = 'ntf'; n.setAttribute('role', 'status');
+  const n = document.createElement('div'); n.className = 'ntf' + (['bad','warn','ok'].includes(tone) ? ' t-' + tone : ''); n.setAttribute('role', 'status');
   n.innerHTML = `<div class="ic ${tone}"><i class="ph ${icon}"></i></div><div><b>${esc(title)}</b>${body ? `<p>${body}</p>` : ''}<time>${new Date().toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit' })}</time></div>
     <button class="ibtn" aria-label="Cerrar"><i class="ph ph-x"></i></button><span class="bar" style="animation-duration:${ms}ms"></span>`;
   const close = () => { n.classList.add('out'); setTimeout(() => n.remove(), 250); };
@@ -1297,7 +1303,7 @@ async function start() {
   route();
   if (STARTED) return; STARTED = true;
   loadLinks();
-  subscribeRealtime();
+  subscribeRealtime(); pushState().catch(() => {});
   try {
     const q1 = await sb.from('ga4_utm_daily').select('date').order('date', { ascending: true }).limit(1);
     const q2 = await sb.from('ga4_utm_daily').select('date').order('date', { ascending: false }).limit(1);
@@ -1315,6 +1321,32 @@ async function start() {
 $('um_btn').onclick = e => { e.stopPropagation(); const p = $('um_pop'); p.hidden = !p.hidden; $('um_btn').setAttribute('aria-expanded', !p.hidden); };
 document.addEventListener('click', e => { if (!$('um_pop').hidden && !$('um_pop').contains(e.target)) { $('um_pop').hidden = true; $('um_btn').setAttribute('aria-expanded', 'false'); } });
 $('um_out').onclick = async () => { await logAct('auth.salida'); await sb.auth.signOut(); location.hash = '#/login'; location.reload(); };
+// Notificaciones push al dispositivo: solo el aviso diario del reporte
+const PUSH_OK = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+const b64u = s => Uint8Array.from(atob((s + '='.repeat((4 - s.length % 4) % 4)).replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+async function pushState() {
+  if (!PUSH_OK) return;
+  const reg = await navigator.serviceWorker.register('/sw.js'); const sub = await reg.pushManager.getSubscription();
+  $('um_push').hidden = false;
+  $('um_push').querySelector('span').textContent = sub ? 'Desactivar avisos del reporte' : 'Activar avisos del reporte diario';
+  return { reg, sub };
+}
+$('um_push').onclick = async () => {
+  $('um_pop').hidden = true;
+  try {
+    const { reg, sub } = await pushState();
+    if (sub) { await sb.from('push_subscriptions').delete().eq('endpoint', sub.endpoint); await sub.unsubscribe(); toast('Avisos del reporte desactivados'); return pushState(); }
+    if (await Notification.requestPermission() !== 'granted') return toast('El navegador bloqueó las notificaciones. Actívalas en la configuración del sitio.', true);
+    const { data: { session } } = await sb.auth.getSession();
+    const { data, error } = await sb.functions.invoke('ga4-ingest', { body: { action: 'pubkey' }, headers: { Authorization: 'Bearer ' + session.access_token } });
+    if (error || !data?.key) throw new Error('no se pudo obtener la llave');
+    const s = (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64u(data.key) })).toJSON();
+    const { error: e2 } = await sb.from('push_subscriptions').upsert({ endpoint: s.endpoint, p256dh: s.keys.p256dh, auth: s.keys.auth });
+    if (e2) throw e2;
+    notify({ icon:'ph-bell-ringing', tone:'ok', title:'Avisos activados', body:'Este dispositivo recibirá un aviso cada día a las 8 a. m. cuando se actualice el reporte.' });
+    pushState();
+  } catch (e) { toast('No se pudieron activar los avisos: ' + e.message, true); }
+};
 $('um_pw').onclick = () => { $('um_pop').hidden = true; showAuth('crear', { type: 'recovery', email: ME.email, note: msg('info', 'Estás cambiando la contraseña de tu propio usuario.') }); };
 
 // ============================================================
@@ -1323,9 +1355,8 @@ $('um_pw').onclick = () => { $('um_pop').hidden = true; showAuth('crear', { type
 function subscribeRealtime() {
   RT = sb.channel('motomundo')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'utm_links' }, ({ eventType, new: n, old: o }) => {
-      if (eventType === 'INSERT' && n.created_by !== ME.id)
-        notify({ icon:'ph-link-simple', title:'Nueva UTM creada', body:`<b style="display:inline;font-weight:600">${esc(n.created_by_name || 'Alguien')}</b> creó <b style="display:inline;font-weight:600">${esc(n.campaign)}</b> · ${esc(n.source)} / ${esc(n.medium)}` });
-      if (eventType === 'DELETE' && ME.role === 'admin') notify({ icon:'ph-trash', tone:'dark', title:'UTM eliminada', body:'Se eliminó una UTM guardada.' });
+      if (eventType === 'INSERT' && n.created_by !== ME.id) utmNotify(n, `<b style="display:inline;font-weight:600">${esc(n.created_by_name || 'Alguien')}</b> creó `);
+      if (eventType === 'DELETE' && !LOCAL_DEL.delete(o?.id)) notify({ icon:'ph-trash', tone:'bad', title:'UTM eliminada', body:'Se eliminó una UTM guardada.' });
       if (LINKS) loadLinks();
     })
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'activity_log' }, ({ new: a }) => {
@@ -1333,7 +1364,23 @@ function subscribeRealtime() {
       ACTS?.unshift(a); if (!$('view-bitacora').hidden) drawActs();
       if (a.action === 'auth.recuperar_solicitud') notify({ icon:'ph-key', tone:'warn', title:'Solicitud de recuperación', body:`${esc(a.summary)} pidió recuperar su contraseña.${a.detail?.correo_enviado ? ' Se le envió el enlace por correo.' : ' No se pudo enviar el correo: genera su enlace en Usuarios.'}`, ms: 15000 });
     })
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'ga4_sync_log' }, () => {
+      clearTimeout(SYNC_T);
+      SYNC_T = setTimeout(() => {
+        notify({ icon:'ph-chart-line-up', tone:'ok', title:'Reporte actualizado', body:'Ya están los datos de GA4 de ayer. Recarga la vista para verlos.', ms: 15000 });
+      }, 4000);
+    })
     .subscribe();
+}
+let SYNC_T; const LOCAL_DEL = new Set();
+// Tarjeta según la calidad de la UTM: verde OK · amarilla con advertencias · roja con errores
+function utmNotify(l, prefix = '', edit = false) {
+  const iss = validar({ s: l.source, m: l.medium, c: l.campaign, t: l.term });
+  const err = iss.filter(i => i.lvl === 'err').length, warn = iss.length - err;
+  const tone = err ? 'bad' : warn ? 'warn' : 'ok';
+  const title = (edit ? 'UTM actualizada' : 'UTM creada') + (err ? ' con errores' : warn ? ` con ${warn} advertencia${warn > 1 ? 's' : ''}` : ' correctamente');
+  notify({ icon: err ? 'ph-x-circle' : warn ? 'ph-warning' : 'ph-check-circle', tone, title,
+    body: `${prefix}<b style="display:inline;font-weight:600">${esc(l.campaign)}</b> · ${esc(l.source)} / ${esc(l.medium)}${iss.length ? '<br>' + iss.slice(0, 2).map(i => esc(i.f + ': ' + i.m)).join('<br>') : ''}`, ms: tone === 'ok' ? 7000 : 12000 });
 }
 
 // ============================================================
@@ -1402,6 +1449,7 @@ $('b_save').onclick = async () => {
   const { data, error } = await q;
   if (error) { toast('No se pudo guardar: ' + (error.message.includes('row-level') ? 'no tienes permiso para esta acción' : error.message), true); build(); return; }
   copy(fullUrl(data), editId ? 'UTM actualizada y link copiado' : 'UTM guardada y link copiado');
+  utmNotify(data, '', !!editId);
   await loadLinks(); resetForm();
   setTimeout(() => { const c = document.querySelector(`.lcard[data-id="${data.id}"]`); c?.classList.add('flash'); c?.scrollIntoView({ block:'nearest', behavior:'smooth' }); }, 60);
 };
@@ -1510,8 +1558,9 @@ $('lib').addEventListener('click', async e => {
   if (t.closest('[data-del-no]')) { confirmDel = ''; drawLib(); return; }
   const yes = t.closest('[data-del-yes]');
   if (yes) {
+    const gone = LINKS?.find(l => l.id === yes.dataset.delYes); LOCAL_DEL.add(yes.dataset.delYes);
     const { error } = await sb.from('utm_links').delete().eq('id', yes.dataset.delYes);
-    if (error) toast('No se pudo eliminar: ' + error.message, true); else { toast('UTM eliminada'); if (editId === yes.dataset.delYes) resetForm(); }
+    if (error) { LOCAL_DEL.delete(yes.dataset.delYes); toast('No se pudo eliminar: ' + error.message, true); } else { notify({ icon:'ph-trash', tone:'bad', title:'UTM eliminada', body: gone ? `<b style="display:inline;font-weight:600">${esc(gone.campaign)}</b> · ${esc(gone.source)} / ${esc(gone.medium)}` : '' }); if (editId === yes.dataset.delYes) resetForm(); }
     confirmDel = ''; loadLinks();
   }
 });
@@ -1680,7 +1729,7 @@ const AFD = {
   type: Dropdown($('af_pills'), { label:'Actividad', options:[{ v:'', l:'Todas' }, { v:'utm', l:'UTMs', ic:'ph-link-simple' }, { v:'usuario', l:'Usuarios', ic:'ph-users-three' }, { v:'auth', l:'Accesos', ic:'ph-sign-in' }], value:'', search:false, onChange: v => { AF.type = v; drawActs(); } }),
 };
 async function loadActs() {
-  const { data, error } = await sb.from('activity_log').select('*').order('at', { ascending: false }).limit(500);
+  const { data, error } = await sb.from('activity_log').select('*').gte('at', new Date(Date.now() - 7 * 864e5).toISOString()).order('at', { ascending: false }).limit(1000);
   if (error) { $('acts').innerHTML = `<div class="empty"><i class="ph ph-plugs"></i><b>No se pudo cargar la bitácora</b><span>${esc(error.message)}</span></div>`; return; }
   ACTS = data; drawActs();
 }
