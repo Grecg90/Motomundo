@@ -1,5 +1,6 @@
 import { timingSafeEqual } from 'node:crypto';
 import { fetchDaily } from '../lib/ga4sync.js';
+import { loadConfig } from '../lib/composio.js';
 
 // Fecha de Honduras (UTC-6) desplazada n días
 const hnDate = (n = 0) => new Date(Date.now() - 6 * 3600e3 + n * 864e5).toISOString().slice(0, 10);
@@ -7,6 +8,7 @@ const addD = (s, n) => new Date(Date.parse(s + 'T12:00Z') + n * 864e5).toISOStri
 
 // Descarga de GA4 y guarda en Supabase, día por día.
 // - Cron diario (vercel.json): últimos 3 días hasta ayer (GA4 a veces completa datos con retraso)
+// - Segundo pase 2 p. m. (?pase=tarde): mismos días, ya con GA4 más procesado; sin aviso push
 // - Manual: /api/sync?from=2026-09-01&to=2026-09-24 con el header Authorization: Bearer <CRON_SECRET>
 export default async function handler(req, res) {
   const auth = req.headers.authorization || '', expected = `Bearer ${process.env.CRON_SECRET}`;
@@ -14,6 +16,7 @@ export default async function handler(req, res) {
   const isDate = s => /^\d{4}-\d{2}-\d{2}$/.test(s);
   if ((req.query.from && !isDate(req.query.from)) || (req.query.to && !isDate(req.query.to))) return res.status(400).json({ error: 'fechas inválidas' });
   try {
+    await loadConfig();
     const to = req.query.to || hnDate(-1), from = req.query.from || addD(to, -2);
     const rows = await fetchDaily(from, to);
     const byDay = new Map();
@@ -23,7 +26,7 @@ export default async function handler(req, res) {
       result[d] = await ingest(d, byDay.get(d) || []);
     }
     // Aviso push al dispositivo solo en la corrida diaria automática
-    const push = req.query.from ? null : await callIngest({ action: 'notify' }).catch(e => ({ error: e.message }));
+    const push = req.query.from || req.query.pase ? null : await callIngest({ action: 'notify' }).catch(e => ({ error: e.message }));
     res.status(200).json({ from, to, rows: rows.length, porDia: result, push });
   } catch (err) {
     console.error(err);

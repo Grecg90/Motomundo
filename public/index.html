@@ -13,6 +13,7 @@
 <!-- Íconos: Phosphor (regular + fill) -->
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" integrity="sha384-6p9AefaqUhEVheRlj1mpAkbngHXy9mbYMrIdcIt4Jlc9lOLIablJq3bBsLOjGwZ7" crossorigin="anonymous">
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" integrity="sha384-pPVoXE8ft+zxKtxIDDI7SfTK6y95NHm4qa+hKEg/hs8VkjW5IP+9/dGOPCbDpUPl" crossorigin="anonymous">
+<script src="/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" integrity="sha384-GFr3yTh5lJznCbZfpTtXnwboFsxqtTQoeTZCRHhE0579KrRmlCzen5AA8ohaB5ug" crossorigin="anonymous"></script>
 <style>
   /* ===== Tokens: rojo · blanco · gris oscuro · negro ===== */
@@ -461,9 +462,45 @@
   .lfilters { display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding:12px; background:var(--gray-100); border-radius:var(--r-md); margin-bottom:16px; }
   .lfilters .lab { display:flex; align-items:center; gap:6px; font-weight:600; font-size:13px; color:var(--gray-700); padding:0 6px 0 4px; }
 
+  /* Indicador de salud del sistema (admin) */
+  .hl-wrap { position:relative; }
+  .hl-btn { display:inline-flex; align-items:center; gap:8px; border:1px solid var(--graphite-2); background:transparent; color:var(--gray-300); border-radius:999px; padding:6px 12px 6px 10px; font-size:12.5px; font-weight:600; white-space:nowrap; transition:border-color .15s, color .15s; }
+  .hl-btn:hover { border-color:#6a6e77; color:var(--white); }
+  .hl-dot { position:relative; width:10px; height:10px; border-radius:50%; background:var(--gray-500); flex:none; }
+  .hl-dot::after { content:''; position:absolute; inset:0; border-radius:50%; background:inherit; animation:hlPing 1.8s cubic-bezier(0,0,.2,1) infinite; }
+  .hl-ok .hl-dot { background:#3ecf7a; } .hl-warn .hl-dot { background:#f5b800; } .hl-bad .hl-dot { background:#ff4d55; } .hl-wait .hl-dot::after { animation:none; }
+  .hl-bad .hl-dot::after { animation-duration:1s; }
+  @keyframes hlPing { 75%, 100% { transform:scale(2.6); opacity:0; } }
+  .hl-pop { position:absolute; right:0; top:calc(100% + 10px); width:330px; max-width:calc(100vw - 24px); background:var(--white); color:var(--ink); border-radius:var(--r-md); box-shadow:var(--shadow-pop); padding:14px; z-index:50; }
+  .hl-pop h4 { margin:0 0 10px; font-size:14px; font-weight:600; display:flex; justify-content:space-between; align-items:center; }
+  .chk { display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:start; padding:8px 0; border-top:1px solid var(--gray-200); font-size:13px; }
+  .chk b { font-weight:600; display:block; } .chk span { color:var(--gray-500); font-size:12px; overflow-wrap:anywhere; }
+  .chk i.ph-fill { font-size:18px; } .chk .s-ok { color:#16a34a; } .chk .s-warn { color:#d99a00; } .chk .s-bad { color:var(--red); } .chk .s-wait { color:var(--gray-300); }
+  @media (max-width:980px) { .hl-btn .hl-t { display:none; } .hl-btn { padding:8px; } }
+  @media (max-width:720px) { .hl-pop { position:fixed; left:12px; right:12px; top:64px; width:auto; } }
+
+  /* Configuración (admin) */
+  .cfg { grid-column:span 6; display:flex; flex-direction:column; gap:14px; }
+  .cfg.full { grid-column:1 / -1; }
+  .cfg h2 { display:flex; gap:10px; align-items:center; } .cfg h2 i { color:var(--red); }
+  .cfg .desc { color:var(--gray-500); font-size:13px; line-height:1.5; margin:-6px 0 0; }
+  .cfg-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .cfg-row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .sec-state { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; padding:3px 10px; border-radius:999px; background:var(--gray-100); color:var(--gray-700); }
+  .sec-state.on { background:var(--ok-50); color:var(--ok); } .sec-state.off { background:var(--warn-50); color:var(--warn); }
+  .color-in { display:flex; gap:8px; align-items:center; } .color-in input[type=color] { width:44px; height:40px; padding:2px; border:1px solid var(--gray-200); border-radius:var(--r-sm); background:var(--white); flex:none; }
+  .img-in { display:flex; gap:8px; align-items:center; flex-wrap:wrap; } .img-in .pv { width:120px; height:48px; border-radius:var(--r-sm); background:var(--black); display:grid; place-items:center; overflow:hidden; flex:none; padding:6px; }
+  .img-in .pv img { max-width:100%; max-height:100%; } .img-in .pv.sq { width:48px; background:var(--gray-100); }
+  .img-in label.btn { cursor:pointer; }
+  .cfg-res { font-size:13px; line-height:1.5; } .cfg-res:empty { display:none; }
+  .steps { margin:0; padding-left:20px; display:grid; gap:6px; font-size:13px; line-height:1.5; color:var(--gray-700); }
+  .cfg code, .steps code { font-family:var(--mono); font-size:12px; background:var(--gray-100); padding:1px 6px; border-radius:6px; }
+  @media (max-width:1100px) { .cfg { grid-column:1 / -1; } }
+  @media (max-width:560px) { .cfg-grid { grid-template-columns:1fr !important; } }
+
   /* Bitácora */
   .act-ic { width:34px; height:34px; border-radius:10px; display:grid; place-items:center; background:var(--gray-100); color:var(--ink); flex:none; }
-  .act-ic.k-utm { background:var(--red-50); color:var(--red-600); } .act-ic.k-usuario { background:#eef0f3; color:var(--graphite); } .act-ic.k-auth { background:var(--warn-50); color:var(--warn); }
+  .act-ic.k-utm { background:var(--red-50); color:var(--red-600); } .act-ic.k-config { background:#eef0f3; color:var(--ink); } .act-ic.k-usuario { background:#eef0f3; color:var(--graphite); } .act-ic.k-auth { background:var(--warn-50); color:var(--warn); }
   .acard { grid-column:span 4; }
   .acard .ah { display:flex; gap:12px; align-items:flex-start; }
   .acard .ah b { font-weight:600; display:block; } .acard .ah p { margin:2px 0 0; font-size:13px; color:var(--gray-700); overflow-wrap:anywhere; }
@@ -507,8 +544,16 @@
       <button data-r="utms" role="tab" data-need="crear"><i class="ph ph-link-simple"></i>Constructor</button>
       <button data-r="usuarios" role="tab" data-need="admin"><i class="ph ph-users-three"></i>Usuarios</button>
       <button data-r="bitacora" role="tab" data-need="admin"><i class="ph ph-clock-counter-clockwise"></i>Bitácora</button>
+      <button data-r="config" role="tab" data-need="admin"><i class="ph ph-gear-six"></i>Configuración</button>
     </div>
     <div class="sp"></div>
+    <div class="hl-wrap" data-need="admin" hidden>
+      <button class="hl-btn hl-wait" id="hl_btn" aria-haspopup="dialog" aria-expanded="false"><span class="hl-dot"></span><span class="hl-t" id="hl_t">Revisando…</span></button>
+      <div class="hl-pop pop-in" id="hl_pop" role="dialog" aria-label="Estado del sistema" hidden>
+        <h4>Estado del sistema <button class="btn btn-ghost" id="hl_re" style="padding:5px 12px"><i class="ph ph-arrows-clockwise"></i>Revisar</button></h4>
+        <div id="hl_list"></div>
+      </div>
+    </div>
     <div class="dp">
       <button class="dp-btn" id="dp_btn" aria-haspopup="dialog" aria-expanded="false">
         <i class="ph ph-calendar-blank"></i><span id="dp_label">Cargando…</span><i class="ph ph-caret-down"></i></button>
@@ -586,8 +631,8 @@
           <div class="field"><span>Medio <em>utm_medium</em></span><div id="b_m"></div></div>
           <label class="field"><span>Campaña <em>utm_campaign</em></span><input id="b_c" list="dl_c" placeholder="Genesis Tactica Comercial Leads"><div class="norm" id="n_c"></div></label>
           <div class="field"><span><i class="ph ph-map-trifold"></i>Zona <em>se agrega al nombre de la campaña</em></span><div id="b_z"></div></div>
-          <label class="field"><span>Término <em>utm_term · opcional</em></span><input id="b_t" placeholder="Tegucigalpa Comayagua"><div class="norm" id="n_t"></div></label>
-          <label class="field"><span>Contenido <em>utm_content · opcional</em></span><input id="b_x" placeholder="TTPremium Zx-200l"><div class="norm" id="n_x"></div></label>
+          <label class="field"><span>Término (Subcategoría) <em>utm_term · opcional</em></span><input id="b_t" placeholder="Tegucigalpa Comayagua"><div class="norm" id="n_t"></div></label>
+          <label class="field"><span>Contenido (Modelo) <em>utm_content · opcional</em></span><input id="b_x" placeholder="TTPremium Zx-200l"><div class="norm" id="n_x"></div></label>
           <label class="field full"><span><i class="ph ph-note-pencil"></i>Nota interna <em>opcional</em></span><textarea id="b_note" rows="2" placeholder="Para qué es, dónde se publicó…"></textarea></label>
         </div>
         <datalist id="dl_s"></datalist><datalist id="dl_c"></datalist>
@@ -710,12 +755,82 @@
       </div>
     </div>
   </section>
+  <!-- ===================== CONFIGURACIÓN (admin) ===================== -->
+  <section class="view" id="view-config" hidden>
+    <div class="intro">
+      <div><h1>Configuración</h1><p>Conexiones, correo y marca de la plataforma. Las llaves se guardan en el servidor y nunca se vuelven a mostrar.</p></div>
+    </div>
+    <div class="bento">
+      <div class="tile cfg full">
+        <div class="card-h" style="margin:0"><h2><i class="ph ph-heartbeat"></i>Estado del sistema</h2><button class="btn btn-ghost" id="cfg_check"><i class="ph ph-arrows-clockwise"></i>Revisar todo</button></div>
+        <div id="cfg_health" class="cfg-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0 20px"></div>
+      </div>
+
+      <div class="tile cfg">
+        <h2><i class="ph ph-plugs-connected"></i>Composio y GA4</h2>
+        <p class="desc">GA4 se conecta a través de Composio. Primero conecta la cuenta de Google en Composio; luego elige aquí la propiedad.</p>
+        <div class="cfg-row"><b style="font-size:13px">Llave de Composio</b><span class="sec-state" id="cs_composio">—</span></div>
+        <div class="cfg-row"><input class="inp" id="c_ckey" type="password" autocomplete="off" placeholder="Pegar nueva llave (ak_…)" style="flex:1;min-width:200px"><button class="btn btn-dark" data-secret="composio_api_key" data-in="c_ckey"><i class="ph ph-lock-key"></i>Guardar llave</button></div>
+        <div class="cfg-grid">
+          <label class="field"><span>Usuario de Composio <em>user_id</em></span><input id="c_cuser" autocomplete="off"></label>
+          <label class="field"><span>Propiedad GA4</span><input id="c_prop" list="c_props" autocomplete="off" placeholder="properties/123456"><datalist id="c_props"></datalist></label>
+        </div>
+        <div class="cfg-row"><button class="btn btn-ghost" id="c_test"><i class="ph ph-plug"></i>Probar conexión y cargar propiedades</button></div>
+        <div class="cfg-res" id="c_res"></div>
+      </div>
+
+      <div class="tile cfg">
+        <h2><i class="ph ph-envelope-simple"></i>Correo (Resend)</h2>
+        <p class="desc">Se usa para invitaciones y recuperación de contraseña. Sin dominio propio, Resend solo entrega al correo dueño de la cuenta.</p>
+        <div class="cfg-row"><b style="font-size:13px">Llave de Resend</b><span class="sec-state" id="cs_resend">—</span></div>
+        <div class="cfg-row"><input class="inp" id="c_rkey" type="password" autocomplete="off" placeholder="Pegar nueva llave (re_…)" style="flex:1;min-width:200px"><button class="btn btn-dark" data-secret="resend_api_key" data-in="c_rkey"><i class="ph ph-lock-key"></i>Guardar llave</button></div>
+        <div class="cfg-grid">
+          <label class="field"><span>Nombre del remitente</span><input id="c_mname" autocomplete="off"></label>
+          <label class="field"><span>Correo remitente <em>requiere dominio</em></span><input id="c_maddr" type="email" autocomplete="off" placeholder="onboarding@resend.dev"></label>
+        </div>
+        <div class="cfg-row"><button class="btn btn-ghost" id="c_mtest"><i class="ph ph-paper-plane-tilt"></i>Enviarme un correo de prueba</button></div>
+        <div class="cfg-res" id="m_res"></div>
+      </div>
+
+      <div class="tile cfg full">
+        <h2><i class="ph ph-palette"></i>Marca</h2>
+        <p class="desc">Nombre, colores, logo y favicon. Sirve para usar esta misma plataforma con otra marca (Ultramotor, Jetstereo, Outlet…).</p>
+        <div class="cfg-grid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr))">
+          <label class="field"><span>Marca</span><input id="c_brand" autocomplete="off"></label>
+          <label class="field"><span>Nombre de la app</span><input id="c_app" autocomplete="off"></label>
+          <label class="field"><span>Dirección de la app <em>https://</em></span><input id="c_url" autocomplete="off"></label>
+          <label class="field"><span>Color principal</span><div class="color-in"><input type="color" id="c_col1p" aria-label="Elegir color principal"><input class="inp" id="c_col1" maxlength="7"></div></label>
+          <label class="field"><span>Color oscuro</span><div class="color-in"><input type="color" id="c_col2p" aria-label="Elegir color oscuro"><input class="inp" id="c_col2" maxlength="7"></div></label>
+        </div>
+        <div class="cfg-grid">
+          <div class="field"><span>Logo <em>PNG, JPG o WebP · se ve sobre fondo oscuro · máx. 1 MB</em></span><div class="img-in"><div class="pv"><img id="c_logo_pv" alt=""></div><label class="btn btn-ghost"><i class="ph ph-upload-simple"></i>Subir logo<input type="file" id="c_logo" accept="image/png,image/jpeg,image/webp" hidden></label><button class="btn btn-ghost" data-clear="logo" title="Volver al original" aria-label="Volver al logo original"><i class="ph ph-arrow-counter-clockwise"></i></button></div></div>
+          <div class="field"><span>Favicon <em>PNG cuadrado, ideal 512×512</em></span><div class="img-in"><div class="pv sq"><img id="c_fav_pv" alt=""></div><label class="btn btn-ghost"><i class="ph ph-upload-simple"></i>Subir favicon<input type="file" id="c_fav" accept="image/png" hidden></label><button class="btn btn-ghost" data-clear="fav" title="Volver al original" aria-label="Volver al favicon original"><i class="ph ph-arrow-counter-clockwise"></i></button></div></div>
+        </div>
+      </div>
+
+      <div class="tile cfg full" style="flex-direction:row;justify-content:space-between;align-items:center;flex-wrap:wrap">
+        <span class="muted" id="c_upd" style="font-size:13px"></span>
+        <div class="cfg-row"><button class="btn btn-ghost" id="c_reset"><i class="ph ph-arrow-counter-clockwise"></i>Descartar cambios</button><button class="btn btn-red" id="c_save"><i class="ph ph-floppy-disk"></i>Guardar configuración</button></div>
+      </div>
+
+      <div class="tile cfg full">
+        <h2><i class="ph ph-copy"></i>Duplicar para otra marca</h2>
+        <p class="desc">El proyecto está empaquetado en el repositorio (carpeta <code>supabase/</code> y guía <code>DUPLICAR.md</code>). Resumen:</p>
+        <ol class="steps">
+          <li>Crear un proyecto nuevo en Supabase, ejecutar <code>supabase/schema.sql</code> y desplegar las funciones de <code>supabase/functions</code>.</li>
+          <li>Crear un proyecto en Vercel desde el mismo repositorio con 4 variables: <code>SUPABASE_URL</code>, <code>SUPABASE_KEY</code>, <code>SYNC_SECRET</code>, <code>CRON_SECRET</code>.</li>
+          <li>Poner la URL y la llave pública del nuevo Supabase en <code>public/config.js</code> y en la política de seguridad de <code>vercel.json</code>.</li>
+          <li>Invitar al primer administrador y completar esta pantalla: Composio, GA4, Resend y marca.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer class="foot">
   <div class="foot-in">
     <div><b>Motomundo · Seguimiento de campañas</b>Datos de Google Analytics 4 (propiedad Motomundo - GA4), guardados en Supabase. Solo cuenta tráfico que llegó con utm_campaign.</div>
-    <div><b>Datos</b><span class="live"><i></i><span id="gen">Sincronización diaria 8:00 a.m.</span></span><a href="#/utms" data-need="crear"><i class="ph ph-link-simple"></i>Constructor de UTMs</a></div>
+    <div><b>Datos</b><span class="live"><i></i><span id="gen">Sincronización diaria 8:00 a.m. y 2:00 p.m.</span></span><a href="#/utms" data-need="crear"><i class="ph ph-link-simple"></i>Constructor de UTMs</a></div>
     <div><b>Eventos medidos</b>Cotiza_Producto<br>Cotización_Crédito</div>
   </div>
   <div class="foot-bar"><div><span>© Motomundo</span><span>Los usuarios de un rango son la suma de cada día; las cotizaciones son exactas.</span></div></div>
@@ -725,7 +840,7 @@
 <div class="ntf-stack" id="ntf" aria-live="polite"></div>
 <script>
 // ===== Supabase (clave publicable: los permisos los aplican las reglas RLS de la base de datos) =====
-const sb = supabase.createClient('https://vefpeohaipnkfzbzuepo.supabase.co', 'sb_publishable_P34fx2jbugXIXark85IxpQ_gMKS06e6');
+const sb = supabase.createClient(window.APP_CONFIG.supabaseUrl, window.APP_CONFIG.supabaseKey);
 // ============================================================
 // Utilidades
 // ============================================================
@@ -1304,6 +1419,7 @@ async function start() {
   if (STARTED) return; STARTED = true;
   loadLinks();
   subscribeRealtime(); pushState().catch(() => {});
+  if (can.admin()) runHealth(true);
   try {
     const q1 = await sb.from('ga4_utm_daily').select('date').order('date', { ascending: true }).limit(1);
     const q2 = await sb.from('ga4_utm_daily').select('date').order('date', { ascending: false }).limit(1);
@@ -1367,10 +1483,13 @@ function subscribeRealtime() {
     .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'ga4_sync_log' }, () => {
       clearTimeout(SYNC_T);
       SYNC_T = setTimeout(() => {
-        notify({ icon:'ph-chart-line-up', tone:'ok', title:'Reporte actualizado', body:'Ya están los datos de GA4 de ayer. Recarga la vista para verlos.', ms: 15000 });
+        const tarde = new Date(Date.now() - 6 * 3600e3).getUTCHours() >= 12;
+        notify(tarde ? { icon:'ph-arrows-clockwise', tone:'dark', title:'Datos de ayer actualizados', body:'Segundo pase del día: GA4 ya procesó más datos de ayer. Recarga la vista para verlos.', ms: 10000 }
+          : { icon:'ph-chart-line-up', tone:'ok', title:'Reporte actualizado', body:'Ya están los datos de GA4 de ayer. Recarga la vista para verlos.', ms: 15000 });
+        if (ME?.role === 'admin') runHealth(false);
       }, 4000);
     })
-    .subscribe();
+    .subscribe(st => { RT_STATE = st; if (ME?.role === 'admin') drawHealthUI(); });
 }
 let SYNC_T; const LOCAL_DEL = new Set();
 // Tarjeta según la calidad de la UTM: verde OK · amarilla con advertencias · roja con errores
@@ -1722,11 +1841,12 @@ const ACT_INFO = {
   'usuario.activar': ['Activó un usuario', 'ph-check-circle'], 'usuario.eliminar': ['Eliminó un usuario', 'ph-user-minus'], 'usuario.reenviar_invitacion': ['Generó una invitación', 'ph-paper-plane-tilt'],
   'usuario.enlace_recuperacion': ['Generó un enlace de recuperación', 'ph-key'], 'auth.ingreso': ['Inició sesión', 'ph-sign-in'], 'auth.salida': ['Cerró sesión', 'ph-sign-out'],
   'auth.contrasena_creada': ['Creó su contraseña', 'ph-key'], 'auth.contrasena_cambiada': ['Cambió su contraseña', 'ph-key'], 'auth.recuperar_solicitud': ['Pidió recuperar su contraseña', 'ph-lifebuoy'],
+  'config.editar': ['Cambió la configuración', 'ph-gear-six'], 'config.llave': ['Cambió una llave de conexión', 'ph-lock-key'],
 };
 const AF = { user:'', type:'' };
 const AFD = {
   user: Dropdown($('af_pills'), { label:'Usuario', options:[], value:'', onChange: v => { AF.user = v; drawActs(); } }),
-  type: Dropdown($('af_pills'), { label:'Actividad', options:[{ v:'', l:'Todas' }, { v:'utm', l:'UTMs', ic:'ph-link-simple' }, { v:'usuario', l:'Usuarios', ic:'ph-users-three' }, { v:'auth', l:'Accesos', ic:'ph-sign-in' }], value:'', search:false, onChange: v => { AF.type = v; drawActs(); } }),
+  type: Dropdown($('af_pills'), { label:'Actividad', options:[{ v:'', l:'Todas' }, { v:'utm', l:'UTMs', ic:'ph-link-simple' }, { v:'usuario', l:'Usuarios', ic:'ph-users-three' }, { v:'auth', l:'Accesos', ic:'ph-sign-in' }, { v:'config', l:'Configuración', ic:'ph-gear-six' }], value:'', search:false, onChange: v => { AF.type = v; drawActs(); } }),
 };
 async function loadActs() {
   const { data, error } = await sb.from('activity_log').select('*').gte('at', new Date(Date.now() - 7 * 864e5).toISOString()).order('at', { ascending: false }).limit(1000);
@@ -1740,6 +1860,8 @@ const actDesc = a => {
     const L = { full_name:'nombre', email:'correo', role:'rol', canal:'canal', active:'activo' }, fv = (k, v) => k === 'role' ? (ROLE_NAME[v] || v) : v ?? '—';
     return `${esc(a.summary)} · ${Object.entries(d).map(([k, v]) => v && typeof v === 'object' && 'ahora' in v ? `${L[k] || k}: ${esc(fv(k, v.antes))} → ${esc(fv(k, v.ahora))}` : `${L[k] || k}: ${esc(fv(k, v))}`).join(' · ')}`;
   }
+  if (a.action === 'config.editar') return Object.entries(d).map(([k, v]) => `${esc(k)}: ${esc(v?.antes ?? '—')} → ${esc(v?.ahora ?? '—')}`).join(' · ');
+  if (a.action === 'config.llave') return `${esc(a.summary)} · ${esc(d.accion || '')}`;
   if (a.action === 'usuario.crear') return `${esc(a.summary)} · ${esc(ROLE_NAME[d.role] || d.role || '')}${d.canal ? ' · ' + esc(d.canal) : ''}`;
   return esc(a.summary || '');
 };
@@ -1773,8 +1895,183 @@ Seg($('aView'), null, aView, v => { aView = v; drawActs(); });
 // ============================================================
 // Navegación entre vistas (según el rol)
 // ============================================================
+// ============================================================
+// Marca configurable (colores, logo, favicon, nombre) — se lee antes de iniciar sesión
+// ============================================================
+const BRAND_DEF = { brand_name:'Motomundo', app_name:'Campañas', color_primary:'#d71920', color_dark:'#0d0e10', logo_url:null, favicon_url:null };
+const mixHex = (a, b, t) => '#' + [0, 2, 4].map(i => Math.round(parseInt(a.substr(i + 1, 2), 16) * (1 - t) + parseInt(b.substr(i + 1, 2), 16) * t).toString(16).padStart(2, '0')).join('');
+function paintBrand(b) {
+  b = { ...BRAND_DEF, ...b };
+  const st = document.documentElement.style;
+  st.setProperty('--red', b.color_primary); st.setProperty('--red-600', mixHex(b.color_primary, '#000000', .17));
+  st.setProperty('--red-50', mixHex(b.color_primary, '#ffffff', .92)); st.setProperty('--red-100', mixHex(b.color_primary, '#ffffff', .82));
+  st.setProperty('--black', b.color_dark);
+  document.querySelectorAll('img.logo').forEach(i => { i.src = b.logo_url || '/logo-motomundo.png'; i.alt = b.brand_name; });
+  document.querySelectorAll('.brand-t').forEach(t => t.textContent = b.app_name);
+  document.querySelectorAll('link[rel~="icon"], link[rel="apple-touch-icon"]').forEach(l => { if (!l.dataset.orig) l.dataset.orig = l.getAttribute('href'); l.href = b.favicon_url || l.dataset.orig; });
+  document.title = `${b.app_name} · ${b.brand_name}`;
+  document.querySelector('.brand')?.setAttribute('aria-label', `${b.brand_name} ${b.app_name}, inicio`);
+}
+async function applyBrand() {
+  try { const c = JSON.parse(localStorage.getItem('brand') || 'null'); if (c) paintBrand(c); } catch {}
+  const { data } = await sb.rpc('branding');
+  if (!data) return;
+  paintBrand(data); try { localStorage.setItem('brand', JSON.stringify(data)); } catch {}
+}
+
+// ============================================================
+// Estado del sistema (solo admin): indicador animado en la barra + tarjeta en Configuración
+// ============================================================
+let RT_STATE = 'CONNECTING', HEALTH = { db: null, ga: null }, HEALTH_T = null;
+const agoTxt = t => { const m = Math.round((Date.now() - new Date(t)) / 6e4); return m < 60 ? `hace ${m} min` : m < 1440 ? `hace ${Math.round(m / 60)} h` : `hace ${Math.round(m / 1440)} d`; };
+async function callAdminApi() {
+  const { data: { session } } = await sb.auth.getSession();
+  const r = await fetch('/api/admin', { method: 'POST', headers: { authorization: 'Bearer ' + session.access_token } });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || 'Error ' + r.status);
+  return j;
+}
+function healthChecks() {
+  const d = HEALTH.db, g = HEALTH.ga, C = [];
+  const add = (s, ic, t, m) => C.push({ s, ic, t, m });
+  if (!d) add('wait', 'ph-database', 'Base de datos', 'Revisando…');
+  else if (d.error) add('bad', 'ph-database', 'Base de datos', d.error);
+  else {
+    add('ok', 'ph-database', 'Base de datos', `Responde bien · ${d.users_active} usuarios activos`);
+    const h = d.last_sync ? (Date.now() - new Date(d.last_sync)) / 36e5 : 999;
+    add(h < 30 ? 'ok' : h < 54 ? 'warn' : 'bad', 'ph-arrows-clockwise', 'Sincronización diaria GA4',
+      d.last_sync ? `Última ${agoTxt(d.last_sync)} · datos hasta ${d.max_date} · 8 a. m. y 2 p. m.` : 'Nunca se ha sincronizado');
+    add(d.secrets?.resend_api_key ? 'ok' : 'warn', 'ph-envelope-simple', 'Correo (Resend)', d.secrets?.resend_api_key ? 'Llave configurada' : 'Sin llave: las invitaciones solo se comparten por enlace');
+    const pl = d.purge_last;
+    add(!pl || pl.status === 'succeeded' ? 'ok' : 'warn', 'ph-broom', 'Limpieza de bitácora (7 días)', pl ? `Última ${agoTxt(pl.at)} · ${pl.status === 'succeeded' ? 'correcta' : pl.status}` : 'Programada a diario');
+    add('ok', 'ph-bell-ringing', 'Avisos al dispositivo', `${d.push_devices} dispositivo${d.push_devices === 1 ? '' : 's'} suscrito${d.push_devices === 1 ? '' : 's'}`);
+  }
+  if (!g) add('wait', 'ph-plugs-connected', 'Composio → GA4', 'Revisando…');
+  else if (!g.ok) add('bad', 'ph-plugs-connected', 'Composio → GA4', g.error);
+  else add(g.property_ok ? 'ok' : 'bad', 'ph-plugs-connected', 'Composio → GA4', g.property_ok ? `Conectado · ${g.property} · ${g.ms} ms` : `Conectado, pero la propiedad ${g.property} no está en la cuenta`);
+  add(RT_STATE === 'SUBSCRIBED' ? 'ok' : RT_STATE === 'CONNECTING' ? 'wait' : 'warn', 'ph-lightning', 'Tiempo real', RT_STATE === 'SUBSCRIBED' ? 'Conectado: notificaciones al instante' : RT_STATE === 'CONNECTING' ? 'Conectando…' : 'Desconectado: recarga la página');
+  return C;
+}
+function drawHealthUI() {
+  const C = healthChecks(), has = s => C.some(c => c.s === s);
+  const lvl = has('bad') ? 'bad' : has('warn') ? 'warn' : has('wait') ? 'wait' : 'ok';
+  const txt = { ok:'Todo funciona', warn:'Revisar', bad:'Falla detectada', wait:'Revisando…' }[lvl];
+  $('hl_btn').className = 'hl-btn hl-' + lvl; $('hl_t').textContent = txt;
+  $('hl_btn').title = 'Estado del sistema: ' + txt;
+  const IC = { ok:'ph-check-circle', warn:'ph-warning-circle', bad:'ph-x-circle', wait:'ph-circle-dashed' };
+  const html = C.map(c => `<div class="chk"><i class="ph-fill ${IC[c.s]} s-${c.s}"></i><div><b>${esc(c.t)}</b><span>${esc(c.m)}</span></div></div>`).join('');
+  $('hl_list').innerHTML = html; if ($('cfg_health')) $('cfg_health').innerHTML = html;
+  return lvl;
+}
+async function runHealth(full) {
+  const prev = $('hl_btn').className;
+  const { data, error } = await sb.rpc('system_health');
+  HEALTH.db = error ? { error: error.message } : data;
+  if (full) { HEALTH.ga = null; drawHealthUI(); HEALTH.ga = await callAdminApi().catch(e => ({ ok: false, error: e.message })); }
+  const lvl = drawHealthUI();
+  if (prev.includes('hl-ok') && lvl === 'bad') notify({ icon:'ph-warning-octagon', tone:'bad', title:'Falla en el sistema', body:'Abre el indicador de estado para ver el detalle.', ms: 15000 });
+  clearTimeout(HEALTH_T); HEALTH_T = setTimeout(() => runHealth(Date.now() - (runHealth.lastFull || 0) > 36e5), 5 * 6e4);
+  if (full) runHealth.lastFull = Date.now();
+}
+$('hl_btn').onclick = e => { e.stopPropagation(); const o = $('hl_pop').hidden; $('hl_pop').hidden = !o; $('hl_btn').setAttribute('aria-expanded', o); };
+$('hl_re').onclick = () => runHealth(true);
+document.addEventListener('click', e => { if (!$('hl_pop').hidden && !e.target.closest('.hl-wrap')) { $('hl_pop').hidden = true; $('hl_btn').setAttribute('aria-expanded', false); } });
+
+// ============================================================
+// Configuración (solo admin) — la función app-config guarda en el servidor; las llaves nunca vuelven al navegador
+// ============================================================
+const cfgCall = async body => {
+  const { data, error } = await sb.functions.invoke('app-config', { body });
+  if (error) { let m = error.message; try { m = (await error.context.json()).error || m; } catch {} throw new Error(m); }
+  if (data?.error) throw new Error(data.error);
+  return data;
+};
+let CFG = null, CFG_PEND = {};
+const CF = { brand_name:'c_brand', app_name:'c_app', app_url:'c_url', color_primary:'c_col1', color_dark:'c_col2', ga4_property:'c_prop', composio_user_id:'c_cuser', mail_from_name:'c_mname' };
+const secState = (el, on) => { $(el).className = 'sec-state ' + (on ? 'on' : 'off'); $(el).innerHTML = on ? '<i class="ph-fill ph-lock-key"></i>Configurada' : '<i class="ph ph-warning"></i>Sin configurar'; };
+function fillConfig() {
+  const s = CFG.settings; CFG_PEND = {};
+  for (const [k, id] of Object.entries(CF)) $(id).value = s[k] ?? '';
+  $('c_col1p').value = s.color_primary; $('c_col2p').value = s.color_dark;
+  $('c_maddr').value = CFG.mail_from || '';
+  $('c_logo_pv').src = s.logo_url || '/logo-motomundo.png'; $('c_fav_pv').src = s.favicon_url || '/favicon-512.png';
+  secState('cs_composio', CFG.secrets.composio_api_key); secState('cs_resend', CFG.secrets.resend_api_key);
+  if (!CFG.secrets.composio_api_key) $('cs_composio').innerHTML = '<i class="ph ph-cloud"></i>Usando la del servidor (Vercel)', $('cs_composio').className = 'sec-state';
+  $('c_upd').textContent = 'Última modificación: ' + new Date(s.updated_at).toLocaleString('es-MX', { dateStyle:'medium', timeStyle:'short' });
+}
+async function loadConfig() {
+  drawHealthUI();
+  try { CFG = await cfgCall({ action: 'get' }); fillConfig(); } catch (e) { toast('No se pudo cargar la configuración: ' + e.message, true); }
+}
+[['c_col1p', 'c_col1'], ['c_col2p', 'c_col2']].forEach(([p, t]) => {
+  $(p).addEventListener('input', () => { $(t).value = $(p).value; previewColors(); });
+  $(t).addEventListener('input', () => { if (/^#[0-9a-f]{6}$/i.test($(t).value)) { $(p).value = $(t).value; previewColors(); } });
+});
+const previewColors = () => paintBrand({ ...CFG?.settings, ...CFG_PEND, color_primary: $('c_col1p').value, color_dark: $('c_col2p').value });
+async function uploadBrand(file, kind) {
+  if (!file) return;
+  if (file.size > 1048576) return toast('La imagen pesa más de 1 MB', true);
+  const ext = { 'image/png':'png', 'image/jpeg':'jpg', 'image/webp':'webp' }[file.type];
+  if (!ext) return toast('Formato no permitido: usa PNG, JPG o WebP', true);
+  const path = `${kind}-${Date.now()}.${ext}`;
+  const { error } = await sb.storage.from('brand').upload(path, file, { contentType: file.type, cacheControl: '31536000' });
+  if (error) return toast('No se pudo subir: ' + error.message, true);
+  const url = sb.storage.from('brand').getPublicUrl(path).data.publicUrl;
+  CFG_PEND[kind === 'logo' ? 'logo_url' : 'favicon_url'] = url;
+  $(kind === 'logo' ? 'c_logo_pv' : 'c_fav_pv').src = url;
+  toast('Imagen lista: pulsa Guardar configuración para aplicarla');
+}
+$('c_logo').onchange = e => uploadBrand(e.target.files[0], 'logo');
+$('c_fav').onchange = e => uploadBrand(e.target.files[0], 'favicon');
+document.addEventListener('click', e => {
+  const c = e.target.closest('[data-clear]'); if (!c) return;
+  if (c.dataset.clear === 'logo') { CFG_PEND.logo_url = ''; $('c_logo_pv').src = '/logo-motomundo.png'; } else { CFG_PEND.favicon_url = ''; $('c_fav_pv').src = '/favicon-512.png'; }
+});
+$('c_reset').onclick = () => { if (CFG) { fillConfig(); paintBrand(CFG.settings); } };
+$('c_save').onclick = async () => {
+  const settings = { ...CFG_PEND }; for (const [k, id] of Object.entries(CF)) settings[k] = $(id).value.trim();
+  if (!/^https:\/\/[^/\s]+$/.test(settings.app_url)) return toast('La dirección de la app debe ser https://dominio, sin / al final', true);
+  $('c_save').disabled = true;
+  try {
+    const r = await cfgCall({ action: 'save', settings, mail_from: $('c_maddr').value.trim() });
+    CFG.settings = r.settings; CFG.mail_from = $('c_maddr').value.trim(); fillConfig();
+    paintBrand(r.settings); try { localStorage.setItem('brand', JSON.stringify(r.settings)); } catch {}
+    notify({ icon:'ph-check-circle', tone:'ok', title:'Configuración guardada', body:'Los cambios ya aplican para todos los usuarios.' });
+  } catch (e) { toast('No se pudo guardar: ' + e.message, true); }
+  $('c_save').disabled = false;
+};
+document.addEventListener('click', async e => {
+  const b = e.target.closest('[data-secret]'); if (!b) return;
+  const v = $(b.dataset.in).value.trim();
+  if (!v) return toast('Pega la llave nueva primero', true);
+  b.disabled = true;
+  try {
+    await cfgCall({ action: 'secret', key: b.dataset.secret, value: v });
+    $(b.dataset.in).value = ''; CFG.secrets[b.dataset.secret] = true; fillConfig();
+    notify({ icon:'ph-lock-key', tone:'ok', title:'Llave guardada', body:'Quedó guardada en el servidor. No se volverá a mostrar.' });
+    runHealth(true);
+  } catch (err) { toast(err.message, true); }
+  b.disabled = false;
+});
+$('c_test').onclick = async () => {
+  $('c_test').disabled = true; $('c_res').innerHTML = '<span class="muted">Probando…</span>';
+  try {
+    const g = await callAdminApi(); HEALTH.ga = g; drawHealthUI();
+    if (!g.ok) throw new Error(g.error);
+    $('c_props').innerHTML = g.properties.map(p => `<option value="${esc(p.id)}">${esc(p.name)} · ${esc(p.account)}</option>`).join('');
+    $('c_res').innerHTML = msg(g.property_ok ? 'ok' : 'err', `${g.property_ok ? 'Conexión correcta' : 'Conectado, pero la propiedad guardada no aparece'} · ${g.properties.length} propiedad${g.properties.length === 1 ? '' : 'es'} disponibles (${g.properties.map(p => esc(p.name)).join(', ')}). Llave: ${g.key_source === 'panel' ? 'panel' : 'servidor (Vercel)'}.`);
+  } catch (e) { $('c_res').innerHTML = msg('err', 'Falló la conexión: ' + esc(e.message)); }
+  $('c_test').disabled = false;
+};
+$('c_mtest').onclick = async () => {
+  $('c_mtest').disabled = true;
+  try { const r = await cfgCall({ action: 'test_resend' }); $('m_res').innerHTML = r.ok ? msg('ok', `Correo de prueba enviado a ${esc(r.to)}.`) : msg('err', esc(r.error)); }
+  catch (e) { $('m_res').innerHTML = msg('err', esc(e.message)); }
+  $('c_mtest').disabled = false;
+};
+$('cfg_check').onclick = () => runHealth(true);
 const NAV = Seg($('nav'), null, 'reporte', r => { location.hash = '#/' + r; });
-const VIEWS = { reporte: () => true, utms: can.crear, usuarios: can.admin, bitacora: can.admin };
+const VIEWS = { reporte: () => true, utms: can.crear, usuarios: can.admin, bitacora: can.admin, config: can.admin };
 function route() {
   if (location.hash.startsWith('#/crear-contrasena')) return;
   if (!ME) return;
@@ -1784,6 +2081,7 @@ function route() {
   Object.keys(VIEWS).forEach(v => { const el = $('view-' + v); const show = v === r; if (show && el.hidden) { el.hidden = false; el.classList.remove('view'); void el.offsetWidth; el.classList.add('view'); } else if (!show) el.hidden = true; });
   if (r === 'usuarios' && !USERS) loadUsers();
   if (r === 'bitacora' && !ACTS) loadActs();
+  if (r === 'config') loadConfig();
   scrollTo({ top: 0 });
 }
 addEventListener('hashchange', () => {
@@ -1796,6 +2094,7 @@ addEventListener('hashchange', () => {
 // Inicio
 // ============================================================
 build();
+applyBrand();
 if (location.hash.startsWith('#/crear-contrasena')) handlePasswordLink(); else start();
 </script>
 </body>
