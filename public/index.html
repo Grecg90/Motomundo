@@ -431,11 +431,22 @@
   .tcell b { grid-area:v; font-weight:700; font-size:15px; text-align:right; } .tcell .sh { grid-area:sh; font-size:11.5px; color:var(--gray-500); font-weight:600; } .tcell .gpill { grid-area:dl; font-size:11px; padding:2px 7px; justify-self:end; }
   .tcell.other { background:transparent; border:1px dashed var(--gray-200); }
   .gcard .gt b.mono { font-family:var(--mono); font-size:14px; overflow-wrap:anywhere; }
-  .bl { width:min(1100px, 100%); } .bl-body { padding:0 22px 16px; overflow:auto; background:var(--white); }
-  .brow { grid-column:1 / -1; display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:14px; }
-  .bcard { display:flex; flex-direction:column; gap:10px; }
+  .bl { width:min(880px, 100%); } .bl-body { padding:16px 22px; overflow:auto; background:var(--gray-100); }
+  .bgrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:10px; }
+  .brc { background:var(--white); border-radius:var(--r-md); padding:14px; display:grid; gap:10px; min-width:0; border:1px solid transparent; }
+  .brc-h { display:flex; align-items:center; justify-content:space-between; gap:8px; } .brc-h .btn { padding:6px 12px; }
+  .brt { display:grid; grid-template-columns:auto auto minmax(0, 1fr); align-items:center; gap:8px; font-size:12.5px; }
+  .brt > i { color:var(--gray-500); } .brt .k { font-weight:600; color:var(--gray-500); width:52px; }
+  .brt a { display:flex; align-items:center; gap:5px; min-width:0; text-decoration:none; color:var(--ink); } .brt a code { font-family:var(--mono); font-size:12px; background:var(--gray-100); padding:3px 7px; border-radius:6px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
+  .brt a i { color:var(--gray-500); flex:none; } .brt a:hover code { background:var(--gray-200); } .brt em { font-style:italic; color:var(--gray-500); }
+  .brc-add { border:1.5px dashed var(--gray-300); background:transparent; place-items:center; align-content:center; text-align:center; color:var(--gray-700); cursor:pointer; min-height:120px; gap:4px; }
+  .brc-add i { font-size:24px; color:var(--red); } .brc-add span { font-size:12px; color:var(--gray-500); } .brc-add:hover { border-color:var(--ink); }
+  @media (max-width:720px) { .bl-body { padding:12px; } .bgrid { grid-template-columns:1fr; } }
+  .brow { grid-column:1 / -1; display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:14px; }
+  .brow .tile { padding:16px 18px; }
+  .bcard { display:flex; flex-direction:column; gap:8px; }
   .bchip { align-self:flex-start; display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:999px; color:#fff; font-weight:700; font-size:12.5px; letter-spacing:.02em; }
-  .bcard .v { font-size:38px; font-weight:700; letter-spacing:-.02em; line-height:1; }
+  .bcard .v { font-size:32px; font-weight:700; letter-spacing:-.02em; line-height:1; }
   .bcard .lbl { font-size:12px; color:var(--gray-500); font-weight:600; line-height:1.4; }
   .bcard .cmpr { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--gray-500); }
   .gpill { display:inline-flex; align-items:center; gap:3px; padding:3px 9px; border-radius:999px; font-size:12px; font-weight:700; }
@@ -483,7 +494,7 @@
   .adm-pop { left:0; right:auto; width:220px; }
   .brand.spin img { animation:pulse1 .9s var(--ease) infinite; } @keyframes pulse1 { 50% { opacity:.45; transform:scale(.94); } }
   @media (max-width:1100px) { .g-half { grid-column:1 / -1; } }
-  @media (max-width:720px) { .brow { grid-template-columns:1fr 1fr; gap:10px; } .bcard .v { font-size:28px; } .bcard .ft { grid-template-columns:1fr 1fr; } .bcard .ft div:last-child { grid-column:1 / -1; } .bm-grid { grid-template-columns:1fr; } .hb-r { grid-template-columns:minmax(0, 96px) 1fr auto; } .g-kv { font-size:44px; } .adm { display:none !important; } }
+  @media (max-width:720px) { .brow { display:flex; overflow-x:auto; scroll-snap-type:x mandatory; gap:10px; margin:0 -12px; padding:0 12px 4px; scrollbar-width:none; } .brow::-webkit-scrollbar { display:none; } .brow .bcard { flex:0 0 66%; scroll-snap-align:start; } .bcard .v { font-size:28px; } .tgrid { grid-template-columns:1fr; } .bm-grid { grid-template-columns:1fr; } .hb-r { grid-template-columns:minmax(0, 96px) 1fr auto; } .g-kv { font-size:44px; } .adm { display:none !important; } }
 
   /* ===== Agrupar canales (modal con tablero) ===== */
   .modal-bg { position:fixed; inset:0; z-index:70; background:rgba(13,14,16,.38); backdrop-filter:blur(10px) saturate(1.1); -webkit-backdrop-filter:blur(10px) saturate(1.1);
@@ -497,8 +508,8 @@
   .modal-h .sp { flex:1; }
   .modal-f { display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:12px 22px; background:var(--white); border-top:1px solid var(--gray-200); }
   .modal-f .sp { flex:1; } .modal-f .chg { font-size:13px; font-weight:600; color:var(--warn); }
-  .board { display:grid; grid-template-columns:repeat(4, minmax(230px, 1fr)); gap:12px; padding:16px 22px; overflow:auto; flex:1; }
-  .bcol { background:var(--white); border-radius:var(--r-md); display:flex; flex-direction:column; min-height:220px; transition:box-shadow .15s, background .15s; }
+  .board { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:12px; padding:16px 22px; overflow:auto; flex:1; }
+  .bcol { min-width:0; background:var(--white); border-radius:var(--r-md); display:flex; flex-direction:column; min-height:220px; transition:box-shadow .15s, background .15s; }
   .bcol.over { box-shadow:0 0 0 2px var(--red); background:#fff8f8; }
   .bcol-h { display:flex; align-items:center; gap:10px; padding:14px 14px 10px; border-bottom:1px solid var(--gray-100); }
   .bcol-h .ic { width:34px; height:34px; border-radius:10px; display:grid; place-items:center; background:var(--red); color:#fff; font-size:18px; flex:none; }
@@ -506,7 +517,7 @@
   .bcol-h b { font-size:16px; font-weight:700; display:block; } .bcol-h span { font-size:12px; color:var(--gray-500); font-weight:600; }
   .bcol-b { padding:10px; display:flex; flex-direction:column; gap:8px; flex:1; }
   .bcol-b .none { color:var(--gray-500); font-size:12.5px; text-align:center; padding:18px 6px; border:1.5px dashed var(--gray-200); border-radius:12px; }
-  .mcard { background:var(--white); border:1px solid var(--gray-200); border-radius:12px; padding:10px 12px; cursor:grab; transition:box-shadow .15s, transform .15s, border-color .15s; }
+  .mcard { min-width:0; background:var(--white); border:1px solid var(--gray-200); border-radius:12px; padding:10px 12px; cursor:grab; transition:box-shadow .15s, transform .15s, border-color .15s; }
   .mcard:hover { border-color:var(--gray-300); box-shadow:0 4px 14px -8px rgba(13,14,16,.35); }
   .mcard.drag { opacity:.45; } .mcard.moved { border-color:#f5b800; box-shadow:0 0 0 2px #f5b800; }
   .mc-h { display:flex; align-items:center; gap:8px; }
@@ -522,8 +533,17 @@
   .mc-f.exc span { color:var(--warn); }
   .mm-sel { border:1px solid var(--gray-200); background:var(--white); border-radius:8px; font-size:12px; font-weight:600; padding:3px 6px; color:var(--ink); font-family:var(--font); max-width:130px; }
   .mc-h .mm-sel { margin-left:auto; }
-  @media (max-width:980px) { .board { grid-template-columns:repeat(2, minmax(220px, 1fr)); } }
-  @media (max-width:720px) { .modal-bg { padding:0; place-items:end stretch; } .modal { max-height:94dvh; border-radius:20px 20px 0 0; width:100%; } .board { grid-template-columns:1fr; padding:12px; } .modal-h, .modal-f { padding-left:14px; padding-right:14px; } }
+  .mc-h b { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  @media (max-width:980px) { .board { grid-template-columns:repeat(2, minmax(0, 1fr)); } }
+  @media (max-width:720px) {
+    .modal-bg { padding:0; place-items:end stretch; } .modal { max-height:92dvh; border-radius:20px 20px 0 0; width:100%; }
+    .board { grid-template-columns:minmax(0, 1fr); grid-auto-rows:max-content; align-content:start; padding:12px; gap:10px; } .bcol { min-height:0; } .bcol-b .none { padding:10px; }
+    .modal-h { padding:16px 14px 10px; } .modal-h h2 { font-size:19px; } .modal-h p { font-size:12.5px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .modal-f { padding:10px 14px calc(10px + env(safe-area-inset-bottom)); display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .modal-f .sp, .modal-f .chg:empty { display:none; } .modal-f .chg { grid-column:1 / -1; }
+    .modal-f .btn { justify-content:center; } .modal-f .btn-red { grid-column:1 / -1; order:-1; }
+    .mc-h .mm-sel { max-width:110px; }
+  }
 
   /* ===== Footer ===== */
   .foot { background:var(--black); color:var(--gray-300); }
@@ -2688,11 +2708,13 @@ async function loadBrands() {
 }
 function drawBrands() {
   $('b_count').textContent = BRANDS ? `${BRANDS.length} marca${BRANDS.length === 1 ? '' : 's'} configurada${BRANDS.length === 1 ? '' : 's'}.` : '';
-  const link = u => u ? `<a class="url" href="${esc(u)}" target="_blank" rel="noopener"><span>${esc(u.replace(/^https:\/\//, ''))}</span><i class="ph ph-arrow-square-out"></i></a>` : '<span class="muted" style="font-style:italic">Sin landing</span>';
-  $('b_table').innerHTML = `<div class="table-wrap btable"><table><thead><tr><th class="l">Marca</th><th class="l">URL landing</th><th class="l">Ruta landing</th><th class="l">URL tienda</th><th class="l">Ruta tienda</th><th></th></tr></thead><tbody>${BRANDS.map(b => `
-    <tr><td class="l"><span class="bchip" style="background:${esc(b.color)}">${esc(b.name)}</span></td><td class="l">${link(b.landing_url)}</td><td class="l">${b.landing_url ? `<code>${esc(urlPath(b.landing_url))}</code>` : '<span class="muted">-</span>'}</td>
-    <td class="l">${link(b.store_url)}</td><td class="l">${b.store_url ? `<code>${esc(urlPath(b.store_url))}</code>` : '<span class="muted">-</span>'}</td>
-    <td><button class="btn btn-ghost" data-bedit="${b.id}"><i class="ph ph-pencil-simple"></i>Editar</button></td></tr>`).join('')}</tbody></table></div>`;
+  const route = (u, label, icon) => `<div class="brt"><i class="ph ${icon}"></i><span class="k">${label}</span>${u
+    ? `<a href="${esc(u)}" target="_blank" rel="noopener" title="${esc(u)}"><code>${esc(urlPath(u))}</code><i class="ph ph-arrow-square-out"></i></a>`
+    : '<em>sin URL</em>'}</div>`;
+  $('b_table').innerHTML = `<div class="bgrid">${BRANDS.map(b => `<div class="brc">
+      <div class="brc-h"><span class="bchip" style="background:${esc(b.color)}"><i class="ph ph-tag"></i>${esc(b.name)}</span><button class="btn btn-ghost" data-bedit="${b.id}"><i class="ph ph-pencil-simple"></i>Editar</button></div>
+      ${route(b.landing_url, 'Landing', 'ph-browser')}${route(b.store_url, 'Tienda', 'ph-storefront')}
+    </div>`).join('')}</div>`;
 }
 let BRM = null;
 function bmSync() {
@@ -2713,6 +2735,7 @@ $('bm_modal').addEventListener('click', e => { if (e.target === $('bm_modal') ||
 $('bl_modal').addEventListener('click', e => { if (e.target === $('bl_modal') || e.target.closest('[data-bl-x]')) modalClose('bl_modal'); });
 $('bl_open').onclick = () => { if (!BRANDS) loadBrands(); modalOpen('bl_modal'); };
 $('b_add').onclick = () => bmOpen(null);
+$('b_table').addEventListener('click', e => { if (e.target.closest('#b_add2')) bmOpen(null); });
 $('b_table').addEventListener('click', e => { const b = e.target.closest('[data-bedit]'); if (b) bmOpen(BRANDS.find(x => x.id === b.dataset.bedit)); });
 $('bm_save').onclick = async () => {
   const name = $('bm_name').value.trim(), color = $('bm_col').value.trim(), land = $('bm_land').value.trim(), store = $('bm_store').value.trim();
