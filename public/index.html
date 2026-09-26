@@ -540,7 +540,7 @@
   @media (max-width:1100px) {
     .t-hero { grid-column:1 / -1; grid-row:auto; }
     .t-sm, .cn { grid-column:span 6; } .t-md { grid-column:1 / -1; }
-    .gcard, .lcard { grid-column:span 6; } .gcard.xl { grid-column:1 / -1; } .gcard.lg { grid-column:span 6; }
+    .gcard, .lcard { grid-column:span 6; } .gcard.xl, .gcard.xl2 { grid-column:1 / -1; } .gcard.lg { grid-column:span 6; }
     .b-form, .b-prev { grid-column:1 / -1; }
     .rules { grid-template-columns:1fr 1fr; }
   }
@@ -553,6 +553,9 @@
     .hl-btn .hl-t { display:none; }
   }
   @media (max-width:720px) {
+    .gcard, .gcard.xl, .gcard.xl2, .gcard.lg { grid-column:1 / -1 !important; }
+    .gcard .gm { gap:8px; } .gcard .gm > div { min-width:0; } .gcard .gm b { font-size:clamp(18px, 6vw, 24px) !important; }
+    .gcard .gt b { overflow-wrap:anywhere; }
     .fstrip .fs-search { order:9; flex-basis:100%; } .fstrip .sp { display:none; }
     .only-m { display:flex !important; } .only-d { display:none !important; }
     .fsheet { position:fixed; left:0; right:0; bottom:0; z-index:50; margin:0 !important; border-radius:20px 20px 0 0; background:var(--white) !important; box-shadow:var(--shadow-pop);
