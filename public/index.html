@@ -473,6 +473,8 @@
   @keyframes skw { to { transform:translateX(100%); } }
   .sk-l { height:12px; width:45%; } .sk-v { height:40px; width:60%; margin-top:14px; } .sk-s { height:10px; width:35%; margin-top:12px; }
   .sk-chart { height:120px; margin-top:auto; border-radius:12px; }
+  .sk-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px 20px; margin-top:auto; padding-top:22px; } .sk-grid .sk { height:52px; border-radius:10px; }
+  .sk-lead { height:90px; border-radius:var(--r-md); margin:4px 0 10px; } .sk-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; } .sk-grid2 .sk-row { height:56px; margin:0; }
   .sk-row { height:44px; margin-bottom:8px; border-radius:10px; }
   .loading #kpis .tile, .loading #canales .tile, .loading #out { opacity:.55; transition:opacity .2s; }
 
@@ -1074,7 +1076,7 @@
           <span class="fchips" id="fchips"></span>
           <button class="fs-clear" id="clear_all" hidden>Limpiar todo</button>
           <span class="sp"></span>
-          <label class="search fs-search"><i class="ph ph-magnifying-glass"></i><input id="q" placeholder="Buscar campaña, término, página…" aria-label="Buscar"></label>
+          <label class="search fs-search"><i class="ph ph-magnifying-glass"></i><input id="q" type="search" autocomplete="off" placeholder="Buscar campaña, término, página…" aria-label="Buscar"></label>
           <div class="seg icons fs-view" id="viewMode" aria-label="Visualización"><span class="pill"></span>
             <button data-v="bento" title="Tarjetas" aria-label="Tarjetas"><i class="ph ph-squares-four"></i></button>
             <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button>
@@ -1097,18 +1099,18 @@
       <div class="cmp"><b>Todo el sitio</b><br><span id="g_period"></span></div>
     </div>
     <div class="bento" id="g_bento">
-      <div class="tile t-hero g-hero" id="g_kpi"><div class="sk sk-l dk"></div><div class="sk sk-v dk" style="width:45%;height:56px"></div><div class="sk sk-chart dk"></div></div>
-      <div class="zrow" id="g_zones"></div>
+      <div class="tile t-hero g-hero" id="g_kpi"><div class="gh"><div class="gh-k"><div class="sk sk-l dk"></div><div class="sk sk-v dk" style="width:70%;height:56px"></div><div class="sk sk-s dk" style="width:40%"></div><div class="sk-grid"><div class="sk dk"></div><div class="sk dk"></div><div class="sk dk"></div><div class="sk dk"></div></div></div><div class="gh-c"><div class="sk sk-l dk" style="width:30%"></div><div class="sk sk-chart dk" style="height:190px;margin-top:14px"></div></div></div></div>
+      <div class="zrow" id="g_zones"><div class="zcard off sk-z"><div class="sk sk-l" style="width:60%"></div><div class="sk sk-v" style="width:75%;height:26px;margin-top:8px"></div><div class="sk sk-s" style="width:50%"></div><div class="sk" style="height:4px;margin-top:8px"></div></div><div class="zcard off sk-z"><div class="sk sk-l" style="width:60%"></div><div class="sk sk-v" style="width:75%;height:26px;margin-top:8px"></div><div class="sk sk-s" style="width:50%"></div><div class="sk" style="height:4px;margin-top:8px"></div></div><div class="zcard off sk-z"><div class="sk sk-l" style="width:60%"></div><div class="sk sk-v" style="width:75%;height:26px;margin-top:8px"></div><div class="sk sk-s" style="width:50%"></div><div class="sk" style="height:4px;margin-top:8px"></div></div><div class="zcard off sk-z"><div class="sk sk-l" style="width:60%"></div><div class="sk sk-v" style="width:75%;height:26px;margin-top:8px"></div><div class="sk sk-s" style="width:50%"></div><div class="sk" style="height:4px;margin-top:8px"></div></div><div class="zcard off sk-z"><div class="sk sk-l" style="width:60%"></div><div class="sk sk-v" style="width:75%;height:26px;margin-top:8px"></div><div class="sk sk-s" style="width:50%"></div><div class="sk" style="height:4px;margin-top:8px"></div></div><div class="zcard off sk-z"><div class="sk sk-l" style="width:60%"></div><div class="sk sk-v" style="width:75%;height:26px;margin-top:8px"></div><div class="sk sk-s" style="width:50%"></div><div class="sk" style="height:4px;margin-top:8px"></div></div></div>
       <div class="bwrap" id="g_bwrap"><button class="btog" id="g_btog" aria-expanded="false" aria-controls="g_brands"><i class="ph ph-tag"></i><span>Marcas</span><em id="g_bsum"></em><span class="sp"></span><span class="bt-l">Mostrar</span><i class="ph ph-caret-down"></i></button>
         <div class="brow" id="g_brands" hidden></div></div>
-      <div class="tile g-half" id="g_chan"><div class="sk sk-l"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div></div>
-      <div class="tile g-half" id="g_city"><div class="sk sk-l"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div></div>
+      <div class="tile g-half" id="g_chan"><div class="sk sk-l"></div><div class="sk sk-lead"></div><div class="sk-grid2"><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div></div></div>
+      <div class="tile g-half" id="g_city"><div class="sk sk-l"></div><div class="sk sk-lead"></div><div class="sk-grid2"><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div></div></div>
       <div class="tile t-full card" id="g_land_t">
         <div class="card-h"><h2>Páginas de destino</h2><div class="count" id="g_lcount"></div></div>
         <div class="fstrip">
           <span class="fs-slot" id="g_lsort"></span>
           <span class="sp"></span>
-          <label class="search fs-search"><i class="ph ph-magnifying-glass"></i><input id="g_lq" placeholder="Buscar página…" aria-label="Buscar página"></label>
+          <label class="search fs-search"><i class="ph ph-magnifying-glass"></i><input id="g_lq" type="search" autocomplete="off" placeholder="Buscar página…" aria-label="Buscar página"></label>
           <div class="seg icons fs-view" id="g_land_v" aria-label="Visualización"><span class="pill"></span>
             <button data-v="bento" title="Tarjetas" aria-label="Tarjetas"><i class="ph ph-squares-four"></i></button>
             <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button></div>
@@ -1182,7 +1184,7 @@
           <span class="fchips" id="lfchips"></span>
           <button class="fs-clear" id="lf_clear_all" hidden>Limpiar todo</button>
           <span class="sp"></span>
-          <label class="search fs-search"><i class="ph ph-magnifying-glass"></i><input id="lq" placeholder="Buscar UTM…" aria-label="Buscar UTM"></label>
+          <label class="search fs-search"><i class="ph ph-magnifying-glass"></i><input id="lq" type="search" autocomplete="off" placeholder="Buscar UTM…" aria-label="Buscar UTM"></label>
           <div class="seg icons fs-view" id="libView" aria-label="Visualización"><span class="pill"></span>
             <button data-v="bento" title="Tarjetas" aria-label="Tarjetas"><i class="ph ph-squares-four"></i></button>
             <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button>
@@ -1229,7 +1231,7 @@
         <div class="card-h">
           <h2>Equipo</h2>
           <div class="toolbar">
-            <label class="search"><i class="ph ph-magnifying-glass"></i><input id="uq" placeholder="Buscar usuario…" aria-label="Buscar usuario"></label>
+            <label class="search"><i class="ph ph-magnifying-glass"></i><input id="uq" type="search" name="buscar-usuario" autocomplete="off" placeholder="Buscar usuario…" aria-label="Buscar usuario"></label>
             <div class="seg icons" id="uView"><span class="pill"></span>
               <button data-v="bento" title="Tarjetas" aria-label="Tarjetas"><i class="ph ph-squares-four"></i></button>
               <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button>
@@ -1262,7 +1264,7 @@
           <span class="lab"><i class="ph ph-funnel-simple"></i>Filtros</span>
           <span id="af_pills" style="display:contents"></span>
           <span style="flex:1"></span>
-          <label class="search"><i class="ph ph-magnifying-glass"></i><input id="aq" placeholder="Buscar en la bitácora…" aria-label="Buscar"></label>
+          <label class="search"><i class="ph ph-magnifying-glass"></i><input id="aq" type="search" autocomplete="off" placeholder="Buscar en la bitácora…" aria-label="Buscar"></label>
         </div>
         <div id="acts"></div>
       </div>
@@ -2997,9 +2999,10 @@ const gdl = (cur, prev) => {
   return `<span class="gpill ${v > 0 ? 'up' : 'dn'}"><i class="ph-fill ${v > 0 ? 'ph-trend-up' : 'ph-trend-down'}"></i>${Math.abs(v * 100).toFixed(Math.abs(v) < .1 ? 1 : 0)}%</span>`;
 };
 const GSK = {
-  g_kpi: '<div class="sk sk-l dk"></div><div class="sk sk-v dk" style="width:45%;height:56px"></div><div class="sk sk-chart dk"></div>',
-  g_chan: '<div class="sk sk-l"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div>',
-  g_city: '<div class="sk sk-l"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div>',
+  g_kpi: '<div class="gh"><div class="gh-k"><div class="sk sk-l dk"></div><div class="sk sk-v dk" style="width:70%;height:56px"></div><div class="sk sk-s dk" style="width:40%"></div><div class="sk-grid"><div class="sk dk"></div><div class="sk dk"></div><div class="sk dk"></div><div class="sk dk"></div></div></div><div class="gh-c"><div class="sk sk-l dk" style="width:30%"></div><div class="sk sk-chart dk" style="height:190px;margin-top:14px"></div></div></div>',
+  g_zones: '<div class="zcard off sk-z"><div class="sk sk-l" style="width:60%"></div><div class="sk sk-v" style="width:75%;height:26px;margin-top:8px"></div><div class="sk sk-s" style="width:50%"></div><div class="sk" style="height:4px;margin-top:8px"></div></div><div class="zcard off sk-z"><div class="sk sk-l" style="width:60%"></div><div class="sk sk-v" style="width:75%;height:26px;margin-top:8px"></div><div class="sk sk-s" style="width:50%"></div><div class="sk" style="height:4px;margin-top:8px"></div></div><div class="zcard off sk-z"><div class="sk sk-l" style="width:60%"></div><div class="sk sk-v" style="width:75%;height:26px;margin-top:8px"></div><div class="sk sk-s" style="width:50%"></div><div class="sk" style="height:4px;margin-top:8px"></div></div><div class="zcard off sk-z"><div class="sk sk-l" style="width:60%"></div><div class="sk sk-v" style="width:75%;height:26px;margin-top:8px"></div><div class="sk sk-s" style="width:50%"></div><div class="sk" style="height:4px;margin-top:8px"></div></div><div class="zcard off sk-z"><div class="sk sk-l" style="width:60%"></div><div class="sk sk-v" style="width:75%;height:26px;margin-top:8px"></div><div class="sk sk-s" style="width:50%"></div><div class="sk" style="height:4px;margin-top:8px"></div></div><div class="zcard off sk-z"><div class="sk sk-l" style="width:60%"></div><div class="sk sk-v" style="width:75%;height:26px;margin-top:8px"></div><div class="sk sk-s" style="width:50%"></div><div class="sk" style="height:4px;margin-top:8px"></div></div>',
+  g_chan: '<div class="sk sk-l"></div><div class="sk sk-lead"></div><div class="sk-grid2"><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div></div>',
+  g_city: '<div class="sk sk-l"></div><div class="sk sk-lead"></div><div class="sk-grid2"><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div></div>',
 };
 async function loadGa4(force = false) {
   if (!RANGO.from) return;
