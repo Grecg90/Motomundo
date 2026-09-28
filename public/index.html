@@ -864,7 +864,10 @@
   .perm span { color:var(--gray-300); }
   .ucard .top-row { display:flex; gap:12px; align-items:center; }
   .ucard .top-row b { font-weight:500; font-size:15px; overflow-wrap:anywhere; } .ucard .top-row span { font-size:12px; color:var(--gray-500); overflow-wrap:anywhere; } .ucard .top-row .av { color:var(--white); font-size:13px; }
-  .ucard .ctl { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .ucard .ctl { display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:8px; min-width:0; }
+  .ucard .ctl > span { min-width:0; display:block; } .ucard .ctl .dd-btn { width:100%; justify-content:space-between; padding:7px 10px 7px 12px; min-width:0; }
+  .ucard .ctl .dd-btn .dv { max-width:none; flex:1; min-width:0; text-align:left; }
+  .ucard .uinv .btn { min-width:0; } .ucard .uinv .btn:first-child { flex:1 1 150px; }
   .ucard .meta { font-size:12px; color:var(--gray-500); display:flex; gap:12px; flex-wrap:wrap; }
   .ucard .meta span { display:flex; gap:5px; align-items:center; }
   .ucard.off { opacity:.62; }
