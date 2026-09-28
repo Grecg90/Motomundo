@@ -522,6 +522,23 @@
   .dt-empty { color:var(--gray-500); font-size:13px; padding:8px 0; }
   .tlead[data-dn], .tcell[data-dn] { cursor:pointer; transition:transform .15s var(--ease), box-shadow .15s var(--ease); } .tcell[data-dn]:hover { box-shadow:0 0 0 1px var(--gray-300); } .tlead[data-dn]:hover { transform:translateY(-1px); }
   @media (max-width:760px) { .dt-body { grid-template-columns:1fr; padding:12px; } }
+  .zrow { grid-column:1 / -1; display:grid; grid-template-columns:repeat(6, minmax(0, 1fr)); gap:14px; }
+  .zcard { border:0; text-align:left; background:var(--white); border-radius:var(--r-lg); box-shadow:var(--shadow); padding:16px 18px; display:flex; flex-direction:column; gap:6px; min-width:0; transition:transform .15s var(--ease), box-shadow .15s var(--ease); }
+  .zcard:hover { transform:translateY(-2px); } .zcard:focus-visible { outline:2px solid var(--red); outline-offset:2px; }
+  .zcard .zh { display:flex; align-items:center; gap:7px; font-size:13px; font-weight:500; color:var(--gray-500); } .zcard .zh .ph { color:var(--red); }
+  .zcard .zv { font-size:26px; font-weight:650; letter-spacing:-.02em; line-height:1.05; display:flex; align-items:center; gap:8px; flex-wrap:wrap; } .zcard .zv .gpill { font-size:11px; padding:2px 7px; }
+  .zcard .zs { font-size:12px; color:var(--gray-500); } .zcard .zb { height:4px; border-radius:999px; background:var(--gray-100); overflow:hidden; } .zcard .zb i { display:block; height:100%; background:var(--red); border-radius:999px; }
+  .zcard .zc { font-size:11.5px; color:var(--gray-500); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .zcard.off { cursor:default; } .zcard.off:hover { transform:none; }
+  .bwrap { grid-column:1 / -1; }
+  .btog { width:100%; border:0; background:var(--white); border-radius:var(--r-md); box-shadow:var(--shadow); padding:12px 18px; display:flex; align-items:center; gap:10px; font-size:14px; font-weight:600; color:var(--ink); }
+  .btog .ph-tag { color:var(--red); } .btog em { font-style:normal; font-size:12.5px; font-weight:500; color:var(--gray-500); } .btog .bt-l { font-size:12.5px; font-weight:500; color:var(--gray-500); }
+  .btog .ph-caret-down { transition:transform .2s var(--ease); color:var(--gray-500); } .btog[aria-expanded="true"] .ph-caret-down { transform:rotate(180deg); }
+  .bwrap .brow { margin-top:12px; }
+  .ghf { display:inline-flex; align-items:center; gap:6px; background:var(--red); color:#fff; border-radius:999px; padding:2px 10px; font-size:12px; font-weight:500; margin-left:8px; }
+  .tcell.on, .tlead.on { box-shadow:0 0 0 2px var(--red); }
+  @media (max-width:1100px) { .zrow { grid-template-columns:repeat(3, minmax(0, 1fr)); } }
+  @media (max-width:600px) { .zrow { grid-template-columns:1fr 1fr; gap:10px; } .zcard { padding:12px 14px; } .zcard .zv { font-size:21px; } }
   .bact { display:flex; align-items:center; gap:7px; font-size:12px; font-weight:500; color:var(--gray-500); margin-top:10px; padding-top:10px; border-top:1px solid var(--gray-100); }
   .bact i { width:8px; height:8px; border-radius:50%; background:var(--gray-300); flex:none; }
   .bact.on { color:var(--ok); } .bact.on i { background:#3ecf7a; box-shadow:0 0 0 3px rgba(62,207,122,.18); }
@@ -655,6 +672,21 @@
   .ga-rows.off { opacity:.55; }
   .ga-row { display:grid; grid-template-columns:minmax(0, 1fr) 64px 14px minmax(0, 1.1fr); align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--gray-100); font-size:13px; }
   .ga-row .nm { font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .ga-row em { font-style:normal; color:var(--gray-500); font-size:12px; text-align:right; } .ga-row .ph { color:var(--gray-300); }
+  .cbn { border:0; text-align:left; cursor:pointer; transition:box-shadow .15s var(--ease), transform .15s var(--ease); } .cbn:hover { transform:translateY(-1px); } .cbn.on { box-shadow:0 0 0 2px var(--red); }
+  .cat { background:var(--white); border-radius:var(--r-md); padding:14px 16px; margin-bottom:12px; }
+  .cat-h { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:10px; } .cat-h b { font-size:15px; font-weight:600; } .cat-h span { font-size:12.5px; color:var(--gray-500); } .cat-h .fs-clear { margin-left:auto; }
+  .cat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px 28px; }
+  .cat-grid h4 { margin:0 0 6px; font-size:12.5px; font-weight:600; color:var(--gray-500); display:flex; gap:6px; } .cat-grid h4 em { font-style:normal; font-weight:500; }
+  .cat-r { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 150px) 32px; gap:8px; align-items:center; padding:5px 0; border-top:1px solid var(--gray-100); }
+  .cat-in { border:1px solid transparent; background:transparent; border-radius:8px; padding:6px 8px; font-size:13px; font-family:var(--mono); min-width:0; } .cat-in:not([disabled]):hover { border-color:var(--gray-200); } .cat-in:focus { border-color:var(--red); outline:none; background:#fff; } .cat-in[disabled] { color:var(--ink); }
+  .cat-r .dd-btn.block { padding:5px 10px; font-size:12.5px; border-radius:10px; }
+  .cat-lock { display:grid; place-items:center; color:var(--gray-300); }
+  .cat-empty { font-size:12.5px; color:var(--gray-500); padding:6px 0; }
+  .cat-add { display:grid; grid-template-columns:140px minmax(0, 1fr) 170px auto; gap:8px; margin-top:12px; padding-top:12px; border-top:1px solid var(--gray-100); align-items:center; }
+  .cat-add input { border:1px solid var(--gray-200); border-radius:10px; padding:8px 11px; font-size:13px; min-width:0; } .cat-add input:focus { border-color:var(--red); outline:none; }
+  .cat-add .dd-btn.block { padding:7px 11px; border-radius:10px; }
+  .cb-sub { margin:4px 0 8px; font-size:13px; font-weight:600; color:var(--gray-700); }
+  @media (max-width:760px) { .cat-grid { grid-template-columns:1fr; } .cat-add { grid-template-columns:1fr 1fr; } .cat-add input { grid-column:1 / -1; order:-1; } }
   .cb-names { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:10px; margin-bottom:12px; }
   .cbn { background:var(--white); border-radius:var(--r-md); padding:12px 14px; display:flex; gap:10px; align-items:center; min-width:0; }
   .cbn .ic { width:34px; height:34px; border-radius:10px; display:grid; place-items:center; background:var(--red); color:#fff; font-size:18px; flex:none; }
@@ -915,6 +947,7 @@
   <button class="dr-item" data-go="utms" data-need="crear"><i class="ph ph-link-simple"></i>Constructor</button>
   <button class="dr-item" data-go="usuarios" data-need="admin"><i class="ph ph-users-three"></i>Usuarios</button>
   <button class="dr-item" data-go="bitacora" data-need="admin"><i class="ph ph-clock-counter-clockwise"></i>Bitácora</button>
+  <button class="dr-item" data-go="canales" data-need="admin"><i class="ph ph-kanban"></i>Canales y marcas</button>
   <button class="dr-item" data-go="config" data-need="admin"><i class="ph ph-gear-six"></i>Configuración</button>
 </aside>
 <div class="sheet-bg" id="sheet_bg"></div>
@@ -980,6 +1013,7 @@
       <div class="um-pop adm-pop pop-in" id="adm_pop" role="menu" hidden>
         <a class="um-item" href="#/usuarios" role="menuitem"><i class="ph ph-users-three"></i>Usuarios</a>
         <a class="um-item" href="#/bitacora" role="menuitem"><i class="ph ph-clock-counter-clockwise"></i>Bitácora</a>
+        <a class="um-item" href="#/canales" role="menuitem"><i class="ph ph-kanban"></i>Canales y marcas</a>
         <a class="um-item" href="#/config" role="menuitem"><i class="ph ph-gear-six"></i>Configuración</a>
       </div>
     </div>
@@ -1062,7 +1096,9 @@
     </div>
     <div class="bento" id="g_bento">
       <div class="tile t-hero g-hero" id="g_kpi"><div class="sk sk-l dk"></div><div class="sk sk-v dk" style="width:45%;height:56px"></div><div class="sk sk-chart dk"></div></div>
-      <div class="brow" id="g_brands"></div>
+      <div class="zrow" id="g_zones"></div>
+      <div class="bwrap" id="g_bwrap"><button class="btog" id="g_btog" aria-expanded="false" aria-controls="g_brands"><i class="ph ph-tag"></i><span>Marcas</span><em id="g_bsum"></em><span class="sp"></span><span class="bt-l">Mostrar</span><i class="ph ph-caret-down"></i></button>
+        <div class="brow" id="g_brands" hidden></div></div>
       <div class="tile g-half" id="g_chan"><div class="sk sk-l"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div></div>
       <div class="tile g-half" id="g_city"><div class="sk sk-l"></div><div class="sk sk-row"></div><div class="sk sk-row"></div><div class="sk sk-row"></div></div>
       <div class="tile t-full card" id="g_land_t">
@@ -1076,16 +1112,6 @@
             <button data-v="table" title="Tabla" aria-label="Tabla"><i class="ph ph-rows"></i></button></div>
         </div>
         <div id="g_land"><div class="sk sk-row"></div><div class="sk sk-row"></div></div>
-      </div>
-      <div class="tile g-half g-adm g-cb" data-need="admin" hidden>
-        <div><h2><i class="ph ph-tag" style="color:var(--red)"></i> Marcas y rutas</h2>
-        <p class="desc g-desc">Landing y tienda de cada marca. Alimentan las tarjetas de marcas. <span id="b_count"></span></p></div>
-        <button class="btn btn-dark" id="bl_open"><i class="ph ph-tag"></i>Administrar marcas</button>
-      </div>
-      <div class="tile g-half g-adm g-cb" data-need="admin" hidden>
-        <div><h2><i class="ph ph-kanban" style="color:var(--red)"></i> Agrupación de canales de campañas</h2>
-        <p class="desc g-desc">Agrupa y renombra los canales de Campañas (Adquisición, Directo, Redes, Otros) y los de este módulo. <span id="cb_rules"></span></p></div>
-        <button class="btn btn-dark" id="cb_open"><i class="ph ph-kanban"></i>Agrupar canales</button>
       </div>
     </div>
   </section>
@@ -1241,6 +1267,24 @@
     </div>
   </section>
   <!-- ===================== CONFIGURACIÓN (admin) ===================== -->
+  <section class="view" id="view-canales" hidden>
+    <div class="intro">
+      <div><h1>Canales y marcas</h1><p>Clasificación que usan Campañas, el Constructor de UTMs y GA4 Audience.</p></div>
+    </div>
+    <div class="bento">
+      <div class="tile g-half g-adm g-cb">
+        <div><h2><i class="ph ph-tag" style="color:var(--red)"></i> Marcas y rutas</h2>
+        <p class="desc g-desc">Landing y tienda de cada marca. Alimentan las tarjetas de marcas. <span id="b_count"></span></p></div>
+        <button class="btn btn-dark" id="bl_open"><i class="ph ph-tag"></i>Administrar marcas</button>
+      </div>
+      <div class="tile g-half g-adm g-cb">
+        <div><h2><i class="ph ph-kanban" style="color:var(--red)"></i> Canales, medios y fuentes</h2>
+        <p class="desc g-desc">Qué fuente y medio va a cada jefatura (Adquisición, Directo, Redes) y a Otros, qué medios y fuentes ve cada canal en el Constructor, y la agrupación de canales de GA4 Audience. <span id="cb_rules"></span></p></div>
+        <button class="btn btn-dark" id="cb_open"><i class="ph ph-kanban"></i>Abrir administrador</button>
+      </div>
+    </div>
+  </section>
+
   <section class="view" id="view-config" hidden>
     <div class="intro">
       <div><h1>Configuración</h1><p>Conexiones, correo y marca de la plataforma. Las llaves se guardan en el servidor y nunca se vuelven a mostrar.</p></div>
@@ -1501,7 +1545,13 @@ const STD = {
   medios: [['paid_social', 'Pauta en redes (Meta, TikTok)'], ['paid_search', 'Pauta en buscadores (Google Ads)'], ['paid_video', 'Pauta en video (YouTube)'],
            ['organic_social', 'Publicación orgánica en redes'], ['sms', 'Mensaje de texto'], ['whatsapp', 'WhatsApp'], ['email', 'Correo'], ['qr', 'Código QR impreso']],
 };
-const MEDIOS = STD.medios.map(m => m[0]);
+const MEDIOS = STD.medios.map(m => m[0]);   // se actualiza con el catálogo del administrador (reglas "m:")
+const STD_M = new Set(MEDIOS);
+const allMedios = (map = CMAP) => [...new Set([...STD_M, ...Object.keys(map).filter(k => k.startsWith('m:')).map(k => k.slice(2))])];
+const medioCanal = (m, map = CMAP) => map['m:' + m] || canalAuto('', m);
+const mediosDe = (c, map = CMAP) => allMedios(map).filter(m => medioCanal(m, map) === c);
+const fuentesDe = (c, map = CMAP) => Object.entries(map).filter(([k, v]) => k.startsWith('s:') && v === c).map(([k]) => k.slice(2));
+function syncMedios() { MEDIOS.splice(0, MEDIOS.length, ...allMedios()); }
 const RULES = [
   { f:'utm_source', n:'Fuente', req:true, d:'Quién envía el tráfico: la plataforma, la pieza física o la base de datos. Palabras unidas con "_" y cada una con la primera letra en mayúscula.', ej:['Meta', 'Google', 'Preciador', 'Base_Clientes_Claro'] },
   { f:'utm_medium', n:'Medio', req:true, d:'Tipo de canal, siempre de la lista. "referral" y "direct" no se usan: GA4 los asigna solo.', ej: MEDIOS },
@@ -1771,18 +1821,37 @@ function update() { fillFilters(); drawCanales(); draw(); if (LINKS) drawLib(); 
 let MM_EDIT = null;
 const CAN_IC = g => CANAL_INFO[g]?.[1] || 'ph-circle';
 // Campañas: cada combinación fuente + medio va a uno de los 4 canales (el nombre de cada canal se edita arriba)
+let CB_F = '';   // filtro por canal dentro del administrador (clic en una tarjeta superior)
 function drawBoard() {
   const map = MM_EDIT, pairs = new Map();
   (R || []).forEach(r => { const k = r.s + '|' + r.m, e = pairs.get(k) || { s:r.s, m:r.m, u:0, cot:0 }; e.u += r.u; e.cot += r.e1 + r.e2; pairs.set(k, e); });
   (LINKS || []).forEach(l => { const k = l.source + '|' + l.medium; if (!pairs.has(k)) pairs.set(k, { s:l.source, m:l.medium, u:0, cot:0 }); });
-  const list = [...pairs.values()].sort((a, b) => b.u - a.u || b.cot - a.cot), tot = new Map(CANALES.map(c => [c, { u:0, n:0 }]));
-  list.forEach(x => { x.c = canal(x.s, x.m, map); const t = tot.get(x.c); t.u += x.u; t.n++; });
-  $('board').innerHTML = `<div class="cb-names">${CANALES.map(c => `<label class="cbn"><span class="ic"><i class="ph ${CAN_IC(c)}"></i></span><div><b class="cbn-t">${esc(cn(c))}</b><small>${tot.get(c).n} combinaci${tot.get(c).n === 1 ? 'ón' : 'ones'} · ${num(tot.get(c).u)} usuarios</small></div></label>`).join('')}</div>
+  const all = [...pairs.values()].sort((a, b) => b.u - a.u || b.cot - a.cot), tot = new Map(CANALES.map(c => [c, { u:0, n:0 }]));
+  all.forEach(x => { x.c = canal(x.s, x.m, map); const t = tot.get(x.c); t.u += x.u; t.n++; });
+  const list = CB_F ? all.filter(x => x.c === CB_F) : all;
+  const cats = CB_F ? [CB_F] : CANALES;
+  const med = cats.flatMap(c => mediosDe(c, map).map(m => ({ k:'m:' + m, v:m, c, std: STD_M.has(m) })));
+  const src = cats.flatMap(c => fuentesDe(c, map).map(f => ({ k:'s:' + f, v:f, c })));
+  const row = x => `<div class="cat-r"><input class="cat-in" data-ck="${esc(x.k)}" value="${esc(x.v)}" ${x.std ? 'disabled title="Medio del estándar de Motomundo: solo se puede cambiar de canal"' : 'aria-label="Editar nombre"'} maxlength="80"><span class="cat-dd" data-ck="${esc(x.k)}"></span>${x.std ? '<span class="cat-lock" title="Del estándar"><i class="ph ph-lock-simple"></i></span>' : `<button class="ibtn" data-cdel="${esc(x.k)}" title="Eliminar" aria-label="Eliminar"><i class="ph ph-trash"></i></button>`}</div>`;
+  $('board').innerHTML = `<div class="cb-names">${CANALES.map(c => `<button class="cbn ${CB_F === c ? 'on' : ''}" data-cf="${c}" aria-pressed="${CB_F === c}" title="Ver solo ${esc(cn(c))}"><span class="ic"><i class="ph ${CAN_IC(c)}"></i></span><div><b class="cbn-t">${esc(cn(c))}</b><small>${mediosDe(c, map).length} medios · ${fuentesDe(c, map).length} fuentes · ${num(tot.get(c).u)} usuarios</small></div></button>`).join('')}</div>
+    <div class="cat">
+      <div class="cat-h"><b>Medios y fuentes${CB_F ? ` de ${esc(cn(CB_F))}` : ''}</b><span>Es lo que cada jefatura ve en el Constructor de UTMs y cómo se clasifican sus campañas.</span>${CB_F ? '<button class="fs-clear" data-cf="">Ver todos los canales</button>' : ''}</div>
+      <div class="cat-grid"><div><h4>Medios <em>${med.length}</em></h4>${med.map(row).join('') || '<div class="cat-empty">Sin medios</div>'}</div>
+        <div><h4>Fuentes <em>${src.length}</em></h4>${src.map(row).join('') || '<div class="cat-empty">Sin fuentes propias; el Constructor sugiere las ya usadas.</div>'}</div></div>
+      <div class="cat-add"><span id="cat_t"></span><input id="cat_v" placeholder="Nombre exacto, p. ej. whatsapp o Base Clientes Claro" maxlength="80" aria-label="Nuevo medio o fuente"><span id="cat_c"></span><button class="btn btn-dark" id="cat_ok"><i class="ph ph-plus"></i>Agregar</button></div>
+    </div>
+    <h4 class="cb-sub">Combinaciones fuente / medio de las campañas${CB_F ? ` · ${esc(cn(CB_F))}` : ''}</h4>
     ${list.length ? `<div class="ga-rows cb-rows"><div class="ga-hd"><span>Fuente / medio</span><span>Usuarios</span><span></span><span>Canal</span></div><div class="ga-hd"><span>Fuente / medio</span><span>Usuarios</span><span></span><span>Canal</span></div>${list.map((x, i) => `<div class="ga-row ${map['p:' + x.s + '|' + x.m] ? 'moved' : ''}"><span class="nm" title="${esc(x.s)} / ${esc(x.m)}"><b>${esc(x.s)}</b> / ${esc(x.m)}</span><em>${num(x.u)}</em><i class="ph ph-arrow-right"></i><span class="cb-dd" data-i="${i}"></span></div>`).join('')}</div>`
-      : '<div class="none">No hay campañas ni UTMs guardadas en el periodo elegido.</div>'}`;
-  list.forEach((x, i) => Dropdown($('board').querySelector(`.cb-dd[data-i="${i}"]`), { options: CANALES.map(c => ({ v:c, l:cn(c, map), ic:CAN_IC(c) })), value:x.c, search:false, block:true, onChange: v => pairSet(x.s, x.m, v) }));
+      : '<div class="none">No hay combinaciones en este canal en el periodo elegido.</div>'}`;
+  const opts = CANALES.map(c => ({ v:c, l:cn(c), ic:CAN_IC(c) }));
+  list.forEach((x, i) => Dropdown($('board').querySelector(`.cb-dd[data-i="${i}"]`), { options: opts, value:x.c, search:false, block:true, onChange: v => pairSet(x.s, x.m, v) }));
+  [...med, ...src].forEach(x => Dropdown($('board').querySelector(`.cat-dd[data-ck="${CSS.escape(x.k)}"]`), { options: opts, value:x.c, search:false, block:true, onChange: v => {
+    if (x.std && v === canalAuto('', x.v)) delete MM_EDIT[x.k]; else MM_EDIT[x.k] = v; drawBoard(); } }));
+  CAT_T = Dropdown($('cat_t'), { options:[{ v:'m', l:'Medio', ic:'ph-broadcast' }, { v:'s', l:'Fuente', ic:'ph-globe-simple' }], value: CAT_T?.value || 'm', search:false, block:true, onChange: () => {} });
+  CAT_C = Dropdown($('cat_c'), { options: opts, value: CB_F || 'Pauta', search:false, block:true, onChange: () => {} });
   mmChg();
 }
+let CAT_T = null, CAT_C = null;
 // Regla por combinación ("p:fuente|medio"); si coincide con lo que ya saldría sin ella, no se guarda
 function pairSet(s, m, v) {
   const k = 'p:' + s + '|' + m, rest = { ...MM_EDIT }; delete rest[k];
@@ -1815,7 +1884,7 @@ $('board_ga').addEventListener('change', e => {
   if (t.name === 'gam') { if (t.value === 'custom') MM_EDIT['ga:mode'] = 'custom'; else delete MM_EDIT['ga:mode']; return drawBoardGa(); }
 });
 let CB_TAB = 'camp';
-const CB_DESC = { camp:'Cada combinación de fuente y medio de tus campañas va a uno de los canales de las jefaturas (Adquisición, Directo, Redes) o a Otros.',
+const CB_DESC = { camp:'Toca un canal para ver solo lo suyo. Arriba, los medios y fuentes que cada jefatura usa en el Constructor; abajo, a qué canal va cada combinación fuente / medio de las campañas.',
   ga:'Elige si GA4 Audience usa los canales predeterminados de Google Analytics o tu propia agrupación con nombres.' };
 const CBT = Seg($('cb_tab'), null, CB_TAB, v => cbTab(v));
 function cbTab(v) { CB_TAB = v; CBT.set(v); $('board').hidden = v !== 'camp'; $('board_ga').hidden = v !== 'ga'; $('cb_desc').textContent = CB_DESC[v]; v === 'ga' ? drawBoardGa() : drawBoard(); }
@@ -1823,10 +1892,27 @@ $('board').addEventListener('change', e => {
   const n = e.target.closest('[data-cn]');
   if (n) { const c = n.dataset.cn, v = n.value.trim().replace(/[<>]/g, '').slice(0, 40); if (!v || v === CN_DEF[c]) delete MM_EDIT['n:' + c]; else MM_EDIT['n:' + c] = v; return drawBoard(); }
 });
-$('board').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('.bcol-n')) e.target.blur(); });
+$('board').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('.bcol-n, .cat-in')) e.target.blur(); if (e.key === 'Enter' && e.target.id === 'cat_v') $('cat_ok').click(); });
+$('board').addEventListener('click', e => {
+  const f = e.target.closest('[data-cf]'); if (f) { CB_F = CB_F === f.dataset.cf ? '' : f.dataset.cf; return drawBoard(); }
+  const d = e.target.closest('[data-cdel]'); if (d) { delete MM_EDIT[d.dataset.cdel]; return drawBoard(); }
+  if (e.target.closest('#cat_ok')) {
+    const v = $('cat_v').value.trim().replace(/[<>|]/g, '').slice(0, 80), t = CAT_T.value, k = t + ':' + v;
+    if (!v) return $('cat_v').focus();
+    if (MM_EDIT[k] || (t === 'm' && STD_M.has(v))) return toast(`"${v}" ya existe como ${t === 'm' ? 'medio' : 'fuente'}`, true);
+    MM_EDIT[k] = CAT_C.value; drawBoard();
+  }
+});
+$('board').addEventListener('change', e => {
+  const i = e.target.closest('.cat-in'); if (!i) return;
+  const old = i.dataset.ck, t = old[0], v = i.value.trim().replace(/[<>|]/g, '').slice(0, 80), k = t + ':' + v;
+  if (!v || k === old) { i.value = old.slice(2); return; }
+  if (MM_EDIT[k] || (t === 'm' && STD_M.has(v))) { toast(`"${v}" ya existe`, true); i.value = old.slice(2); return; }
+  MM_EDIT[k] = MM_EDIT[old]; delete MM_EDIT[old]; drawBoard();
+});
 function cbOpen() {
   if (!can.admin()) return;
-  MM_EDIT = { ...CMAP }; Object.keys(MM_EDIT).forEach(k => { if (k.startsWith('n:')) delete MM_EDIT[k]; }); cbTab(location.hash.startsWith('#/ga4') ? 'ga' : 'camp');
+  MM_EDIT = { ...CMAP }; Object.keys(MM_EDIT).forEach(k => { if (k.startsWith('n:')) delete MM_EDIT[k]; }); cbTab('camp');
   $('cb_modal').hidden = false; requestAnimationFrame(() => $('cb_modal').classList.add('on'));
   document.body.style.overflow = 'hidden'; $('cb_x').focus();
 }
@@ -1839,12 +1925,12 @@ $('cb_open').onclick = cbOpen;
 $('cb_x').onclick = cbClose; $('mm_cancel').onclick = cbClose;
 $('cb_modal').addEventListener('mousedown', e => { if (e.target === $('cb_modal')) cbClose(); });
 addEventListener('keydown', e => { if (e.key === 'Escape' && !$('cb_modal').hidden) cbClose(); });
-$('mm_reset').onclick = () => { const re = CB_TAB === 'ga' ? /^(g|ga):/ : /^[msnp]:/; Object.keys(MM_EDIT).forEach(k => { if (re.test(k)) delete MM_EDIT[k]; }); cbTab(CB_TAB); };
+$('mm_reset').onclick = () => { const re = CB_TAB === 'ga' ? /^(g|ga):/ : /^[np]:/; /* restaurar no borra el catálogo de medios y fuentes */ Object.keys(MM_EDIT).forEach(k => { if (re.test(k)) delete MM_EDIT[k]; }); cbTab(CB_TAB); };
 $('mm_save').onclick = async () => {
   $('mm_save').disabled = true;
   try {
     const r = await cfgCall({ action: 'save', channel_map: MM_EDIT, expected_map: CMAP });
-    CMAP = r.settings.channel_map || {}; CFG = null;
+    CMAP = r.settings.channel_map || {}; CFG = null; syncMedios();
     [R || [], P || []].forEach(rs => rs.forEach(x => { x.g = canal(x.s, x.m); }));
     cbClose(); if (R) update(); cbRules(); if (GA) drawGa4(); if (LINKS) drawLib();
     notify({ icon:'ph-kanban', tone:'ok', title:'Agrupación guardada', body:'Campañas, Audiencia y el Constructor ya usan la nueva agrupación.' });
@@ -2074,7 +2160,7 @@ async function start() {
       sb.from('ga4_utm_daily').select('date').order('date', { ascending: false }).limit(1),
       sb.from('ga4_sync_log').select('ran_at').order('ran_at', { ascending: false }).limit(1),
     ]);
-    CMAP = qm.data || {};
+    CMAP = qm.data || {}; syncMedios();
     $('um_role').innerHTML = roleChip(ME); cbRules(); if (GA) drawGa4(); if (LINKS) drawLib();
     const min = q1.data?.[0]?.date, max = q2.data?.[0]?.date;
     if (!max) throw new Error(q1.error?.message || 'Todavía no hay datos sincronizados');
@@ -2258,7 +2344,7 @@ async function loadLinks() {
   LINK_IDX = new Map(LINKS.map(l => [linkKey(l.campaign, l.source, l.medium, l.term, l.content), l]));
   enriquecer(R); enriquecer(P); if (R.length) { fillFilters(); draw(); }
   $('libCount').textContent = num(LINKS.length);
-  $('dl_s').innerHTML = uniq(LINKS, l => l.source).map(v => `<option value="${esc(v)}">`).join('');
+  fillSrc();
   $('dl_c').innerHTML = uniq(LINKS, l => l.campaign).map(v => `<option value="${esc(v)}">`).join('');
   fillLibFilters(); drawLib(); build();
 }
@@ -2313,6 +2399,19 @@ function landUsers(url) {
   const p = pathOf(url), x = GA.landing.find(y => y[0] === p);
   return { p, u: x ? x[1] : 0 };
 }
+// Medios y fuentes que ve cada jefatura en el Constructor (catálogo del administrador)
+function fillSrc() {
+  const c = LF.g, own = c ? fuentesDe(c) : [], used = uniq((LINKS || []).filter(l => !c || LV.g(l) === c), l => l.source);
+  $('dl_s').innerHTML = [...new Set([...own, ...used])].map(v => `<option value="${esc(v)}">`).join('');
+}
+let BM_FOR = null;
+function syncBuilderCanal() {
+  const c = LF.g; if (BM_FOR === c + '|' + MEDIOS.join()) return; BM_FOR = c + '|' + MEDIOS.join();
+  const lbl = Object.fromEntries(STD.medios), ms = c ? mediosDe(c) : MEDIOS, list = ms.length ? ms : MEDIOS;
+  BM.setOptions(list.map(v => ({ v, l: v, m: lbl[v] || '' })));
+  if (!list.includes(BM.value)) { BM.set(list[0]); build(); }
+  fillSrc();
+}
 function libCard(l) {
   const iss = validar({ s: l.source, m: l.medium, c: l.campaign, t: l.term }), lv = nivel(iss), ga = gaFor(l), u = fullUrl(l);
   let host = ''; try { const x = new URL(l.url); host = x.host + x.pathname; } catch { host = l.url; }
@@ -2366,6 +2465,7 @@ function drawLib() {
   $('lcanal').innerHTML = CANALES.map(c => { const n = base.filter(x => LV.g(x) === c).length, off = fx && fx !== c;
     return `<button class="ctab ${LF.g === c ? 'on' : ''}" data-jc="${c}" role="tab" aria-selected="${LF.g === c}" ${off ? 'disabled title="Solo puedes trabajar en tu canal"' : ''}>
       <span class="ic"><i class="ph ${off ? 'ph-lock-simple' : CANAL_INFO[c][1]}"></i></span><b>${esc(cn(c))}</b><small>${c === 'Otros' ? 'Todo lo demás' : fx === c ? 'Tu canal de trabajo' : 'Jefatura'}</small><em>${num(n)}</em></button>`; }).join('');
+  syncBuilderCanal();
   $('b_wc').innerHTML = `Creando UTMs para <b><i class="ph ${CANAL_INFO[LF.g][1]}"></i>${esc(cn(LF.g))}</b>`;
   LIB_ROWS = ls;
   $('lf_clear').disabled = !Object.entries(LF).some(([k, v]) => k !== 'g' && v) && !q && !mine;
@@ -2900,6 +3000,24 @@ async function loadGa4(force = false) {
   GA_LOADING = ''; $('view-ga4').classList.remove('loading');
 }
 let gCh = '';
+// Todo el tablero con el filtro de canal (o el sitio completo): totales, ciudades y páginas de destino
+function gaView() {
+  const g = GA;
+  if (!gCh) return { c: g.totals.cur, p: g.totals.prev, landing: g.landing, cities: (g.cityAll || g.cities.filter(x => x[0] !== 'Otras')).slice().sort((a, b) => b[1] - a[1]), brands: g.brands || [], exact: true };
+  const chs = g.channels.filter(x => gaGroup(x[0]) === gCh), sm = i => chs.reduce((a, x) => a + (x[i] || 0), 0);
+  const LM = new Map();
+  for (const r of g.chanPages || []) { if (gaGroup(r[0]) !== gCh || r.length < 9) continue; const e = LM.get(r[1]) || [r[1], 0, 0, 0, 0, 0, 0, 0]; for (let i = 2; i < 9; i++) e[i - 1] += r[i]; LM.set(r[1], e); }
+  const CM = new Map();
+  for (const r of g.cityChan || []) { if (gaGroup(r[1]) !== gCh) continue; const e = CM.get(r[0]) || [r[0], 0, 0]; e[1] += r[2]; e[2] += r[3] || 0; CM.set(r[0], e); }
+  const landing = [...LM.values()].filter(x => x[1]).sort((a, b) => b[1] - a[1]);
+  const lo = x => (x || '').toLowerCase(), by = (pfx, i) => pfx ? landing.filter(x => lo(x[0]).startsWith(lo(pfx))).reduce((a, x) => a + x[i], 0) : 0;
+  const brands = (g.brands || []).map(b => ({ ...b, landing: by(b.lp, 1), store: by(b.sp, 1), pLanding: by(b.lp, 5), pStore: by(b.sp, 5) }));
+  return { c: { active: sm(1), new: sm(2), sessions: sm(5), views: sm(6) }, p: { active: sm(3), new: sm(4), sessions: sm(7), views: sm(8) },
+    landing, cities: [...CM.values()].filter(x => x[0] && x[0] !== '(not set)').sort((a, b) => b[1] - a[1]), brands, exact: false };
+}
+let BRANDS_OPEN = false; try { BRANDS_OPEN = localStorage.getItem('mm_brands') === '1'; } catch {}
+$('g_btog').onclick = () => { BRANDS_OPEN = !BRANDS_OPEN; try { localStorage.setItem('mm_brands', BRANDS_OPEN ? '1' : '0'); } catch {} brandsUi(); };
+function brandsUi() { $('g_brands').hidden = !BRANDS_OPEN; $('g_btog').setAttribute('aria-expanded', BRANDS_OPEN); $('g_btog').querySelector('.bt-l').textContent = BRANDS_OPEN ? 'Ocultar' : 'Mostrar'; }
 // Canales de Audiencia ya agrupados: [nombre, activos, nuevos, activos antes, nuevos antes]
 function gaChannels() {
   const M = new Map();
@@ -2926,6 +3044,19 @@ function gaNote() {
 }
 function drawGaChart() { $('g_chart').innerHTML = gaChart(); $('g_note').innerHTML = gaNote(); }
 const rankCls = (i, n) => n === 1 ? 'xl full' : i === 0 ? 'xl r1' : i === 1 ? 'r2' : i === 2 ? 'r3' : '';
+// Zonas de Motomundo por ciudad (GA4 escribe las ciudades sin tilde a veces; se compara normalizado)
+const ZONA_CIUDADES = {
+  Centro: ['Tegucigalpa', 'Comayaguela', 'Distrito Central', 'Comayagua', 'Siguatepeque', 'La Paz', 'Talanga', 'Valle de Angeles', 'Santa Lucia', 'Villa de San Francisco', 'Marcala', 'Guaimaca', 'Cedros', 'Ojojona', 'Sabanagrande', 'La Esperanza', 'Intibuca'],
+  Norte: ['San Pedro Sula', 'Villanueva', 'Choloma', 'El Progreso', 'Puerto Cortes', 'La Lima', 'Santa Cruz de Yojoa', 'Santa Rita', 'Potrerillos', 'Omoa', 'Pimienta', 'Yoro', 'Morazan', 'San Manuel', 'Quimistan', 'Pinalejo', 'Victoria', 'Olanchito'],
+  Litoral: ['La Ceiba', 'Tela', 'Trujillo', 'Tocoa', 'Roatan', 'Sonaguera', 'Jutiapa', 'Utila', 'Balfate', 'Saba', 'Bonito Oriental', 'Arizona', 'Esparta', 'Puerto Lempira', 'Guanaja', 'West End', 'Coxen Hole'],
+  Sur: ['Choluteca', 'San Lorenzo', 'Nacaome', 'Amapala', 'El Triunfo', 'San Marcos de Colon', 'Pespire', 'Marcovia', 'Namasigue', 'Langue', 'Goascoran'],
+  Oriente: ['Danli', 'Juticalpa', 'Catacamas', 'El Paraiso', 'Yuscaran', 'Trojes', 'Campamento', 'Teupasenti', 'San Esteban', 'Salama', 'Morocelí', 'Moroceli'],
+  Occidente: ['Santa Rosa de Copan', 'La Entrada', 'Gracias', 'Santa Barbara', 'Ocotepeque', 'Nueva Ocotepeque', 'Copan Ruinas', 'San Marcos', 'Nueva Arcadia', 'Corquin', 'Lempira', 'Trinidad', 'Macuelizo', 'San Nicolas'],
+};
+const ZONAS_VIS = Object.keys(ZONA_CIUDADES);
+const normTxt = t => (t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+const ZONA_DE = new Map(Object.entries(ZONA_CIUDADES).flatMap(([z, cs]) => cs.map(c => [normTxt(c), z])));
+const zonaCiudad = c => ZONA_DE.get(normTxt(c)) || '';
 const pageName = p => p === '/' ? 'Homepage' : (p || '(not set)');
 const gpct = (a, b) => b ? pct(a / b) : '0%';
 // Campañas con tráfico en el periodo cuya página de destino es la landing o la tienda de la marca
@@ -2938,14 +3069,15 @@ function brandCamps(b) {
 }
 const campPages = () => new Set((R || []).filter(r => r.u > 0).map(r => (r.p || '').toLowerCase()));
 function drawGa4() {
-  const g = GA, c = g.totals.cur, p = g.totals.prev, ret = x => Math.max(0, x.active - x.new);
+  const g = GA, ret = x => Math.max(0, x.active - x.new);
+  const GCH0 = gaChannels().filter(x => x[1]); if (gCh && !GCH0.some(x => x[0] === gCh)) gCh = '';
+  const V = gaView(), c = V.c, p = V.p;
   $('g_period').textContent = `Comparado con ${date(g.range.pFrom)} al ${date(g.range.pTo)}`;
   const pn = c.active ? c.new / c.active : 0, kk = (sw, l, v, pv, sub) => `<div class="k"><div class="kl">${sw ? `<i class="swc" style="background:${sw}"></i>` : ''}${l}</div><div class="kv">${num(v)}</div><div class="ks">${gdl(v, pv)}${sub}</div></div>`;
-  const GCH = gaChannels().filter(x => x[1]);
-  if (gCh && !GCH.some(x => x[0] === gCh)) gCh = '';
+  const GCH = GCH0;
   $('g_kpi').innerHTML = `<div class="gh">
     <div class="gh-k">
-      <div class="l"><i class="ph ph-users-three"></i>Usuarios totales</div>
+      <div class="l"><i class="ph ph-users-three"></i>${gCh ? `Usuarios · <span class="ghf"><i class="ph ph-git-branch"></i>${esc(gCh)}</span>` : 'Usuarios totales'}</div>
       <div class="g-kv">${num(c.active)} ${gdl(c.active, p.active)}</div><div class="g-sub">Periodo anterior: ${num(p.active)}</div>
       <div class="gh-sec">
         ${kk('var(--red)', 'Nuevos', c.new, p.new, `<span>${pct(pn)} del total</span>`)}
@@ -2962,10 +3094,22 @@ function drawGa4() {
   </div>`;
   Dropdown($('g_chsel'), { icon:'ph-git-branch', dark:true, allLabel:'Todos los canales', value:gCh, search:false,
     options:[{ v:'', l:'Todos los canales' }, ...GCH.map((x, i) => ({ v:x[0], l:x[0], m:num(x[1]), sep:i === 0 }))],
-    onChange: v => { gCh = v; drawGaChart(); } });
+    onChange: v => { gCh = v; gLandAll = false; drawGa4(); } });
   drawGaChart();
+  $('g_period').textContent = `${gCh ? `Canal ${gCh} · ` : ''}Comparado con ${date(g.range.pFrom)} al ${date(g.range.pTo)}`;
+  // Zonas (6): suma de sus ciudades; clic = detalle como el de una ciudad
+  const ZT = new Map(ZONAS_VIS.map(z => [z, { v:0, pv:0, cs:[] }]));
+  V.cities.forEach(([ct, v, pv]) => { const z = zonaCiudad(ct); if (!z) return; const t = ZT.get(z); t.v += v; t.pv += pv || 0; t.cs.push([ct, v]); });
+  const ztot = c.active || 1;
+  $('g_zones').innerHTML = ZONAS_VIS.map(z => { const t = ZT.get(z);
+    return `<button class="zcard ${t.v ? '' : 'off'}" ${t.v ? `data-dk="zone" data-dn="${z}"` : 'disabled'} title="Ver detalle de la zona ${z}">
+      <span class="zh"><i class="ph ph-map-trifold"></i>Zona ${z}</span>
+      <span class="zv">${num(t.v)} ${t.v || t.pv ? gdl(t.v, t.pv) : ''}</span>
+      <span class="zs">${pct(t.v / ztot)} del total</span><span class="zb"><i style="width:${Math.max(t.v ? 3 : 0, Math.min(100, t.v / ztot * 100))}%"></i></span>
+      <span class="zc">${t.cs.length ? t.cs.sort((a, b) => b[1] - a[1]).slice(0, 3).map(x => esc(x[0])).join(' · ') : 'Sin usuarios en el periodo'}</span></button>`; }).join('');
   // Marcas: total = landing + tienda
-  $('g_brands').innerHTML = (g.brands || []).map(b => {
+  $('g_bsum').textContent = `${(V.brands || []).length} marcas · ${num(V.brands.reduce((a, b) => a + b.landing + b.store, 0))} usuarios en landing y tienda${V.exact ? '' : ' (por página de entrada)'}`; brandsUi();
+  $('g_brands').innerHTML = V.brands.map(b => {
     const t = b.landing + b.store, pt = b.pLanding + b.pStore;
     const kp = (on, v, pv, l) => `<div><b>${on ? num(v) : '-'}</b><span>${l}</span>${on ? gdl(v, pv) : '<em>sin URL</em>'}</div>`;
     return `<div class="tile bcard">
@@ -2980,14 +3124,14 @@ function drawGa4() {
   const top = (id, icon, title, rows, tot, note) => {
     const [lead, ...rest] = rows, kind = id === 'g_chan' ? 'chan' : 'city', at = x => x.other ? '' : ` data-dk="${kind}" data-dn="${esc(x.n)}" role="button" tabindex="0" title="Ver detalle"`;
     $(id).innerHTML = `<div class="card-h" style="margin-bottom:12px"><h2><i class="ph ${icon}" style="color:var(--red)"></i> ${title}</h2><span class="muted" style="font-size:12px">${note}</span></div>
-      ${lead ? `<div class="tlead"${at(lead)}><span class="rk">#1</span><div><b>${esc(lead.n)}</b><small>${lead.sub || ''}</small></div><div class="tv"><b>${num(lead.v)}</b><small>${gpct(lead.v, tot)} del total</small>${gdl(lead.v, lead.pv)}</div></div>` : ''}
-      <div class="tgrid">${rest.map((x, i) => `<div class="tcell ${x.other ? 'other' : ''}"${at(x)}><span class="rk">${x.other ? '' : '#' + (i + 2)}</span><span class="nm" title="${esc(x.n)}">${esc(x.n)}</span><span class="pc"><span>${gpct(x.v, tot)}</span><i><i style="width:${Math.max(3, Math.min(100, x.v / tot * 100))}%"></i></i></span><b>${num(x.v)}</b>${gdl(x.v, x.pv)}</div>`).join('')}</div>`;
+      ${lead ? `<div class="tlead ${lead.on ? 'on' : ''}"${at(lead)}><span class="rk">#1</span><div><b>${esc(lead.n)}</b><small>${lead.sub || ''}</small></div><div class="tv"><b>${num(lead.v)}</b><small>${gpct(lead.v, tot)} del total</small>${gdl(lead.v, lead.pv)}</div></div>` : ''}
+      <div class="tgrid">${rest.map((x, i) => `<div class="tcell ${x.other ? 'other' : ''} ${x.on ? 'on' : ''}"${at(x)}><span class="rk">${x.other ? '' : '#' + (i + 2)}</span><span class="nm" title="${esc(x.n)}">${esc(x.n)}</span><span class="pc"><span>${gpct(x.v, tot)}</span><i><i style="width:${Math.max(3, Math.min(100, x.v / tot * 100))}%"></i></i></span><b>${num(x.v)}</b>${gdl(x.v, x.pv)}</div>`).join('')}</div>`;
   };
-  top('g_chan', 'ph-git-branch', 'Canales', GCH.map(x => ({ n: x[0], v: x[1], pv: x[3], sub: `${num(x[2])} usuarios nuevos` })), c.active, 'Usuarios activos');
+  top('g_chan', 'ph-git-branch', 'Canales', GCH.map(x => ({ n: x[0], v: x[1], pv: x[3], sub: `${num(x[2])} usuarios nuevos`, on: x[0] === gCh })), g.totals.cur.active, gCh ? 'Todo el sitio · canal elegido marcado' : 'Usuarios activos');
   // Ciudades: tantas como tarjetas tenga el widget de canales (misma altura); el resto va a "Otras"
-  const slots = Math.max(3, 1 + 2 * Math.ceil((GCH.length - 1) / 2)), named = g.cities.filter(x => x[0] !== 'Otras').slice(0, slots - 1);
+  const slots = Math.max(3, 1 + 2 * Math.ceil((GCH.length - 1) / 2)), named = V.cities.slice(0, slots - 1);
   const oc = Math.max(0, c.active - named.reduce((a, x) => a + x[1], 0)), op = Math.max(0, p.active - named.reduce((a, x) => a + x[2], 0));
-  top('g_city', 'ph-map-pin', 'Usuarios activos por ciudad', [...named.map(x => ({ n: x[0], v: x[1], pv: x[2] })), { n: 'Otras', v: oc, pv: op, other: true }], c.active, `Top ${named.length} + otras`);
+  top('g_city', 'ph-map-pin', gCh ? `Ciudades · ${esc(gCh)}` : 'Usuarios activos por ciudad', [...named.map(x => ({ n: x[0], v: x[1], pv: x[2] })), { n: 'Otras', v: oc, pv: op, other: true }], c.active, `Top ${named.length} + otras`);
   drawLand();
   if (R?.length) drawKpis();
   if (LINKS) drawLib();
@@ -3000,8 +3144,8 @@ const LSD = Dropdown($('g_lsort'), { label: 'Ordenar', icon: 'ph-sort-descending
 $('g_lq').addEventListener('input', () => drawLand());
 function drawLand() {
   if (!GA) return;
-  const tot = GA.totals.cur.active || 1, q = $('g_lq').value.trim().toLowerCase();
-  const all = GA.landing.filter(x => !q || pageName(x[0]).toLowerCase().includes(q)).sort((a, b) => lval(b, gLandSort) - lval(a, gLandSort));
+  const V = gaView(), tot = V.c.active || 1, q = $('g_lq').value.trim().toLowerCase();
+  const all = V.landing.filter(x => !q || pageName(x[0]).toLowerCase().includes(q)).sort((a, b) => lval(b, gLandSort) - lval(a, gLandSort));
   const L = gLandAll || q ? all : all.slice(0, 15), su = (i) => all.reduce((a, x) => a + x[i], 0);
   $('g_lcount').innerHTML = `<span><b>${num(all.length)}</b> páginas</span><span><b>${num(su(1))}</b> usuarios activos</span><span><b>${num(su(2))}</b> nuevos</span><span><b>${num(su(3))}</b> sesiones</span>`;
   const more = !q && all.length > 15 ? `<button class="btn btn-ghost more-btn" id="g_more">${gLandAll ? 'Ver menos' : `Ver las ${all.length}`}</button>` : '';
@@ -3047,7 +3191,13 @@ function openDetail(kind, name) {
       : '<span class="cp">Sin campaña</span>'}</span>`; };
   const plain = n => `<span class="nm" title="${esc(n)}">${esc(n)}</span>`;
   let users, pages, side, sideTitle, sideIc;
-  if (kind === 'city') {
+  if (kind === 'zone') {
+    const inZ = ct => zonaCiudad(ct) === name;
+    users = gaView().cities.filter(x => inZ(x[0])).reduce((a, x) => a + x[1], 0);
+    pages = sumBy((g.cityPages || []).filter(r => inZ(r[0])), r => r[1], r => r[2]);
+    side = sumBy((g.cityChan || []).filter(r => inZ(r[0])), r => gaGroup(r[1]), r => r[2]); sideTitle = 'Canal por el que llegan'; sideIc = 'ph-git-branch';
+    name = 'Zona ' + name;
+  } else if (kind === 'city') {
     users = (g.cities.find(x => x[0] === name) || [0, 0])[1];
     pages = sumBy((g.cityPages || []).filter(r => r[0] === name), r => r[1], r => r[2]);
     side = sumBy((g.cityChan || []).filter(r => r[0] === name), r => gaGroup(r[1]), r => r[2]); sideTitle = 'Canal por el que llegan'; sideIc = 'ph-git-branch';
@@ -3063,7 +3213,7 @@ function openDetail(kind, name) {
     <div class="dt-sec"><h3><i class="ph ${sideIc}"></i>${sideTitle}<span>usuarios</span></h3>${list(side, 10, plain)}</div>`;
   modalOpen('dt_modal');
 }
-['g_chan', 'g_city'].forEach(id => {
+['g_chan', 'g_city', 'g_zones'].forEach(id => {
   $(id).addEventListener('click', e => { const t = e.target.closest('[data-dn]'); if (t) openDetail(t.dataset.dk, t.dataset.dn); });
   $(id).addEventListener('keydown', e => { const t = e.target.closest('[data-dn]'); if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openDetail(t.dataset.dk, t.dataset.dn); } });
 });
@@ -3151,7 +3301,7 @@ $('brand_btn').onclick = async e => {
 const curRoute = () => (location.hash.match(/^#\/(\w+)/) || [])[1] || 'ga4';
 
 const NAV = Seg($('nav'), null, 'ga4', r => { location.hash = '#/' + r; });
-const VIEWS = { ga4: () => true, reporte: () => true, utms: can.crear, usuarios: can.admin, bitacora: can.admin, config: can.admin };
+const VIEWS = { ga4: () => true, reporte: () => true, utms: can.crear, usuarios: can.admin, bitacora: can.admin, canales: can.admin, config: can.admin };
 function route() {
   if (location.hash.startsWith('#/crear-contrasena')) return;
   if (!ME) return;
@@ -3162,8 +3312,9 @@ function route() {
   if (r === 'usuarios' && !USERS) loadUsers();
   if (r === 'bitacora' && !ACTS) loadActs();
   if (r === 'config') loadConfig();
-  if (r === 'ga4') { loadGa4(); if (can.admin()) { cbRules(); if (!BRANDS) loadBrands(); } }
-  $('adm_btn').classList.toggle('on', ['usuarios', 'bitacora', 'config'].includes(r));
+  if (r === 'ga4') loadGa4();
+  if (r === 'canales') { loadGa4(); cbRules(); if (!BRANDS) loadBrands(); }
+  $('adm_btn').classList.toggle('on', ['usuarios', 'bitacora', 'canales', 'config'].includes(r));
   scrollTo({ top: 0 });
 }
 addEventListener('hashchange', () => {
