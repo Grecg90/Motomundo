@@ -378,7 +378,7 @@
   @media (max-width:1400px) { .lcard { grid-column:span 4; } }
   .lcard .lst { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:6px; background:var(--gray-100); border-radius:var(--r-sm); padding:10px 12px; margin-top:auto; }
   .lcard .lst div { font-size:11px; font-weight:500; color:var(--gray-500); line-height:1.3; min-width:0; } .lcard .lst b { display:block; font-size:17px; font-weight:600; color:var(--ink); }
-  .lcard .lst .lnd { grid-column:1 / -1; border-top:1px solid var(--gray-200); padding-top:7px; margin-top:2px; display:flex; align-items:baseline; gap:6px; } .lcard .lst .lnd b { display:inline; font-size:14px; }
+  .lcard .lst .lnd { grid-column:1 / -1; border-top:1px solid var(--gray-200); padding-top:7px; margin-top:2px; display:block; font-size:11.5px; line-height:1.45; } .lcard .lst .lnd b { display:inline; font-size:11.5px; font-weight:500; font-family:var(--mono); color:var(--gray-700); }
   .lcard.lcard .lst.zero div:not(.lnd) b { color:var(--gray-300); }
   .lcard .lact { margin-top:0; }
   .lcard .chips { display:flex; flex-wrap:wrap; gap:4px; }
@@ -494,7 +494,7 @@
   .tcell b { grid-area:v; font-weight:600; font-size:15px; text-align:right; } .tcell .sh { grid-area:sh; font-size:11.5px; color:var(--gray-500); font-weight:500; } .tcell .gpill { grid-area:dl; font-size:11px; padding:2px 7px; justify-self:end; }
   .tcell .pc { grid-area:pc; display:grid; gap:4px; font-size:12px; font-weight:500; color:var(--gray-700); text-align:center; }
   .tcell .pc > i { display:block; height:4px; border-radius:999px; background:var(--gray-200); overflow:hidden; } .tcell .pc > i > i { display:block; height:100%; background:var(--red); border-radius:999px; }
-  .tcell .nm { align-self:center; }
+  .tcell .nm { align-self:center; } .tcell .nm:has(.csub) { white-space:normal; display:grid; } .tcell .nm:has(.csub) > * { overflow:hidden; text-overflow:ellipsis; } .tcell .csub { display:block; font-size:11px; font-weight:500; color:var(--red); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .tcell.other { background:transparent; border:1px dashed var(--gray-200); }
   .gcard .gt b.mono { font-family:var(--mono); font-size:14px; overflow-wrap:anywhere; }
   .bl { width:min(880px, 100%); } .bl-body { padding:16px 22px; overflow:auto; background:var(--gray-100); }
@@ -514,6 +514,7 @@
   .dt { width:min(860px, 100%); } .dt-body { padding:16px 22px 22px; overflow:auto; display:grid; grid-template-columns:minmax(0, 3fr) minmax(0, 2fr); gap:12px; align-items:start; }
   .dt-sec { background:var(--white); border-radius:var(--r-md); padding:14px 16px; min-width:0; }
   .dt-sec h3 { margin:0 0 10px; font-size:14px; font-weight:600; display:flex; align-items:center; gap:8px; } .dt-sec h3 .ph { color:var(--red); } .dt-sec h3 span { margin-left:auto; font-size:12px; font-weight:500; color:var(--gray-500); }
+  #dt_t { display:flex; align-items:center; gap:14px; flex-wrap:wrap; } .dt-tab { font-size:12px; } .dt-tab button { padding:6px 12px; font-size:12.5px; }
   .dt-row { display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:4px 10px; padding:8px 0; border-top:1px solid var(--gray-100); font-size:13px; align-items:center; }
   .dt-row:first-of-type { border-top:0; }
   .dt-row .nm { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .dt-row .nm.mono { font-family:var(--mono); font-size:12px; } .dt-row b { font-weight:600; text-align:right; }
@@ -530,6 +531,8 @@
   .zcard .zh { display:flex; align-items:center; gap:7px; font-size:13px; font-weight:500; color:var(--gray-500); } .zcard .zh .ph { color:var(--red); }
   .zcard .zv { font-size:26px; font-weight:650; letter-spacing:-.02em; line-height:1.05; display:flex; align-items:center; gap:8px; flex-wrap:wrap; } .zcard .zv .gpill { font-size:11px; padding:2px 7px; }
   .zcard .zs { font-size:12px; color:var(--gray-500); } .zcard .zb { height:4px; border-radius:999px; background:var(--gray-100); overflow:hidden; } .zcard .zb i { display:block; height:100%; background:var(--red); border-radius:999px; }
+  .zcard .zs .gpill { font-size:10.5px; padding:1px 6px; margin-left:4px; }
+  .zcard .zcu, .gcamp { color:var(--red); font-weight:600; } .gcamp { color:#ff9296; }
   .zcard .zc { font-size:11.5px; color:var(--gray-500); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .zcard.off { cursor:default; } .zcard.off:hover { transform:none; }
   .bwrap { grid-column:1 / -1; }
@@ -1297,9 +1300,9 @@
       </div>
       <div class="tile t-full g-cb cl-t">
         <div><h2><i class="ph ph-circles-three" style="color:var(--red)"></i> Clusters</h2>
-        <p class="desc g-desc">Uno por línea. Aparecen en el Constructor y se agregan al nombre de la campaña (antes de la zona). <span id="cl_count"></span></p>
+        <p class="desc g-desc">Los clusters son las ciudades de cada zona (57 oficiales, ya cargados). Aquí puedes agregar otros, uno por línea. <span id="cl_count"></span></p>
         <div class="mods"><b>Se usa en:</b><span><i class="ph ph-link-simple"></i>Constructor · campo Cluster</span><span><i class="ph ph-megaphone-simple"></i>Campañas · nombre de la campaña</span></div></div>
-        <textarea id="cl_list" rows="8" placeholder="Cluster_01&#10;Cluster_02&#10;…" aria-label="Clusters, uno por línea"></textarea>
+        <textarea id="cl_list" rows="4" placeholder="Nombre de la ciudad, uno por línea" aria-label="Clusters adicionales, uno por línea"></textarea>
         <div class="cl-f"><span class="muted" id="cl_msg"></span><span class="sp"></span><button class="btn btn-red" id="cl_save"><i class="ph ph-floppy-disk"></i>Guardar clusters</button></div>
       </div>
     </div>
@@ -1930,10 +1933,10 @@ $('board').addEventListener('change', e => {
   if (MM_EDIT[k] || (t === 'm' && STD_M.has(v))) { toast(`"${v}" ya existe`, true); i.value = old.slice(2); return; }
   MM_EDIT[k] = MM_EDIT[old]; delete MM_EDIT[old]; drawBoard();
 });
-function clDraw() { const cl = clustersList(); $('cl_list').value = cl.join('\n'); $('cl_count').textContent = cl.length ? `${cl.length} cargados.` : 'Todavía no hay clusters.'; $('cl_msg').textContent = ''; }
+function clDraw() { const ex = clustersAll().filter(c => !c.z); $('cl_list').value = ex.map(c => c.n).join('\n'); $('cl_count').textContent = ex.length ? `${ex.length} adicionales.` : 'Sin clusters adicionales.'; $('cl_msg').textContent = ''; }
 $('cl_list').addEventListener('input', () => { const n = [...new Set($('cl_list').value.split('\n').map(x => normalizar(x)).filter(Boolean))].length; $('cl_msg').textContent = `${n} al guardar (se escriben con el estándar: Palabras_Con_Mayúscula)`; });
 $('cl_save').onclick = async () => {
-  const list = [...new Set($('cl_list').value.split('\n').map(x => normalizar(x).replace(/[<>|]/g, '').slice(0, 60)).filter(Boolean))];
+  const list = [...new Set($('cl_list').value.split('\n').map(x => normalizar(x).replace(/[<>|]/g, '').slice(0, 60)).filter(v => v && !CLUSTERS.some(c => c.v === v)))];
   if (list.length > 150) return toast('Máximo 150 clusters', true);
   const map = Object.fromEntries(Object.entries(CMAP).filter(([k]) => !k.startsWith('cl:'))); list.forEach(c => map['cl:' + c] = '1');
   $('cl_save').disabled = true;
@@ -2281,18 +2284,31 @@ $('rules').innerHTML = RULES.map(r => `<div class="rule"><div class="k">${r.f}</
   <p>${r.ej.map(x => `<code>${esc(x)}</code>`).join('')}</p></div>`).join('');
 $('rules').style.gridTemplateColumns = 'repeat(auto-fit, minmax(220px, 1fr))';
 const BM = Dropdown($('b_m'), { options: STD.medios.map(([v, l]) => ({ v, l: v, m: l })), value: 'paid_social', block: true, search: false, onChange: build });
-const BZ = Dropdown($('b_z'), { options: [{ v:'', l:'Sin zona' }, ...ZONAS.map(z => ({ v:z, l:z, ic:'ph-map-pin' }))], value: '', block: true, search: false, onChange: build });
+const BZ = Dropdown($('b_z'), { options: [{ v:'', l:'Sin zona' }, ...ZONAS.map(z => ({ v:z, l:z, ic:'ph-map-pin' }))], value: '', block: true, search: false, onChange: () => { if (typeof syncMarcaCluster === 'function') syncMarcaCluster(); build(); } });
 // Marcas (van al inicio de utm_term) y clusters (van en utm_campaign, antes de la zona); los clusters se administran en Admin
 const MARCAS_DEF = ['TVS', 'HJ', 'Genesis', 'KMF', 'Yamaha'];
+// Clusters = ciudades de Motomundo por zona (en la UTM van sin tildes y con "_": San_Pedro_Sula)
+const CLUSTERS_ZONA = {
+  Centro: ['Comayagua', 'Tegucigalpa', 'Jesús de Otoro', 'La Esperanza', 'La Paz', 'Marcala', 'San Antonio de Oriente', 'Siguatepeque', 'Talanga'],
+  Litoral: ['La Ceiba', 'Olanchito', 'Tocoa', 'Bonito Oriental', 'Jutiapa', 'Roatán', 'Saba', 'San Juan Pueblo', 'Sonaguera', 'Tela', 'Trujillo'],
+  Norte: ['El Progreso', 'Omoa', 'San Pedro Sula', 'Choloma', 'Morazán', 'El Negrito', 'Puerto Cortés', 'Santa Cruz de Yojoa', 'Villanueva', 'Yoro'],
+  Occidente: ['Gracias', 'Santa Bárbara', 'Cucuyagua', 'Lepaera', 'Macuelizo', 'Nueva Arcadia', 'Ocotepeque', 'Quimistán', 'San Juan Intibucá', 'San Marcos', 'Santa Rita', 'Santa Rita Copán', 'Santa Rosa de Copán'],
+  Oriente: ['Catacamas', 'Danlí', 'Juticalpa', 'El Paraíso', 'Guaimaca', 'San Esteban', 'Trojes'],
+  Sur: ['Choluteca', 'El Triunfo', 'Monjarás', 'Nacaome', 'San Lorenzo', 'San Marcos de Colón'],
+};
+const CLUSTERS = Object.entries(CLUSTERS_ZONA).flatMap(([z, cs]) => cs.map(n => ({ v: normalizar(n), n, z })));
 const marcasList = () => { const n = (GA?.brands || []).map(b => b.name).filter(Boolean); return n.length ? n : MARCAS_DEF; };
-const clustersList = (map = CMAP) => Object.keys(map).filter(k => k.startsWith('cl:')).map(k => k.slice(3)).sort((a, b) => a.localeCompare(b, 'es', { numeric:true }));
-const BCL = Dropdown($('b_cl'), { options: [], value: '', block: true, search: true, allLabel: 'Sin cluster', onChange: build });
+// Lista oficial + los que el admin agregue (sin zona)
+const clustersAll = (map = CMAP) => [...CLUSTERS, ...Object.keys(map).filter(k => k.startsWith('cl:')).map(k => k.slice(3)).filter(v => !CLUSTERS.some(c => c.v === v)).map(v => ({ v, n: v.replace(/_/g, ' '), z: '' }))];
+const clustersList = (map = CMAP) => clustersAll(map).map(c => c.v);
+const BCL = Dropdown($('b_cl'), { options: [], value: '', block: true, search: true, allLabel: 'Sin cluster', onChange: v => { const c = clustersAll().find(x => x.v === v); if (c?.z && BZ.value !== c.z) BZ.set(c.z); build(); } });
 const BBR = Dropdown($('b_br'), { options: [], value: '', block: true, search: false, allLabel: 'Sin marca', onChange: build });
 function syncMarcaCluster() {
-  const cl = clustersList();
-  BCL.setOptions([{ v:'', l:'Sin cluster' }, ...cl.map((c, i) => ({ v:c, l:c, ic:'ph-circles-three', sep:i === 0 }))]);
+  const z = BZ.value, cl = clustersAll().filter(c => !z || !c.z || c.z === z).sort((a, b) => a.n.localeCompare(b.n, 'es'));
+  if (BCL.value && !cl.some(c => c.v === BCL.value)) BCL.set('');
+  BCL.setOptions([{ v:'', l:'Sin cluster' }, ...cl.map((c, i) => ({ v:c.v, l:c.n, m: z ? '' : c.z, ic:'ph-circles-three', sep:i === 0 }))]);
   BBR.setOptions([{ v:'', l:'Sin marca' }, ...marcasList().map((m, i) => ({ v:normalizar(m), l:m, ic:'ph-tag', sep:i === 0 }))]);
-  $('b_cl').closest('.field').querySelector('em').textContent = cl.length ? 'opcional · se agrega al nombre de la campaña' : 'opcional · el admin aún no cargó clusters';
+  $('b_cl').closest('.field').querySelector('em').textContent = z ? `opcional · ciudades de la zona ${z}` : 'opcional · elige zona para filtrar';
 }
 const tail = (b, x) => !x ? b : b.toLowerCase().endsWith('_' + x.toLowerCase()) ? b : `${b}_${x}`;
 // Campaña final = campaña + "_" + cluster + "_" + zona (sin repetirlos si ya están)
@@ -2469,7 +2485,7 @@ function libCard(l) {
     <div class="chips"><span class="tag"><i>fuente</i> ${esc(l.source)}</span><span class="tag"><i>medio</i> ${esc(l.medium)}</span>${l.zone ? `<span class="tag"><i>zona</i> ${esc(l.zone)}</span>` : ''}${l.term ? `<span class="tag"><i>término</i> ${esc(l.term)}</span>` : ''}${l.content ? `<span class="tag"><i>contenido</i> ${esc(l.content)}</span>` : ''}</div>
     <div class="url"><b>${esc(host)}</b></div>
     ${l.note ? `<div class="note"><i class="ph ph-note-pencil"></i>${esc(l.note)}</div>` : ''}
-    ${(lu => `<div class="lst ${ga ? '' : 'zero'}"><div title="Usuarios que llegaron con esta UTM"><b>${ga ? num(ga.u) : '0'}</b>Usuarios</div><div><b>${ga ? num(ga.e1) : '0'}</b>${EV1}</div><div><b>${ga ? num(ga.e2) : '0'}</b>${EV2}</div>${lu ? `<div class="lnd" title="Usuarios que llegaron a ${esc(pageName(lu.p))} en el periodo, por cualquier canal"><b>${num(lu.u)}</b>usuarios en la landing</div>` : ''}</div>`)(landUsers(l.url))}
+    ${(lu => `<div class="lst ${ga ? '' : 'zero'}"><div title="Usuarios que llegaron con esta UTM"><b>${ga ? num(ga.u) : '0'}</b>Usuarios</div><div><b>${ga ? num(ga.e1) : '0'}</b>${EV1}</div><div><b>${ga ? num(ga.e2) : '0'}</b>${EV2}</div>${lu ? `<div class="lnd" title="Usuarios que llegaron a ${esc(pageName(lu.p))} en el periodo, por cualquier canal">Su landing <b>${esc(pageName(lu.p))}</b> recibió ${num(lu.u)} usuarios en total (todas las fuentes)</div>` : ''}</div>`)(landUsers(l.url))}
     <div class="lact">${actions}</div></div>`;
 }
 let LIB_ROWS = [];
@@ -3120,7 +3136,7 @@ const ZONA_CIUDADES = {
 };
 const ZONAS_VIS = Object.keys(ZONA_CIUDADES);
 const normTxt = t => (t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
-const ZONA_DE = new Map(Object.entries(ZONA_CIUDADES).flatMap(([z, cs]) => cs.map(c => [normTxt(c), z])));
+const ZONA_DE = new Map([...Object.entries(ZONA_CIUDADES), ...Object.entries(CLUSTERS_ZONA)].flatMap(([z, cs]) => cs.map(c => [normTxt(c), z])));
 const zonaCiudad = c => ZONA_DE.get(normTxt(c)) || '';
 const pageName = p => p === '/' ? 'Homepage' : (p || '(not set)');
 const gpct = (a, b) => b ? pct(a / b) : '0%';
@@ -3143,7 +3159,7 @@ function drawGa4() {
   $('g_kpi').innerHTML = `<div class="gh">
     <div class="gh-k">
       <div class="l"><i class="ph ph-users-three"></i>${gCh ? `Usuarios · <span class="ghf"><i class="ph ph-git-branch"></i>${esc(gCh)}</span>` : 'Usuarios totales'}</div>
-      <div class="g-kv">${num(c.active)} ${gdl(c.active, p.active)}</div><div class="g-sub">Periodo anterior: ${num(p.active)}</div>
+      <div class="g-kv">${num(c.active)} ${gdl(c.active, p.active)}</div><div class="g-sub">Periodo anterior: ${num(p.active)}${!gCh && g.campTotal ? ` · <b class="gcamp">${num(g.campTotal[0])} de campaña</b> (${pct(g.campTotal[0] / (c.active || 1))}) ${gdl(g.campTotal[0], g.campTotal[1])}` : ''}</div>
       <div class="gh-sec">
         ${kk('var(--red)', 'Nuevos', c.new, p.new, `<span>${pct(pn)} del total</span>`)}
         ${kk('#fff', 'Recurrentes', ret(c), ret(p), `<span>${pct(1 - pn)} del total</span>`)}
@@ -3163,14 +3179,15 @@ function drawGa4() {
   drawGaChart();
   $('g_period').textContent = `${gCh ? `Canal ${gCh} · ` : ''}Comparado con ${date(g.range.pFrom)} al ${date(g.range.pTo)}`;
   // Zonas (6): suma de sus ciudades; clic = detalle como el de una ciudad
-  const ZT = new Map(ZONAS_VIS.map(z => [z, { v:0, pv:0, cs:[] }]));
+  const ZT = new Map(ZONAS_VIS.map(z => [z, { v:0, pv:0, cs:[], cu:0, cpu:0 }]));
+  if (!gCh) (g.campCity || []).forEach(([ct, v, pv]) => { const z = zonaCiudad(ct); if (!z) return; const t = ZT.get(z); t.cu += v; t.cpu += pv || 0; });
   V.cities.forEach(([ct, v, pv]) => { const z = zonaCiudad(ct); if (!z) return; const t = ZT.get(z); t.v += v; t.pv += pv || 0; t.cs.push([ct, v]); });
   const ztot = c.active || 1;
   $('g_zones').innerHTML = ZONAS_VIS.map(z => { const t = ZT.get(z);
     return `<button class="zcard ${t.v ? '' : 'off'}" ${t.v ? `data-dk="zone" data-dn="${z}"` : 'disabled'} title="Ver detalle de la zona ${z}">
       <span class="zh"><i class="ph ph-map-trifold"></i>Zona ${z}</span>
       <span class="zv">${num(t.v)} ${t.v || t.pv ? gdl(t.v, t.pv) : ''}</span>
-      <span class="zs">${pct(t.v / ztot)} del total</span><span class="zb"><i style="width:${Math.max(t.v ? 3 : 0, Math.min(100, t.v / ztot * 100))}%"></i></span>
+      <span class="zs">${pct(t.v / ztot)} del total</span>${!gCh && g.campCity ? `<span class="zs"><b class="zcu">${num(t.cu)}</b> de campaña ${gdl(t.cu, t.cpu)}</span>` : ''}<span class="zb"><i style="width:${Math.max(t.v ? 3 : 0, Math.min(100, t.v / ztot * 100))}%"></i></span>
       <span class="zc">${t.cs.length ? t.cs.sort((a, b) => b[1] - a[1]).slice(0, 3).map(x => esc(x[0])).join(' · ') : 'Sin usuarios en el periodo'}</span></button>`; }).join('');
   // Marcas: total = landing + tienda
   $('g_bsum').textContent = `${(V.brands || []).length} marcas · ${num(V.brands.reduce((a, b) => a + b.landing + b.store, 0))} usuarios en landing y tienda${V.exact ? '' : ' (por página de entrada)'}`; brandsUi();
@@ -3190,13 +3207,14 @@ function drawGa4() {
     const [lead, ...rest] = rows, kind = id === 'g_chan' ? 'chan' : 'city', at = x => x.other ? '' : ` data-dk="${kind}" data-dn="${esc(x.n)}" role="button" tabindex="0" title="Ver detalle"`;
     $(id).innerHTML = `<div class="card-h" style="margin-bottom:12px"><h2><i class="ph ${icon}" style="color:var(--red)"></i> ${title}</h2><span class="muted" style="font-size:12px">${note}</span></div>
       ${lead ? `<div class="tlead ${lead.on ? 'on' : ''}"${at(lead)}><span class="rk">#1</span><div><b>${esc(lead.n)}</b><small>${lead.sub || ''}</small></div><div class="tv"><b>${num(lead.v)}</b><small>${gpct(lead.v, tot)} del total</small>${gdl(lead.v, lead.pv)}</div></div>` : ''}
-      <div class="tgrid">${rest.map((x, i) => `<div class="tcell ${x.other ? 'other' : ''} ${x.on ? 'on' : ''}"${at(x)}><span class="rk">${x.other ? '' : '#' + (i + 2)}</span><span class="nm" title="${esc(x.n)}">${esc(x.n)}</span><span class="pc"><span>${gpct(x.v, tot)}</span><i><i style="width:${Math.max(3, Math.min(100, x.v / tot * 100))}%"></i></i></span><b>${num(x.v)}</b>${gdl(x.v, x.pv)}</div>`).join('')}</div>`;
+      <div class="tgrid">${rest.map((x, i) => `<div class="tcell ${x.other ? 'other' : ''} ${x.on ? 'on' : ''}"${at(x)}><span class="rk">${x.other ? '' : '#' + (i + 2)}</span><span class="nm" title="${esc(x.n)}">${esc(x.n)}${x.sub && kind === 'city' ? `<small class="csub">${x.sub}</small>` : ''}</span><span class="pc"><span>${gpct(x.v, tot)}</span><i><i style="width:${Math.max(3, Math.min(100, x.v / tot * 100))}%"></i></i></span><b>${num(x.v)}</b>${gdl(x.v, x.pv)}</div>`).join('')}</div>`;
   };
   top('g_chan', 'ph-git-branch', 'Canales', GCH.map(x => ({ n: x[0], v: x[1], pv: x[3], sub: `${num(x[2])} usuarios nuevos`, on: x[0] === gCh })), g.totals.cur.active, gCh ? 'Todo el sitio · canal elegido marcado' : 'Usuarios activos');
   // Ciudades: tantas como tarjetas tenga el widget de canales (misma altura); el resto va a "Otras"
   const slots = Math.max(3, 1 + 2 * Math.ceil((GCH.length - 1) / 2)), named = V.cities.slice(0, slots - 1);
   const oc = Math.max(0, c.active - named.reduce((a, x) => a + x[1], 0)), op = Math.max(0, p.active - named.reduce((a, x) => a + x[2], 0));
-  top('g_city', 'ph-map-pin', gCh ? `Ciudades · ${esc(gCh)}` : 'Usuarios activos por ciudad', [...named.map(x => ({ n: x[0], v: x[1], pv: x[2] })), { n: 'Otras', v: oc, pv: op, other: true }], c.active, `Top ${named.length} + otras`);
+  const CC = new Map((g.campCity || []).map(x => [x[0], x[1]]));
+  top('g_city', 'ph-map-pin', gCh ? `Ciudades · ${esc(gCh)}` : 'Usuarios activos por ciudad', [...named.map(x => ({ n: x[0], v: x[1], pv: x[2], sub: !gCh && CC.size ? `${num(CC.get(x[0]) || 0)} de campaña` : '' })), { n: 'Otras', v: oc, pv: op, other: true }], c.active, `Top ${named.length} + otras`);
   drawLand(); syncMarcaCluster();
   if (R?.length) drawKpis();
   if (LINKS) drawLib();
@@ -3244,7 +3262,9 @@ Seg($('g_land_v'), null, gLandView, v => { gLandView = v; drawLand(); });
 // ---------- Marcas y rutas (solo admin, en modal) ----------
 const urlPath = u => { try { return new URL(u).pathname; } catch { return ''; } };
 // Detalle de una ciudad o un canal agrupado: páginas de destino (con o sin campaña) y de dónde llegan
-function openDetail(kind, name) {
+let DT_MODE = 'all', DT_LAST = null;
+function openDetail(kind, name, mode = 'all') {
+  DT_LAST = [kind, name]; DT_MODE = mode;
   const g = GA; if (!g) return;
   const cmap = new Map(); (R || []).filter(r => r.u > 0).forEach(r => { const k = (r.p || '').toLowerCase(), m = cmap.get(k) || new Map(); m.set(r.c, (m.get(r.c) || 0) + r.u); cmap.set(k, m); });
   const campsOf = p => [...(cmap.get(p.toLowerCase()) || new Map())].sort((a, b) => b[1] - a[1]).map(x => x[0]), camp = p => cmap.has(p.toLowerCase()), tot = g.totals.cur.active || 1;
@@ -3256,24 +3276,28 @@ function openDetail(kind, name) {
       : '<span class="cp">Sin campaña</span>'}</span>`; };
   const plain = n => `<span class="nm" title="${esc(n)}">${esc(n)}</span>`;
   let users, pages, side, sideTitle, sideIc;
+  const cmp = mode === 'camp' && (kind === 'zone' || kind === 'city') && g.campCityPages;
+  const CP = cmp ? g.campCityPages : g.cityPages, CH = cmp ? g.campCityChan : g.cityChan;
   if (kind === 'zone') {
     const inZ = ct => zonaCiudad(ct) === name;
-    users = gaView().cities.filter(x => inZ(x[0])).reduce((a, x) => a + x[1], 0);
-    pages = sumBy((g.cityPages || []).filter(r => inZ(r[0])), r => r[1], r => r[2]);
-    side = sumBy((g.cityChan || []).filter(r => inZ(r[0])), r => gaGroup(r[1]), r => r[2]); sideTitle = 'Canal por el que llegan'; sideIc = 'ph-git-branch';
-    name = 'Zona ' + name;
+    users = (cmp ? g.campCity : gaView().cities).filter(x => inZ(x[0])).reduce((a, x) => a + x[1], 0);
+    pages = sumBy((CP || []).filter(r => inZ(r[0])), r => r[1], r => r[2]);
+    side = sumBy((CH || []).filter(r => inZ(r[0])), r => gaGroup(r[1]), r => r[2]); sideTitle = 'Canal por el que llegan'; sideIc = 'ph-git-branch';
   } else if (kind === 'city') {
-    users = (g.cities.find(x => x[0] === name) || [0, 0])[1];
-    pages = sumBy((g.cityPages || []).filter(r => r[0] === name), r => r[1], r => r[2]);
-    side = sumBy((g.cityChan || []).filter(r => r[0] === name), r => gaGroup(r[1]), r => r[2]); sideTitle = 'Canal por el que llegan'; sideIc = 'ph-git-branch';
+    users = ((cmp ? g.campCity : (g.cityAll || g.cities)).find(x => x[0] === name) || [0, 0])[1];
+    pages = sumBy((CP || []).filter(r => r[0] === name), r => r[1], r => r[2]);
+    side = sumBy((CH || []).filter(r => r[0] === name), r => gaGroup(r[1]), r => r[2]); sideTitle = 'Canal por el que llegan'; sideIc = 'ph-git-branch';
   } else {
     users = (gaChannels().find(x => x[0] === name) || [0, 0])[1];
     pages = sumBy((g.chanPages || []).filter(r => gaGroup(r[0]) === name), r => r[1], r => r[2]);
     side = sumBy((g.cityChan || []).filter(r => gaGroup(r[1]) === name), r => r[0], r => r[2]); sideTitle = 'Ciudades'; sideIc = 'ph-map-pin';
   }
   const shown = Math.min(pages.length, 12), withCamp = pages.slice(0, 12).filter(([n]) => camp(n)).length;
-  $('dt_t').textContent = name;
-  $('dt_s').textContent = `${num(users)} usuarios activos · ${pct(users / tot)} del total · ${withCamp} de ${shown} páginas principales con campaña activa`;
+  const canTabs = (kind === 'zone' || kind === 'city') && g.campCityPages;
+  $('dt_t').innerHTML = `${esc(kind === 'zone' ? 'Zona ' + name : name)}${canTabs ? `<span class="seg dt-tab" id="dt_tab"><span class="pill"></span><button data-v="all">Todo el tráfico</button><button data-v="camp">Solo campañas</button></span>` : ''}`;
+  if (canTabs) Seg($('dt_tab'), null, mode, v => openDetail(DT_LAST[0], DT_LAST[1], v));
+  $('dt_s').textContent = cmp ? `${num(users)} usuarios llegaron por campañas (con utm_campaign) · ${pct(users / tot)} del total del sitio`
+    : `${num(users)} usuarios activos · ${pct(users / tot)} del total · ${withCamp} de ${shown} páginas principales con campaña activa`;
   $('dt_b').innerHTML = `<div class="dt-sec"><h3><i class="ph ph-browser"></i>Páginas de destino<span>usuarios</span></h3>${list(pages, 12, pageRow)}</div>
     <div class="dt-sec"><h3><i class="ph ${sideIc}"></i>${sideTitle}<span>usuarios</span></h3>${list(side, 10, plain)}</div>`;
   modalOpen('dt_modal');
