@@ -542,6 +542,7 @@
   @media (max-width:1100px) { .zrow { grid-template-columns:repeat(3, minmax(0, 1fr)); } }
   @media (max-width:600px) { .zrow { grid-template-columns:1fr 1fr; gap:10px; } .zcard { padding:12px 14px; } .zcard .zv { font-size:21px; } }
   .uinv { display:flex; gap:6px; flex-wrap:wrap; } .uinv .btn { padding:7px 12px; font-size:12.5px; } .uinv .btn:first-child { flex:1; justify-content:center; }
+  .cl-t { flex-direction:column; align-items:stretch; } .cl-t > div { min-width:0; } .cl-t textarea { width:100%; border:1px solid var(--gray-200); border-radius:var(--r-sm); padding:10px 12px; font-family:var(--mono); font-size:13px; resize:vertical; } .cl-t textarea:focus { border-color:var(--red); outline:none; } .cl-f { display:flex; align-items:center; gap:10px; }
   .mods { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; } .mods span { display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:500; background:var(--gray-100); color:var(--gray-700); border-radius:999px; padding:3px 10px; } .mods span .ph { color:var(--red); } .mods b { font-size:12px; font-weight:500; color:var(--gray-500); align-self:center; }
   .bact { display:flex; align-items:center; gap:7px; font-size:12px; font-weight:500; color:var(--gray-500); margin-top:10px; padding-top:10px; border-top:1px solid var(--gray-100); }
   .bact i { width:8px; height:8px; border-radius:50%; background:var(--gray-300); flex:none; }
@@ -1141,6 +1142,8 @@
           <div class="field"><span>Medio <em>utm_medium</em></span><div id="b_m"></div></div>
           <label class="field"><span>Campaña <em>utm_campaign</em></span><input id="b_c" list="dl_c" placeholder="Genesis Tactica Comercial Leads"><div class="norm" id="n_c"></div></label>
           <div class="field"><span><i class="ph ph-map-trifold"></i>Zona <em>se agrega al nombre de la campaña</em></span><div id="b_z"></div></div>
+          <div class="field"><span><i class="ph ph-circles-three"></i>Cluster <em>opcional · se agrega al nombre de la campaña</em></span><div id="b_cl"></div></div>
+          <div class="field"><span><i class="ph ph-tag"></i>Marca <em>opcional · se agrega al inicio del término</em></span><div id="b_br"></div></div>
           <label class="field"><span>Término (Subcategoría) <em>utm_term · opcional</em></span><input id="b_t" placeholder="Tegucigalpa Comayagua"><div class="norm" id="n_t"></div></label>
           <label class="field"><span>Contenido (Modelo) <em>utm_content · opcional</em></span><input id="b_x" placeholder="TTPremium Zx-200l"><div class="norm" id="n_x"></div></label>
           <label class="field full"><span><i class="ph ph-note-pencil"></i>Nota interna <em>opcional</em></span><textarea id="b_note" rows="2" placeholder="Para qué es, dónde se publicó…"></textarea></label>
@@ -1291,6 +1294,13 @@
         <div class="mods"><b>Pestaña Campañas:</b><span><i class="ph ph-megaphone-simple"></i>Campañas · tarjetas y reportes</span><span><i class="ph ph-link-simple"></i>Constructor · medios y fuentes por canal</span></div>
         <div class="mods"><b>Pestaña Audiencia GA4:</b><span><i class="ph ph-chart-bar"></i>GA4 Audience · canales, gráfico y filtro</span></div></div>
         <button class="btn btn-dark" id="cb_open"><i class="ph ph-kanban"></i>Abrir administrador</button>
+      </div>
+      <div class="tile t-full g-cb cl-t">
+        <div><h2><i class="ph ph-circles-three" style="color:var(--red)"></i> Clusters</h2>
+        <p class="desc g-desc">Uno por línea. Aparecen en el Constructor y se agregan al nombre de la campaña (antes de la zona). <span id="cl_count"></span></p>
+        <div class="mods"><b>Se usa en:</b><span><i class="ph ph-link-simple"></i>Constructor · campo Cluster</span><span><i class="ph ph-megaphone-simple"></i>Campañas · nombre de la campaña</span></div></div>
+        <textarea id="cl_list" rows="8" placeholder="Cluster_01&#10;Cluster_02&#10;…" aria-label="Clusters, uno por línea"></textarea>
+        <div class="cl-f"><span class="muted" id="cl_msg"></span><span class="sp"></span><button class="btn btn-red" id="cl_save"><i class="ph ph-floppy-disk"></i>Guardar clusters</button></div>
       </div>
     </div>
   </section>
@@ -1920,6 +1930,17 @@ $('board').addEventListener('change', e => {
   if (MM_EDIT[k] || (t === 'm' && STD_M.has(v))) { toast(`"${v}" ya existe`, true); i.value = old.slice(2); return; }
   MM_EDIT[k] = MM_EDIT[old]; delete MM_EDIT[old]; drawBoard();
 });
+function clDraw() { const cl = clustersList(); $('cl_list').value = cl.join('\n'); $('cl_count').textContent = cl.length ? `${cl.length} cargados.` : 'Todavía no hay clusters.'; $('cl_msg').textContent = ''; }
+$('cl_list').addEventListener('input', () => { const n = [...new Set($('cl_list').value.split('\n').map(x => normalizar(x)).filter(Boolean))].length; $('cl_msg').textContent = `${n} al guardar (se escriben con el estándar: Palabras_Con_Mayúscula)`; });
+$('cl_save').onclick = async () => {
+  const list = [...new Set($('cl_list').value.split('\n').map(x => normalizar(x).replace(/[<>|]/g, '').slice(0, 60)).filter(Boolean))];
+  if (list.length > 150) return toast('Máximo 150 clusters', true);
+  const map = Object.fromEntries(Object.entries(CMAP).filter(([k]) => !k.startsWith('cl:'))); list.forEach(c => map['cl:' + c] = '1');
+  $('cl_save').disabled = true;
+  try { const r = await cfgCall({ action:'save', channel_map: map, expected_map: CMAP }); CMAP = r.settings.channel_map || {}; syncMarcaCluster(); clDraw(); notify({ icon:'ph-circles-three', tone:'ok', title:'Clusters guardados', body:`${list.length} clusters disponibles en el Constructor.` }); }
+  catch (e) { toast('No se pudo guardar: ' + e.message, true); }
+  $('cl_save').disabled = false;
+};
 function cbOpen() {
   if (!can.admin()) return;
   MM_EDIT = { ...CMAP }; Object.keys(MM_EDIT).forEach(k => { if (k.startsWith('n:')) delete MM_EDIT[k]; }); cbTab('camp');
@@ -1940,7 +1961,7 @@ $('mm_save').onclick = async () => {
   $('mm_save').disabled = true;
   try {
     const r = await cfgCall({ action: 'save', channel_map: MM_EDIT, expected_map: CMAP });
-    CMAP = r.settings.channel_map || {}; CFG = null; syncMedios();
+    CMAP = r.settings.channel_map || {}; CFG = null; syncMedios(); syncMarcaCluster();
     [R || [], P || []].forEach(rs => rs.forEach(x => { x.g = canal(x.s, x.m); }));
     cbClose(); if (R) update(); cbRules(); if (GA) drawGa4(); if (LINKS) drawLib();
     notify({ icon:'ph-kanban', tone:'ok', title:'Agrupación guardada', body:'Campañas, Audiencia y el Constructor ya usan la nueva agrupación.' });
@@ -2170,7 +2191,7 @@ async function start() {
       sb.from('ga4_utm_daily').select('date').order('date', { ascending: false }).limit(1),
       sb.from('ga4_sync_log').select('ran_at').order('ran_at', { ascending: false }).limit(1),
     ]);
-    CMAP = qm.data || {}; syncMedios();
+    CMAP = qm.data || {}; syncMedios(); syncMarcaCluster();
     $('um_role').innerHTML = roleChip(ME); cbRules(); if (GA) drawGa4(); if (LINKS) drawLib();
     const min = q1.data?.[0]?.date, max = q2.data?.[0]?.date;
     if (!max) throw new Error(q1.error?.message || 'Todavía no hay datos sincronizados');
@@ -2261,10 +2282,25 @@ $('rules').innerHTML = RULES.map(r => `<div class="rule"><div class="k">${r.f}</
 $('rules').style.gridTemplateColumns = 'repeat(auto-fit, minmax(220px, 1fr))';
 const BM = Dropdown($('b_m'), { options: STD.medios.map(([v, l]) => ({ v, l: v, m: l })), value: 'paid_social', block: true, search: false, onChange: build });
 const BZ = Dropdown($('b_z'), { options: [{ v:'', l:'Sin zona' }, ...ZONAS.map(z => ({ v:z, l:z, ic:'ph-map-pin' }))], value: '', block: true, search: false, onChange: build });
-// Campaña final = campaña + "_" + zona (sin repetirla si ya termina así)
-const campaignName = (c, z) => { const b = normalizar(c); return !z || !b ? b : b.toLowerCase().endsWith('_' + z.toLowerCase()) ? b : `${b}_${z}`; };
-const form = () => ({ url: $('b_url').value.trim(), source: normalizar($('b_s').value), medium: BM.value, zone: BZ.value, campaign: campaignName($('b_c').value, BZ.value),
-  term: normalizar($('b_t').value), content: normalizar($('b_x').value), note: $('b_note').value.trim() });
+// Marcas (van al inicio de utm_term) y clusters (van en utm_campaign, antes de la zona); los clusters se administran en Admin
+const MARCAS_DEF = ['TVS', 'HJ', 'Genesis', 'KMF', 'Yamaha'];
+const marcasList = () => { const n = (GA?.brands || []).map(b => b.name).filter(Boolean); return n.length ? n : MARCAS_DEF; };
+const clustersList = (map = CMAP) => Object.keys(map).filter(k => k.startsWith('cl:')).map(k => k.slice(3)).sort((a, b) => a.localeCompare(b, 'es', { numeric:true }));
+const BCL = Dropdown($('b_cl'), { options: [], value: '', block: true, search: true, allLabel: 'Sin cluster', onChange: build });
+const BBR = Dropdown($('b_br'), { options: [], value: '', block: true, search: false, allLabel: 'Sin marca', onChange: build });
+function syncMarcaCluster() {
+  const cl = clustersList();
+  BCL.setOptions([{ v:'', l:'Sin cluster' }, ...cl.map((c, i) => ({ v:c, l:c, ic:'ph-circles-three', sep:i === 0 }))]);
+  BBR.setOptions([{ v:'', l:'Sin marca' }, ...marcasList().map((m, i) => ({ v:normalizar(m), l:m, ic:'ph-tag', sep:i === 0 }))]);
+  $('b_cl').closest('.field').querySelector('em').textContent = cl.length ? 'opcional · se agrega al nombre de la campaña' : 'opcional · el admin aún no cargó clusters';
+}
+const tail = (b, x) => !x ? b : b.toLowerCase().endsWith('_' + x.toLowerCase()) ? b : `${b}_${x}`;
+// Campaña final = campaña + "_" + cluster + "_" + zona (sin repetirlos si ya están)
+const campaignName = (c, z, cl = '') => { const b = normalizar(c); return b ? tail(tail(b, cl), z) : b; };
+// Término final = marca + "_" + término
+const termName = (t, m) => { const b = normalizar(t); return !m ? b : !b ? m : b.toLowerCase().startsWith(m.toLowerCase() + '_') || b.toLowerCase() === m.toLowerCase() ? b : `${m}_${b}`; };
+const form = () => ({ url: $('b_url').value.trim(), source: normalizar($('b_s').value), medium: BM.value, zone: BZ.value, campaign: campaignName($('b_c').value, BZ.value, BCL.value),
+  term: termName($('b_t').value, BBR.value), content: normalizar($('b_x').value), note: $('b_note').value.trim() });
 const fullUrl = f => { const q = [['utm_source', f.source], ['utm_medium', f.medium], ['utm_campaign', f.campaign], ['utm_term', f.term], ['utm_content', f.content]]
   .filter(([, v]) => v).map(([k, v]) => k + '=' + encodeURIComponent(v)).join('&'); return f.url ? f.url + (f.url.includes('?') ? '&' : '?') + q : q; };
 
@@ -2313,7 +2349,7 @@ function build() {
 ['b_url', 'b_s', 'b_c', 'b_t', 'b_x', 'b_note'].forEach(id => $(id).addEventListener('input', build));
 $('b_copy').onclick = () => copy($('b_out').textContent);
 function resetForm() {
-  editId = ''; editVer = ''; ['b_s', 'b_c', 'b_t', 'b_x', 'b_note'].forEach(id => $(id).value = ''); BM.set('paid_social'); BZ.set('');
+  editId = ''; editVer = ''; ['b_s', 'b_c', 'b_t', 'b_x', 'b_note'].forEach(id => $(id).value = ''); BM.set('paid_social'); BZ.set(''); BCL.set(''); BBR.set('');
   $('b_url').value = 'https://www.motomundohn.com/cotizar-en-linea';
   $('formTitle').textContent = 'Nueva UTM'; $('editing').hidden = true; $('b_cancel').hidden = true; $('b_save').querySelector('span').textContent = 'Guardar UTM';
   build();
@@ -2523,9 +2559,12 @@ $('lib').addEventListener('click', async e => {
   const ed = t.closest('[data-edit]');
   if (ed) {
     const l = LINKS.find(x => x.id === ed.dataset.edit); editId = l.id; editVer = l.updated_at;
-    const base = l.zone && l.campaign.endsWith('_' + l.zone) ? l.campaign.slice(0, -(l.zone.length + 1)) : l.campaign;
+    let base = l.zone && l.campaign.endsWith('_' + l.zone) ? l.campaign.slice(0, -(l.zone.length + 1)) : l.campaign;
+    const cl = clustersList().find(c => base.toLowerCase().endsWith('_' + c.toLowerCase())) || ''; if (cl) base = base.slice(0, -(cl.length + 1));
+    const mk = marcasList().map(normalizar).find(m => (l.term || '').toLowerCase().startsWith(m.toLowerCase() + '_') || (l.term || '').toLowerCase() === m.toLowerCase()) || '';
+    BCL.set(cl); BBR.set(mk);
     $('b_url').value = l.url; $('b_s').value = l.source; BM.set(MEDIOS.includes(l.medium) ? l.medium : 'paid_social'); BZ.set(l.zone || '');
-    $('b_c').value = base; $('b_t').value = l.term; $('b_x').value = l.content; $('b_note').value = l.note;
+    $('b_c').value = base; $('b_t').value = mk ? (l.term || '').slice(mk.length + 1) : l.term; $('b_x').value = l.content; $('b_note').value = l.note;
     $('formTitle').textContent = 'Editar UTM'; $('editing').hidden = false; $('b_cancel').hidden = false; $('b_save').querySelector('span').textContent = 'Guardar cambios';
     build(); document.querySelector('.b-form').scrollIntoView({ behavior:'smooth', block:'start' }); return;
   }
@@ -3158,7 +3197,7 @@ function drawGa4() {
   const slots = Math.max(3, 1 + 2 * Math.ceil((GCH.length - 1) / 2)), named = V.cities.slice(0, slots - 1);
   const oc = Math.max(0, c.active - named.reduce((a, x) => a + x[1], 0)), op = Math.max(0, p.active - named.reduce((a, x) => a + x[2], 0));
   top('g_city', 'ph-map-pin', gCh ? `Ciudades · ${esc(gCh)}` : 'Usuarios activos por ciudad', [...named.map(x => ({ n: x[0], v: x[1], pv: x[2] })), { n: 'Otras', v: oc, pv: op, other: true }], c.active, `Top ${named.length} + otras`);
-  drawLand();
+  drawLand(); syncMarcaCluster();
   if (R?.length) drawKpis();
   if (LINKS) drawLib();
 }
@@ -3339,7 +3378,7 @@ function route() {
   if (r === 'bitacora' && !ACTS) loadActs();
   if (r === 'config') loadConfig();
   if (r === 'ga4') loadGa4();
-  if (r === 'canales') { loadGa4(); cbRules(); if (!BRANDS) loadBrands(); }
+  if (r === 'canales') { loadGa4(); cbRules(); if (!BRANDS) loadBrands(); clDraw(); }
   $('adm_btn').classList.toggle('on', ['usuarios', 'bitacora', 'canales', 'config'].includes(r));
   scrollTo({ top: 0 });
 }

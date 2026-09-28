@@ -64,7 +64,7 @@ Deno.serve(async (req) => {
         }
       }
       // Mapa de canales: { "p:<fuente>|<medio>", "m:<medio>" o "s:<fuente>": canal } (Campañas),
-      // "n:<canal>": nombre visible, "g:<canal GA4>": grupo en Audiencia, "ga:mode": "custom" para usar esa agrupación
+      // "cl:<cluster>": catálogo de clusters, "n:<canal>": nombre visible, "g:<canal GA4>": grupo en Audiencia, "ga:mode": "custom" para usar esa agrupación
       if (body.channel_map !== undefined) {
         const cm = body.channel_map, CAN = ['Pauta', 'Directos', 'Redes', 'Otros'];
         if (!cm || typeof cm !== 'object' || Array.isArray(cm)) return json({ error: 'Mapa de canales inválido' }, 400);
@@ -74,6 +74,7 @@ Deno.serve(async (req) => {
           const ok = /^[ms]:.{1,80}$/.test(k) || /^p:[^|]{1,100}\|.{1,80}$/.test(k) ? CAN.includes(v)
             : /^n:/.test(k) ? CAN.includes(k.slice(2)) && NAME.test(v)
             : /^g:.{1,80}$/.test(k) ? NAME.test(v)
+            : /^cl:[^<>\r\n]{1,60}$/.test(k) ? v === '1'
             : k === 'ga:mode' ? v === 'custom' : false;
           if (!ok) return json({ error: `Mapa de canales inválido en ${k}` }, 400);
           clean[k] = v;
