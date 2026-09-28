@@ -539,6 +539,8 @@
   .tcell.on, .tlead.on { box-shadow:0 0 0 2px var(--red); }
   @media (max-width:1100px) { .zrow { grid-template-columns:repeat(3, minmax(0, 1fr)); } }
   @media (max-width:600px) { .zrow { grid-template-columns:1fr 1fr; gap:10px; } .zcard { padding:12px 14px; } .zcard .zv { font-size:21px; } }
+  .uinv { display:flex; gap:6px; flex-wrap:wrap; } .uinv .btn { padding:7px 12px; font-size:12.5px; } .uinv .btn:first-child { flex:1; justify-content:center; }
+  .mods { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; } .mods span { display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:500; background:var(--gray-100); color:var(--gray-700); border-radius:999px; padding:3px 10px; } .mods span .ph { color:var(--red); } .mods b { font-size:12px; font-weight:500; color:var(--gray-500); align-self:center; }
   .bact { display:flex; align-items:center; gap:7px; font-size:12px; font-weight:500; color:var(--gray-500); margin-top:10px; padding-top:10px; border-top:1px solid var(--gray-100); }
   .bact i { width:8px; height:8px; border-radius:50%; background:var(--gray-300); flex:none; }
   .bact.on { color:var(--ok); } .bact.on i { background:#3ecf7a; box-shadow:0 0 0 3px rgba(62,207,122,.18); }
@@ -1274,12 +1276,15 @@
     <div class="bento">
       <div class="tile g-half g-adm g-cb">
         <div><h2><i class="ph ph-tag" style="color:var(--red)"></i> Marcas y rutas</h2>
-        <p class="desc g-desc">Landing y tienda de cada marca. Alimentan las tarjetas de marcas. <span id="b_count"></span></p></div>
+        <p class="desc g-desc">Landing y tienda de cada marca. <span id="b_count"></span></p>
+        <div class="mods"><b>Se usa en:</b><span><i class="ph ph-chart-bar"></i>GA4 Audience · tarjetas de Marcas</span><span><i class="ph ph-map-pin"></i>Detalle de ciudades y zonas</span></div></div>
         <button class="btn btn-dark" id="bl_open"><i class="ph ph-tag"></i>Administrar marcas</button>
       </div>
       <div class="tile g-half g-adm g-cb">
         <div><h2><i class="ph ph-kanban" style="color:var(--red)"></i> Canales, medios y fuentes</h2>
-        <p class="desc g-desc">Qué fuente y medio va a cada jefatura (Adquisición, Directo, Redes) y a Otros, qué medios y fuentes ve cada canal en el Constructor, y la agrupación de canales de GA4 Audience. <span id="cb_rules"></span></p></div>
+        <p class="desc g-desc">Qué fuente y medio va a cada jefatura (Adquisición, Directo, Redes) y a Otros, qué medios y fuentes ve cada canal en el Constructor, y la agrupación de canales de GA4 Audience. <span id="cb_rules"></span></p>
+        <div class="mods"><b>Pestaña Campañas:</b><span><i class="ph ph-megaphone-simple"></i>Campañas · tarjetas y reportes</span><span><i class="ph ph-link-simple"></i>Constructor · medios y fuentes por canal</span></div>
+        <div class="mods"><b>Pestaña Audiencia GA4:</b><span><i class="ph ph-chart-bar"></i>GA4 Audience · canales, gráfico y filtro</span></div></div>
         <button class="btn btn-dark" id="cb_open"><i class="ph ph-kanban"></i>Abrir administrador</button>
       </div>
     </div>
@@ -2554,7 +2559,8 @@ function showLink({ name, email, link, type = 'invite', emailed, uid }) {
     <div class="out">${esc(link)}</div>
     <div class="msg info" style="background:var(--graphite);color:var(--gray-300)"><i class="ph ph-info"></i><span>El enlace vence en <b style="color:#fff">24 horas</b>. La contraseña debe tener <b style="color:#fff">mínimo 8 caracteres</b>, con mayúsculas, minúsculas y números.</span></div>
     <div class="actions" style="margin-top:0">
-      <button class="btn btn-red" data-copy="${esc(link)}"><i class="ph ph-copy"></i>Copiar enlace</button>
+      <button class="btn btn-red" data-copy="${esc(t)}" data-copymsg="Invitación copiada"><i class="ph ph-chat-text"></i>Copiar mensaje</button>
+      <button class="btn btn-ghost-dark" data-copy="${esc(link)}"><i class="ph ph-copy"></i>Copiar solo el enlace</button>
       ${uid ? `<button class="btn btn-ghost-dark" data-resend="${uid}"><i class="ph ph-envelope-simple"></i>${emailed ? 'Reenviar correo' : 'Enviar por correo'}</button>` : ''}
       <a class="btn btn-ghost-dark" href="mailto:${esc(email)}?subject=${encodeURIComponent(type === 'invite' ? 'Tu acceso a Motomundo Campañas' : 'Recupera tu contraseña de Motomundo Campañas')}&body=${encodeURIComponent(t)}"><i class="ph ph-envelope-open"></i>Desde mi correo</a>
       <a class="btn btn-ghost-dark" href="https://wa.me/?text=${encodeURIComponent(t)}" target="_blank" rel="noopener"><i class="ph ph-whatsapp-logo"></i>WhatsApp</a>
@@ -2562,7 +2568,7 @@ function showLink({ name, email, link, type = 'invite', emailed, uid }) {
   $('u_link').scrollIntoView({ behavior:'smooth', block:'nearest' });
 }
 $('u_link').addEventListener('click', async e => {
-  const c = e.target.closest('[data-copy]'); if (c) return copy(c.dataset.copy, 'Enlace copiado');
+  const c = e.target.closest('[data-copy]'); if (c) return copy(c.dataset.copy, c.dataset.copymsg || 'Enlace copiado');
   const r = e.target.closest('[data-resend]');
   if (r) { r.disabled = true; try { const u = USERS?.find(x => x.id === r.dataset.resend) || {}; const j = await adminCall({ action:'link', user_id: r.dataset.resend, send: true });
     j.emailed ? toast('Correo enviado') : toast(j.email_error || 'No se pudo enviar el correo', true); showLink({ name: u.full_name, email: u.email, link: j.link, type: j.pending ? 'invite' : 'recovery', emailed: j.emailed, uid: r.dataset.resend }); }
@@ -2611,6 +2617,7 @@ function drawUsers() {
       <div style="display:flex;gap:6px;flex-wrap:wrap">${roleChip(u)}${stChip(u)}</div>
       <div class="ctl"><span data-urole="${u.id}"></span><span data-ucanal="${u.id}"></span></div>
       <div class="meta"><span><i class="ph ph-calendar-plus"></i>Creado ${dt(u.created_at)}</span><span><i class="ph ph-sign-in"></i>${u.last_sign_in_at ? 'Entró ' + dt(u.last_sign_in_at) : 'Nunca ha entrado'}</span></div>
+      ${u.active && u.id !== ME.id ? `<div class="uinv"><button class="btn ${u.pending ? 'btn-red' : 'btn-ghost'}" data-uinv="${u.id}"><i class="ph ph-copy"></i>${u.pending ? 'Copiar invitación' : 'Copiar enlace de acceso'}</button><button class="btn btn-ghost" data-uwa="${u.id}" title="Enviar por WhatsApp"><i class="ph ph-whatsapp-logo"></i>WhatsApp</button></div>` : ''}
       <div class="lact"><span class="when">${u.id === ME.id ? 'Tu usuario' : ''}</span><span>${userActions(u)}</span></div></div>`).join('')}</div>`);
   }
   // Controles de rol y canal por usuario
@@ -2628,6 +2635,19 @@ async function updUser(u, patch) {
 }
 $('users').addEventListener('click', async e => {
   const ed = e.target.closest('[data-uedit]'); if (ed) return editUser(USERS.find(x => x.id === ed.dataset.uedit));
+  const inv = e.target.closest('[data-uinv], [data-uwa]');
+  if (inv) {
+    const id = inv.dataset.uinv || inv.dataset.uwa, u = USERS.find(x => x.id === id), wa = !!inv.dataset.uwa;
+    // WhatsApp: la ventana se abre ya (si no, el navegador la bloquea) y se completa al tener el enlace
+    const w = wa ? window.open('', '_blank') : null; inv.disabled = true;
+    try {
+      const r = await adminCall({ action:'link', user_id: u.id }), type = r.pending ? 'invite' : 'recovery', t = inviteText(u.full_name, r.link, type);
+      if (wa) { if (w) w.location = 'https://wa.me/?text=' + encodeURIComponent(t); else location.href = 'https://wa.me/?text=' + encodeURIComponent(t); }
+      else copy(t, type === 'invite' ? 'Invitación copiada: pégala en WhatsApp' : 'Enlace de acceso copiado');
+      showLink({ name: u.full_name, email: u.email, link: r.link, type, uid: u.id });
+    } catch (err) { w?.close(); toast(err.message, true); }
+    inv.disabled = false; return;
+  }
   const l = e.target.closest('[data-ulink]'), a = e.target.closest('[data-uact]'), d = e.target.closest('[data-udel]');
   if (l) { const u = USERS.find(x => x.id === l.dataset.ulink); try { const r = await adminCall({ action:'link', user_id: u.id }); showLink({ name: u.full_name, email: u.email, link: r.link, type: r.pending ? 'invite' : 'recovery', uid: u.id }); } catch (err) { toast(err.message, true); } }
   if (a) { const u = USERS.find(x => x.id === a.dataset.uact); updUser(u, { active: !u.active }); }
