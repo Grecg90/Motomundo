@@ -2194,7 +2194,7 @@ async function start() {
       sb.from('ga4_utm_daily').select('date').order('date', { ascending: false }).limit(1),
       sb.from('ga4_sync_log').select('ran_at').order('ran_at', { ascending: false }).limit(1),
     ]);
-    CMAP = qm.data || {}; syncMedios(); syncMarcaCluster();
+    CMAP = qm.data || {}; syncMedios(); syncMarcaCluster(); loadMarcas();
     $('um_role').innerHTML = roleChip(ME); cbRules(); if (GA) drawGa4(); if (LINKS) drawLib();
     const min = q1.data?.[0]?.date, max = q2.data?.[0]?.date;
     if (!max) throw new Error(q1.error?.message || 'Todavía no hay datos sincronizados');
@@ -2297,7 +2297,10 @@ const CLUSTERS_ZONA = {
   Sur: ['Choluteca', 'El Triunfo', 'Monjarás', 'Nacaome', 'San Lorenzo', 'San Marcos de Colón'],
 };
 const CLUSTERS = Object.entries(CLUSTERS_ZONA).flatMap(([z, cs]) => cs.map(n => ({ v: normalizar(n), n, z })));
-const marcasList = () => { const n = (GA?.brands || []).map(b => b.name).filter(Boolean); return n.length ? n : MARCAS_DEF; };
+// Las marcas salen de la tabla brands (la misma que edita el admin), no del reporte de GA4 que puede estar sin cargar o en caché
+let MARCAS_DB = null;
+async function loadMarcas() { const { data } = await sb.from('brands').select('name').order('sort'); if (data) { MARCAS_DB = data.map(b => b.name).filter(Boolean); syncMarcaCluster(); } }
+const marcasList = () => { const n = MARCAS_DB?.length ? MARCAS_DB : (GA?.brands || []).map(b => b.name).filter(Boolean); return n.length ? n : MARCAS_DEF; };
 // Lista oficial + los que el admin agregue (sin zona)
 const clustersAll = (map = CMAP) => [...CLUSTERS, ...Object.keys(map).filter(k => k.startsWith('cl:')).map(k => k.slice(3)).filter(v => !CLUSTERS.some(c => c.v === v)).map(v => ({ v, n: v.replace(/_/g, ' '), z: '' }))];
 const clustersList = (map = CMAP) => clustersAll(map).map(c => c.v);
@@ -2375,8 +2378,11 @@ $('b_save').onclick = async () => {
   const f = form(); $('b_save').disabled = true;
   const row = { url: f.url, source: f.source, medium: f.medium, campaign: f.campaign, term: f.term, content: f.content, note: f.note, zone: f.zone, canal: fixedCanal() || LF.g || canal(f.source, f.medium) };
   // Edición: solo se guarda si nadie más la cambió desde que la abriste (updated_at funciona como versión)
-  const q = editId ? sb.from('utm_links').update(row).eq('id', editId).eq('updated_at', editVer).select().single() : sb.from('utm_links').insert(row).select().single();
-  const { data, error } = await q;
+  const run = () => editId ? sb.from('utm_links').update(row).eq('id', editId).eq('updated_at', editVer).select().single() : sb.from('utm_links').insert(row).select().single();
+  // Token vigente antes de escribir: con un token vencido la base lo ve como "sin sesión" y rechaza por permisos aunque el rol sea correcto
+  await freshToken();
+  let { data, error } = await run();
+  if (error && /row-level|JWT/i.test(error.message)) { await freshToken(true); ({ data, error } = await run()); }
   if (error) {
     if (error.code === '23505') {
       await loadLinks(); build();
@@ -3359,14 +3365,14 @@ $('bm_save').onclick = async () => {
   $('bm_save').disabled = false;
   if (!error && BRM && !saved?.length) { modalClose('bm_modal'); await loadBrands(); return notify({ icon:'ph-warning', tone:'warn', title:'Otro administrador cambió esta marca', body:'Se cargó la versión actual; vuelve a abrirla para editar.' }); }
   if (error) return toast('No se pudo guardar: ' + (error.message.includes('duplicate') ? 'ya existe una marca con ese nombre' : error.message), true);
-  modalClose('bm_modal'); await loadBrands(); GA_KEY = ''; loadGa4();
+  modalClose('bm_modal'); await loadBrands(); loadMarcas(); GA_KEY = ''; loadGa4();
   notify({ icon:'ph-tag', tone:'ok', title:'Marca guardada', body:`<b style="display:inline;font-weight:500">${esc(name)}</b>: las tarjetas se recalculan con las nuevas rutas.` });
 };
 $('bm_del').onclick = async () => {
   if (!BRM || !confirm(`¿Eliminar la marca ${BRM.name}?`)) return;
   const { error } = await sb.from('brands').delete().eq('id', BRM.id);
   if (error) return toast('No se pudo eliminar: ' + error.message, true);
-  modalClose('bm_modal'); await loadBrands(); GA_KEY = ''; loadGa4();
+  modalClose('bm_modal'); await loadBrands(); loadMarcas(); GA_KEY = ''; loadGa4();
   notify({ icon:'ph-trash', tone:'bad', title:'Marca eliminada', body: esc(BRM.name) });
 };
 addEventListener('keydown', e => { if (e.key !== 'Escape') return; if (!$('bm_modal').hidden) modalClose('bm_modal'); else if (!$('bl_modal').hidden) modalClose('bl_modal'); });
